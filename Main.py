@@ -3,6 +3,7 @@ from Plot import *
 from Input import input_file_setup, xyz_to_plato_input
 from custom_pyqtgraph import scaledQImage
 from subprocess import PIPE, run
+import pyqtgraph as pg
 import math
 import os
 import numpy as np
@@ -291,6 +292,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # sphOrbWfCheckBox
 
     def draw(self):
+        draw_transmission(self.openGLWidget)
+        return
         atoms_off = self.toggleAtomsButton.isChecked()
         self.openGLWidget.clear()
 

@@ -1,0 +1,544 @@
+################################################################################
+# This is the input file for tb1.
+#
+# All flags have the format:
+#
+# Field_Name
+# Data
+#
+# NOTE:
+# 1) The program is case insensitive.
+# 2) The fields can appear in any order.
+# 3) Only relevant fields will be read in.
+# 4) All lengths are in Bohr radii, and all energies are in Rydbergs.
+################################################################################
+
+################################################################################
+# ------- Parameters defining the electronic structure model to be used -------
+#
+# SpinFlag determines whether the calculation is to be spin polarized or not.
+#  0  ==>  Not spin polarized
+#  1  ==>  Collinear Spin
+#  2  ==>  Non-collinear spin
+# If SpinFlag = 1, then a list of the initial net spin on each atom is required.
+# The spin of an electron is (of course) 0.5. If you have a list of identical
+# spin values, you can compress the list by writing (for example)
+#   0.5 * 15
+# This will give 15 identical spins. NOTE: you need the spaces on either side
+# of the *
+# If SpinFlag = 2, then a list of the initial net spin vectors on each atom is
+# required (x, y and z components).
+#
+# LSDApUFlag determines if the correlation correction (U-J) is to be used.
+#  0  ==>  Ordinary TB
+#  1  ==>  TB plus U
+#
+# DataSet is the name of the subdirectory of the main directory in which the 
+# data files are kept for the chosen model.
+#
+# OccupyFlag determines how the occupancies of the single particle states are
+# assigned.
+#  0  ==>  Use default occupancies (does not apply to metals)
+#  1  ==>  Find occupancies using Fermi distribution with
+#          temperature given by ElectronTemperature
+#  2  ==>  User assigned occupancy. Followed by a list of the form
+#          Number of elements in list
+#          Occupancy #1   Number of levels with this occupancy
+#          Occupancy #2   Number of levels with this occupancy
+#          Occupancy #3   Number of levels with this occupancy
+#          ...............
+#  3  ==>  Find occupancies using Paxton-Methfessel scheme with
+#          broadening given by ElectronTemperature. Following number is the
+#          order of the polynomial used.
+#  4  ==>  Find occupancies using Fermi distribution with
+#          temperature given by ElectronTemperature and a fixed
+#          total spin.  Only valid for SpinFlag = 1. Following number is the
+#          the total spin.
+#
+# OccupyTolerance sets the tolerance on the number of electrons used when
+# searching for the Fermi energy
+#
+# ElectronTemperature is the temperature (in Ry) that the electrons are given
+# to smooth the finding of the Fermi level.
+#
+# BlochStates is the flag marking the list of quantities to define the k points
+# to be used for a periodic calculation. Zero K points means Bloch states are
+# not to be used. A positive number means that you must provide a list with
+# this many K points (in reduced coordinates) with their weights (k1,k2,k3,wt)
+# A value of -1 means that a Monkhorst-Pack mesh will be generated for you. You
+# must provide three integers giving the number of points in each direction.
+#
+# ElectronExcess is the number of extra electrons to be added to the system over
+# and above those contributed by the neutral atoms.
+#
+# MagneticField gives the magnitude of the uniform magnetic field along the z
+# direction. Its value is \mu_B B in units of Rydberg.
+################################################################################
+SpinFlag
+0
+0.0 0.0
+
+LSDApUFlag
+0
+
+DataSet
+Hydrocarbons
+
+OccupyFlag
+1 0
+
+OccupyTolerance
+1.0e-12
+
+ElectronTemperature
+0.001
+
+BlochStates
+0
+
+ElectronExcess
+0.0
+
+MagneticField
+0.0
+
+################################################################################
+# ------- Parameters defining the method of self-consistency -------
+#
+# SCFFlag determines whether self-consistency is to be used or not
+#  0  ==>  No self-consistency included
+#  1  ==>  Self-consistent calculation
+#
+# NLoops is the number of loops used to achieve self-consistency
+#
+# ETol is the maximum change in the total energy between self-consistency
+# iterations for a self-consistent solution to have been achieved
+#
+# ResidueTol is the largest allowed rms change in the density as a percentage of
+# the average density for a self-consistent solution to have been achieved
+#
+# MixLevels is the number of previous input charge densities used to estimate
+# the optimal new input charge density.
+#
+# MixFactor gives the fraction of the new density mixed with the old when
+# simple mixing is used
+################################################################################
+SCFFlag
+1
+
+NLoops
+200
+
+ETol
+0.0
+
+ResidueTol
+0.00001
+
+MixLevels
+5
+
+MixFactor
+0.02
+
+################################################################################
+# ------- Methods for obtaining eigenstates -------
+#
+# NBands the number of bands you want to include.
+################################################################################
+NBands
+0
+
+################################################################################
+# ------- Parameters defining the characteristics of the job -------
+#
+# Job is the job control flag:
+#  0  ==>  Debug mode
+#  1  ==>  Single point energy calculation
+#  2  ==>  Static relaxation
+#  3  ==>  Molecular dynamics
+#  4  ==>  Defined motion of one atom (all others held fixed)
+#  5  ==>  Ehrenfest Dynamics
+#  99 ==>  User defined operation
+#          (You will need to write a subroutine called douser.c)
+#
+# RestartFlag determines whether the atomic coordinates and velocities are to be
+# read in from a restart file.
+#  0  ==>  Do not use restart file
+#  1  ==>  Use restart file for atomic coordinates and velocities
+#  2  ==>  Use atomic coordinates from restart file, but initialize
+#          velocities
+#  3  ==>  As for 1, but set initial MD step to 0
+#  4  ==>  As for 2, but set initial MD step to 0
+#
+# MaximumTime determines how long the job is allowed to run for in hours.
+#
+# NoNetForceFlag > 0 results in the net force on the cell being set to zero. 
+# Do not use this with constraints. It is only useful for molecules.
+################################################################################
+Job
+2
+
+RestartFlag
+0
+
+MaximumTime
+1000000.0
+
+NoNetForceFlag
+1
+
+################################################################################
+# ------- Parameters defining the geometry -------
+#
+# CellVec is the direction vectors for the unit cell.
+#
+# CellSize is the length of the cell vectors in bohr radii.
+#
+# CellRepeat determines the cell boundary conditions along the three directions
+# of CellVec.
+#  0  ==>  Free boundary
+#  1  ==>  Periodic boundary
+#
+# NAtom is the number of atoms in the unit cell.
+#
+# Format determines the input format for atomic coordinates.
+#  0  ==>  Reduced coordinate format in units of the translation vectors
+#  1  ==>  z-matrix format
+#  2  ==>  (x,y,z) format in units of the lattice constant
+#  3  ==>  (x,y,z) format in angstroms, with atomic symbol first.
+#          Cell vectors and dimensions in this file are ignored, and 
+#          automatically calculated to provide adequate space around 
+#          the molecule.
+#  4  ==>  Read coordinates in format 3 from file specified under
+#          Atoms section.  File contains number of atoms on its first line.
+#          NAtom in this file is ignored.
+#
+# Atoms is the list of atomic positions. Below is given the z-matrix input.
+#
+# Isotope gives a list of isotope mass shifts (units of proton mass) and
+# nuclear spin data for the atoms in the unit cell. The format is:
+# Number of atoms whose isotope is to be changed
+# Atom number   Mass shift   Nuclear spin   Nuclear magnetic moment
+# Atom number   Mass shift   Nuclear spin   Nuclear magnetic moment
+# Atom number   Mass shift   Nuclear spin   Nuclear magnetic moment
+# .....
+#
+# PBCFlag determines if the atoms are to moved back into the unit cell should
+# they wander out.
+#  0  ==>  Do not fold atoms back in
+#  1  ==>  Do fold atoms back in
+################################################################################
+CellVec
+1.0 0.0 0.0
+0.0 1.0 0.0
+0.0 0.0 1.0
+
+CellSize
+100 100 100
+
+CellRepeat
+0 0 0
+
+NAtom
+12
+
+Format
+3
+
+Atoms
+C      -0.423336    1.324585   -0.037368
+C      -0.993240    0.439300    0.874688
+C       0.575856    0.883375   -0.896140
+H      -0.726144    2.336885   -0.122484
+H      -1.792296    0.758270    1.534856
+H       1.020024    1.557605   -1.599904
+C      -0.575856   -0.883375    0.896140
+C       0.993240   -0.439300   -0.874688
+C       0.423336   -1.324585    0.037368
+H      -1.020024   -1.557605    1.599904
+H       1.792296   -0.758270   -1.534856
+H       0.726144   -2.336885    0.122484
+0
+
+Isotope
+0
+1 +1.0
+
+PBCFlag
+1
+
+################################################################################
+# ------- Parameters for relaxation simulations -------
+#
+# RFlag is the relaxation method flag.
+#  1  ==>  Steepest descent
+#  2  ==>  Conjugate gradient
+#  3  ==>  Variable metric
+#  4  ==>  Find transition state using mode following
+#  5  ==>  Relax cell and atomic coordinates
+#  6  ==>  BFGS
+# Making RFlag negative means numeric rather than analytic forces are used.    
+#
+# CellRelaxMode defines the way the cell vectors are relaxed:
+#  0  ==>  Free relaxation
+#  1  ==>  Volume relaxed at fixed shape
+#  2  ==>  Relax along axis 1 only
+#  3  ==>  Relax along axis 2 only
+#  4  ==>  Relax along axis 3 only
+#
+# FTol is the highest force allowed in a relaxed structure. Units are
+# rydbergs/bohr radius.
+#
+# MaxDisplacement is the maximum distance any atom can move in any one update.
+# Currently only used by variable metric minimization.
+#
+# StressTol is the highest trace of the stress allowed in a relaxed structure.
+# Units are MBars.
+#
+# Pinned determines which atoms are pinned. Variables are:
+# Number of pinned atoms and the index for each pinned atom.
+#
+# Constrain determines constraints to be applied to atomic motion. Variables
+# are:
+# Number of constrained atoms 
+# The index of atom and normal to plane of constraint
+#
+# ReactionCoordinate defines the constraint direction for a drag calculation of
+# a minimum energy pathway. Variables are:
+# Type
+# Coordinates of atoms
+#
+# MaxNSteps: see molecular dynamics section
+################################################################################
+RFlag
+3
+
+CellRelaxMode
+0
+
+FTol
+0.0001
+
+MaxDisplacement
+0.1
+
+StressTol
+0.001
+
+Pinned
+0
+1
+
+Constrain
+0
+1 1.0 1.0 0.0
+
+ReactionCoordinate
+0
+
+################################################################################
+# ------- Parameters for molecular dynamics simulations -------
+#
+# AtomTemperature is the temperature of the atoms in kelvin.
+#
+# TemperatureTolerance is the fractional error in the temperature allowed
+# before temperature rescaling. A negative value means constant energy MD is to
+# be used.
+#
+# NoseHoover is set if a Nose-Hoover thermostat is to be used. The value given
+# is the relaxation time in femto seconds. A negative value turns this
+# thermostat off.
+# NOTE: This works alongside temperature rescaling. To use only this thermostat,
+# set TemperatureTolerance to a negative value.
+#
+# KickAtom allows for stochastic events that give atoms sudden increases in
+# kinetic energy. The values are: Number of atoms that can be kicked
+#                                     (0 ==> No kicking)
+#                                 The energy of a kick (Ry)
+#                                 The number of time steps between kicks
+# MaxNSteps is the number of time steps to be used for MD, or the maximum number
+# of line minimizations to be used in static relaxation.
+#
+# MDTimeStep is the MD time step in femto seconds.
+#
+# AutoSave gives the number of time steps between subsequent saves of atomic
+# configurations. A value < 1 implies save only at the end of the simulation.
+################################################################################
+AtomTemperature
+300.0
+
+TemperatureTolerance
+0.1
+
+NoseHoover
+-1.0
+
+KickAtom
+0 0.05 200
+
+MaxNSteps
+1000
+
+MDTimeStep
+1.0
+
+AutoSave
+10
+
+################################################################################
+# ------- Parameters for defined motion simulations -------
+#
+# DefinedMotion corresponds to the displacement of one atom following a given
+# trajectory. The values are:
+# Index for the moving atom
+# Type of motion:
+#   0) constant velocity (a0/fs)
+#   1) oscillating
+# Type of evolution for the electrons:
+#   0) Adiabatic
+#   1) Non-adiabatic
+# Parameters for the motion in x, y and z.
+#   o For constant velocity: the component of the velocity.
+#   o For an oscillating atom: amplitude, angular frequency and phase
+################################################################################
+DefinedMotion
+1 0 0
+0.1 0.0 0.0
+
+################################################################################
+# ------- Parameters controlling I/O -------
+#
+# Verbosity determines the amount of output produced by the program.
+#
+# WriteBondData sets two flags and a distance related to bond data.
+#  flag 1: bond lengths (1 ==> write; 0 ==> do not write)
+#  flag 2: bond angles  (1 ==> write; 0 ==> do not write)
+#  distance: the cutoff radius used to distinguish between atoms that are or
+#            are not bonded to each other. 
+#
+# MovieRate is the number of MD time steps in between frames of the movie
+# dumped to the .xyz file. A value of 0 implies no frames are to be stored.
+#
+# VelocityRate is the number of MD time steps between dumps of atomic
+# velocities to the .vel file. A value of 0 implies no velocities are to be
+# stored.
+#
+# WavefunctionFlag determines whether the eigenvectors are to be written to a
+# file:
+#  0  ==>  Do not write out eigenvectors
+#  1  ==>  Write out eigenvectors
+#  2  ==>  Write out eigenvectors and the overlap matrix
+#          (required by plotdos)
+#
+# PartialPopulationFlag determines whether Mulliken population analysis is to
+# be applied to eigenstates with energies within a given window or not. This is
+# useful for determining the location in space of localised states.
+#  0  ==>  Do not evaluate partial populations
+#  n  ==>  Evaluate partial populations for |n| energy
+#          windows. This requires energy windows to be
+#          defined (ELo and EHi in eV). If n>0, the
+#          energies are defined relative to the vacuum.
+#          If n <0 the energies are defined relative to
+#          the Fermi level.
+#
+# HamiltonianFlag determines if the Hamiltonian (and overlap) matrix is to be
+# written out to file or not.
+#  0  ==> Do not write out Hamiltonian
+#  1  ==> Do write out Hamiltonian
+#
+# WriteEnergyFlag determines if a detailed breakdown of the energy is written
+# out or not.
+#  0  ==>  Do not write out breakdown
+#  1  ==>  Write out breakdown
+################################################################################
+Verbosity
+1
+
+WriteBondData
+0 0 6.0
+
+MovieRate
+0
+
+VelocityRate
+0
+
+WavefunctionFlag
+1
+
+PartialPopulationFlag
+0
+0.0 1.0
+
+WriteEnergyFlag
+0
+
+HamiltonianFlag
+0
+
+################################################################################
+# ------- Parameters that should seldom be changed -------
+#
+# BasisFlag determines whether or not auxiliary basis functions are used.
+#  0  ==>  Include all functions
+#  n  ==>  Ignore last n angular momentum states
+#
+# Seed is the seed for the random number generator
+#
+# MixScheme determines the scheme used to mix charge densities
+#  0  ==>  Linear mixing (slow)
+#  1  ==>  Pulay (fast - default)
+#  2  ==>  Newton-Raphson (orthogonal tight binding only)
+#
+# SpinMixScheme determines the scheme used to mix spin densities
+#  0  ==>  Linear mixing (slow)
+#  1  ==>  Pulay (fast - default)
+#  2  ==>  Newton-Raphson (orthogonal tight binding only).
+#
+# SpinMixLevels is the number of previous input spin densities used to estimate
+# the optimal new input spin density.
+#
+# SpinMixFactor gives the fraction of the new spin polarization mixed with the
+# old
+#
+# PreconditoningFlag determines what type of preconditioning of the charge is
+# used before updating it.
+#  0  ==>  No preconditioning
+#  1  ==>  Independent atom preconditioner (second value is dn/de)
+#
+# MixClipping is the maximum change in charge and magnetic moment allowed
+# during one mixing step. First number is for charge, and second for magnetic
+# moment. This applies only to orthogonal tight binding
+#
+# OnSiteElectrostatics is set when the 1/r terms are to be neglected in
+# self-consistent tight binding, but the onsite Hubbard U is to be retained.
+# 0  ==>  Keep inter-site
+# 1  ==>  No inter-site
+################################################################################
+BasisFlag
+0
+
+Seed
+12345
+ 
+MixScheme
+1
+
+SpinMixScheme
+1
+
+SpinMixLevels
+5
+
+SpinMixFactor
+0.2
+
+PreconditioningFlag
+1 1.0
+
+MixClipping
+0.01 0.1
+
+OnSiteElectrostatics 
+0

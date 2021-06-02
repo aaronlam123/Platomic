@@ -7,7 +7,7 @@ B         "beige"       0.870       All
 C         "black"       0.670       All
 N         "blue"        0.560       All
 O         "red"         0.480       All
-F         "green"       0.420       ALl
+F         "green"       0.420       All
 Ne        "cyan"        0.380       All
 
 Na        "violet"      1.900       All

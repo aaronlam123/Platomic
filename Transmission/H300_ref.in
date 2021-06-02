@@ -1,0 +1,913 @@
+################################################################################
+# This is the input file for tb1.
+#
+# All flags have the format:
+#
+# Field_Name
+# Data
+#
+# NOTE:
+# 1) The program is case insensitive.
+# 2) The fields can appear in any order.
+# 3) Only relevant fields will be read in.
+# 4) All lengths are in Bohr radii, and all energies are in Rydbergs.
+################################################################################
+
+################################################################################
+# ------- Parameters defining the electronic structure model to be used -------
+#
+# SpinFlag determines whether the calculation is to be spin polarized or not.
+#  0  ==>  Not spin polarized
+#  1  ==>  Collinear Spin
+#  2  ==>  Non-collinear spin
+# If SpinFlag = 1, then a list of the initial net spin on each atom is required.
+# The spin of an electron is (of course) 0.5. If you have a list of identical
+# spin values, you can compress the list by writing (for example)
+#   0.5 * 15
+# This will give 15 identical spins. NOTE: you need the spaces on either side
+# of the *
+# If SpinFlag = 2, then a list of the initial net spin vectors on each atom is
+# required (x, y and z components).
+#
+# LSDApUFlag determines if the correlation correction (U-J) is to be used.
+#  0  ==>  Ordinary TB
+#  1  ==>  TB plus U
+#
+# DataSet is the name of the subdirectory of the main directory in which the 
+# data files are kept for the chosen model.
+#
+# OccupyFlag determines how the occupancies of the single particle states are
+# assigned.
+#  0  ==>  Use default occupancies (does not apply to metals)
+#  1  ==>  Find occupancies using Fermi distribution with
+#          temperature given by ElectronTemperature
+#  2  ==>  User assigned occupancy. Followed by a list of the form
+#          Number of elements in list
+#          Occupancy #1   Number of levels with this occupancy
+#          Occupancy #2   Number of levels with this occupancy
+#          Occupancy #3   Number of levels with this occupancy
+#          ...............
+#  3  ==>  Find occupancies using Paxton-Methfessel scheme with
+#          broadening given by ElectronTemperature. Following number is the
+#          order of the polynomial used.
+#  4  ==>  Find occupancies using Fermi distribution with
+#          temperature given by ElectronTemperature and a fixed
+#          total spin.  Only valid for SpinFlag = 1. Following number is the
+#          the total spin.
+#
+# OccupyTolerance sets the tolerance on the number of electrons used when
+# searching for the Fermi energy
+#
+# ElectronTemperature is the temperature (in Ry) that the electrons are given
+# to smooth the finding of the Fermi level.
+#
+# BlochStates is the flag marking the list of quantities to define the k points
+# to be used for a periodic calculation. Zero K points means Bloch states are
+# not to be used. A positive number means that you must provide a list with
+# this many K points (in reduced coordinates) with their weights (k1,k2,k3,wt)
+# A value of -1 means that a Monkhorst-Pack mesh will be generated for you. You
+# must provide three integers giving the number of points in each direction.
+#
+# ElectronExcess is the number of extra electrons to be added to the system over
+# and above those contributed by the neutral atoms.
+#
+# MagneticField gives the magnitude of the uniform magnetic field along the z
+# direction. Its value is \mu_B B in units of Rydberg.
+#
+# ExternalField defines the form of an applied electrostatic potential. It has
+# two parts: the spatial form and the time dependence. First the number of fields
+# is required, then a line for each the spatial form and time dependence follows.
+#
+#  N  ==>  Number of fields.
+# Spatial form:
+#  0  ==>  Shift in onsite energy.
+#          Followed by: atom index (1 to N) and shift amount (in Ry)
+#  1  ==>  Sawtooth field (corresponding to uniform electric field)
+#          Followed by direction (1=x, 2=y, 3=z) and field strength (in Ry/bohr)
+# Time dependence:
+#  0  ==>  Static
+#  1  ==>  Pulse
+#          Followed by: duration (fs)
+#  2  ==>  Periodic
+#          Followed by: period (fs)
+#  3  ==>  Sin^2 Envelope Pulse
+#          Followed by: duration (fs)
+#                       laser frequency (1/fs)
+#                       phase
+#                       pulse start (fs)
+################################################################################
+SpinFlag
+0
+0.0 0.0
+
+LSDApUFlag
+0
+
+DataSet
+FrauenheimT
+
+OccupyFlag
+1 0
+
+OccupyTolerance
+1.0e-12
+
+ElectronTemperature
+0.001
+
+BlochStates
+0
+
+ElectronExcess
+0.0
+
+MagneticField
+0.0
+
+ExternalField
+0
+0
+
+################################################################################
+# ------- Parameters defining the method of self-consistency -------
+#
+# SCFFlag determines whether self-consistency is to be used or not
+#  0  ==>  No self-consistency included
+#  1  ==>  Monopole self-consistent calculation
+#  2  ==>  Monopole and dipole self-consistent calculation
+#  3  ==>  Monopole, dipole and quadrupole self-consistent calculation
+#
+# NLoops is the number of loops used to achieve self-consistency
+#
+# ETol is the maximum change in the total energy between self-consistency
+# iterations for a self-consistent solution to have been achieved
+#
+# ResidueTol is the largest allowed rms change in the density as a percentage of
+# the average density for a self-consistent solution to have been achieved
+#
+# MixScheme determines the scheme used to mix charge densities
+#  0  ==>  Linear mixing (slow)
+#  1  ==>  Pulay (fast - default)
+#
+# MixLevels is the number of previous input charge densities used to estimate
+# the optimal new input charge density.
+#
+# MixFactor gives the fraction of the new density mixed with the old when
+# simple mixing is used
+#
+# SpinMixFactor gives the fraction of the new spin polarization mixed with the
+# old
+#
+# PreconditoningFlag determines what type of preconditioning of the charge is
+# used before updating it.
+#  0  ==>  No preconditioning
+#  1  ==>  Independent atom preconditioner (second value is dn/de)
+#
+# MixClipping is the maximum change in charge and magnetic moment allowed
+# during one mixing step. First number is for charge, and second for magnetic
+# moment. This applies only to orthogonal tight binding
+################################################################################
+SCFFlag
+1
+
+NLoops
+30
+
+ETol
+0.0
+
+ResidueTol
+1.0e-6
+
+MixScheme
+0
+
+MixLevels
+5
+
+MixFactor
+0.2
+
+SpinMixFactor
+0.2
+
+PreconditioningFlag
+1 1.0
+
+MixClipping
+0.01 0.1
+
+################################################################################
+# ------- Methods for obtaining eigenstates -------
+#
+# OpenBoundaryTerminals determines how many terminals are considered for 
+# open boundaries with current-carrying states. Note that the atoms to which
+# terminals are attached can be pinned (see <Pin> below).
+#  0 ==> No terminals, and hence no current-carrying states
+#  N ==> N terminals, and hence current-carrying states with open boundaries
+#  <Number of terminals> <Chemical potential flag> <Lower cutoff energy> <Reference chemical potential>
+#  <Bias> <Gamma> <kT> <Pin> <No of probes> <atom 1> <atom 2> ...
+#  <Bias> <Gamma> <kT> <Pin> <No of probes> <atom 1> <atom 2> ...
+#  ...
+# The chemical potential flag takes the following values
+# 0 ==> fixed chemical potentials
+# 1 ==> reference chemical potential adjusted to fix the number of electrons in the system
+# The <Pin> flag determines if these atoms or pinned or not.
+# 0 ==> do not pin
+# 1 ==> pin
+#
+# OpenBoundaryCurrent provides the lists of atoms that form the interfaces
+# between pairs of regions (A and B) between which measured currents flow.
+# Number of currents
+# <Number of atoms in A> <atom A1> <atom A2> ...
+# <Number of atoms in B> <atom B1> <atom B2> ...
+# <Number of atoms in A> <atom A1> <atom A2> ...
+# <Number of atoms in B> <atom B1> <atom B2> ...
+# ...
+#
+# OpenBoundaryTransmission causes the tramsmission function between pairs of
+# terminals to be written to file at the end of the simulation.
+# Flag (0 ==> no output, 1 ==> produce output)
+# <Emin> <Emax> <dE>
+#
+# NBands the number of bands you want to include.
+################################################################################
+OpenBoundaryTerminals
+2 1 -100.0 -0.4281406
+
+  1   2   3   4   5   6   7   8   9  10
+ 11  12  13  14  15  16  17  18  19  20
+ 21  22  23  24  25  26  27  28  29  30
+ 31  32  33  34  35  36  37  38  39  40
+ 41  42  43  44  45  46  47  48  49  50
+ 51  52  53  54  55  56  57  58  59  60
+ 61  62  63  64  65  66  67  68  69  70
+ 71  72  73  74  75  76  77  78  79  80
+ 81  82  83  84  85  86  87  88  89  90
+ 91  92  93  94  95  96  97  98  99 100
+
+201 202 203 204 205 206 207 208 209 210
+211 212 213 214 215 216 217 218 219 220
+221 222 223 224 225 226 227 228 229 230
+231 232 233 234 235 236 237 238 239 240
+241 242 243 244 245 246 247 248 249 250
+251 252 253 254 255 256 257 258 259 260
+261 262 263 264 265 266 267 268 269 270
+271 272 273 274 275 276 277 278 279 280
+281 282 283 284 285 286 287 288 289 290
+291 292 293 294 295 296 297 298 299 300
+
+OpenBoundaryCurrent
+1
+2 149 150
+2 151 152
+
+OpenBoundaryTransmission
+1
+-1.0 1.0 0.003
+
+NBands
+4
+
+################################################################################
+# ------- Parameters defining the characteristics of the job -------
+#
+# Job is the job control flag:
+#  0  ==>  Debug mode
+#  1  ==>  Single point energy calculation
+#  2  ==>  Static relaxation
+#  3  ==>  Molecular dynamics
+#  4  ==>  Defined motion of one atom (all others held fixed)
+#  5  ==>  Ehrenfest Dynamics
+#  99 ==>  User defined operation
+#          (You will need to write a subroutine called douser.c)
+#
+# RestartFlag determines whether the atomic coordinates and velocities are to be
+# read in from a restart file.
+#  0  ==>  Do not use restart file
+#  1  ==>  Use restart file for atomic coordinates and velocities
+#  2  ==>  Use atomic coordinates from restart file, but initialize
+#          velocities
+#  3  ==>  As for 1, but set initial MD step to 0
+#  4  ==>  As for 2, but set initial MD step to 0
+#
+# MaximumTime determines how long the job is allowed to run for in hours.
+#
+# NoNetForceFlag > 0 results in the net force on the cell being set to zero. 
+# Do not use this with constraints. It is only useful for molecules.
+################################################################################
+Job
+1
+
+RestartFlag
+0
+
+MaximumTime
+1000000.0
+
+NoNetForceFlag
+1
+
+################################################################################
+# ------- Parameters defining the geometry -------
+#
+# CellVec is the direction vectors for the unit cell.
+#
+# CellSize is the length of the cell vectors in bohr radii.
+#
+# CellRepeat determines the cell boundary conditions along the three directions
+# of CellVec.
+#  0  ==>  Free boundary
+#  1  ==>  Periodic boundary
+#
+# NAtom is the number of atoms in the unit cell.
+#
+# Format determines the input format for atomic coordinates.
+#  0  ==>  Reduced coordinate format in units of the translation vectors
+#  1  ==>  z-matrix format
+#  2  ==>  (x,y,z) format in units of the lattice constant
+#  3  ==>  (x,y,z) format in angstroms, with atomic symbol first, followed
+#          by a single number. If the number is 0, Cell vectors and dimensions
+#          in this file are ignored, and automatically calculated to provide
+#          adequate space around the molecule. Set this number to 1 to
+#          respect the specified cell parameters.
+#  4  ==>  Read coordinates in format 3 from file specified under
+#          Atoms section, followed by a single number (see 3).  File contains 
+#          number of atoms on its first line. NAtom in this file is ignored.
+#
+# Atoms is the list of atomic positions. Below is given the z-matrix input.
+#
+# Isotope gives a list of isotope mass shifts (units of proton mass) and
+# nuclear spin data for the atoms in the unit cell. The format is:
+# Number of atoms whose isotope is to be changed
+# Atom number   Mass shift   Nuclear spin   Nuclear magnetic moment
+# Atom number   Mass shift   Nuclear spin   Nuclear magnetic moment
+# Atom number   Mass shift   Nuclear spin   Nuclear magnetic moment
+# .....
+#
+# PBCFlag determines if the atoms are to moved back into the unit cell should
+# they wander out.
+#  0  ==>  Do not fold atoms back in
+#  1  ==>  Do fold atoms back in
+################################################################################
+CellVec
+               1               0               0
+               0               1               0
+               0               0               1
+
+CellSize
+       600.0000000      100.000000000      100.000000000
+
+CellRepeat
+0 0 0
+
+NAtom
+300
+
+Format
+0
+
+Atoms
+                 0                  0                  0   H   
+    0.003333333333                  0                  0   H   
+    0.006666666667                  0                  0   H   
+              0.01                  0                  0   H   
+     0.01333333333                  0                  0   H   
+     0.01666666667                  0                  0   H   
+              0.02                  0                  0   H   
+     0.02333333333                  0                  0   H   
+     0.02666666667                  0                  0   H   
+              0.03                  0                  0   H   
+     0.03333333333                  0                  0   H   
+     0.03666666667                  0                  0   H   
+              0.04                  0                  0   H   
+     0.04333333333                  0                  0   H   
+     0.04666666667                  0                  0   H   
+              0.05                  0                  0   H   
+     0.05333333333                  0                  0   H   
+     0.05666666667                  0                  0   H   
+              0.06                  0                  0   H   
+     0.06333333333                  0                  0   H   
+     0.06666666667                  0                  0   H   
+              0.07                  0                  0   H   
+     0.07333333333                  0                  0   H   
+     0.07666666667                  0                  0   H   
+              0.08                  0                  0   H   
+     0.08333333333                  0                  0   H   
+     0.08666666667                  0                  0   H   
+              0.09                  0                  0   H   
+     0.09333333333                  0                  0   H   
+     0.09666666667                  0                  0   H   
+               0.1                  0                  0   H   
+      0.1033333333                  0                  0   H   
+      0.1066666667                  0                  0   H   
+              0.11                  0                  0   H   
+      0.1133333333                  0                  0   H   
+      0.1166666667                  0                  0   H   
+              0.12                  0                  0   H   
+      0.1233333333                  0                  0   H   
+      0.1266666667                  0                  0   H   
+              0.13                  0                  0   H   
+      0.1333333333                  0                  0   H   
+      0.1366666667                  0                  0   H   
+              0.14                  0                  0   H   
+      0.1433333333                  0                  0   H   
+      0.1466666667                  0                  0   H   
+              0.15                  0                  0   H   
+      0.1533333333                  0                  0   H   
+      0.1566666667                  0                  0   H   
+              0.16                  0                  0   H   
+      0.1633333333                  0                  0   H   
+      0.1666666667                  0                  0   H   
+              0.17                  0                  0   H   
+      0.1733333333                  0                  0   H   
+      0.1766666667                  0                  0   H   
+              0.18                  0                  0   H   
+      0.1833333333                  0                  0   H   
+      0.1866666667                  0                  0   H   
+              0.19                  0                  0   H   
+      0.1933333333                  0                  0   H   
+      0.1966666667                  0                  0   H   
+               0.2                  0                  0   H   
+      0.2033333333                  0                  0   H   
+      0.2066666667                  0                  0   H   
+              0.21                  0                  0   H   
+      0.2133333333                  0                  0   H   
+      0.2166666667                  0                  0   H   
+              0.22                  0                  0   H   
+      0.2233333333                  0                  0   H   
+      0.2266666667                  0                  0   H   
+              0.23                  0                  0   H   
+      0.2333333333                  0                  0   H   
+      0.2366666667                  0                  0   H   
+              0.24                  0                  0   H   
+      0.2433333333                  0                  0   H   
+      0.2466666667                  0                  0   H   
+              0.25                  0                  0   H   
+      0.2533333333                  0                  0   H   
+      0.2566666667                  0                  0   H   
+              0.26                  0                  0   H   
+      0.2633333333                  0                  0   H   
+      0.2666666667                  0                  0   H   
+              0.27                  0                  0   H   
+      0.2733333333                  0                  0   H   
+      0.2766666667                  0                  0   H   
+              0.28                  0                  0   H   
+      0.2833333333                  0                  0   H   
+      0.2866666667                  0                  0   H   
+              0.29                  0                  0   H   
+      0.2933333333                  0                  0   H   
+      0.2966666667                  0                  0   H   
+               0.3                  0                  0   H   
+      0.3033333333                  0                  0   H   
+      0.3066666667                  0                  0   H   
+              0.31                  0                  0   H   
+      0.3133333333                  0                  0   H   
+      0.3166666667                  0                  0   H   
+              0.32                  0                  0   H   
+      0.3233333333                  0                  0   H   
+      0.3266666667                  0                  0   H   
+              0.33                  0                  0   H   
+      0.3333333333                  0                  0   H  
+      0.3366666667                  0                  0   H  
+              0.34                  0                  0   H  
+      0.3433333333                  0                  0   H  
+      0.3466666667                  0                  0   H  
+              0.35                  0                  0   H  
+      0.3533333333                  0                  0   H  
+      0.3566666667                  0                  0   H  
+              0.36                  0                  0   H  
+      0.3633333333                  0                  0   H  
+      0.3666666667                  0                  0   H  
+              0.37                  0                  0   H  
+      0.3733333333                  0                  0   H  
+      0.3766666667                  0                  0   H  
+              0.38                  0                  0   H  
+      0.3833333333                  0                  0   H  
+      0.3866666667                  0                  0   H  
+              0.39                  0                  0   H  
+      0.3933333333                  0                  0   H  
+      0.3966666667                  0                  0   H  
+               0.4                  0                  0   H  
+      0.4033333333                  0                  0   H  
+      0.4066666667                  0                  0   H  
+              0.41                  0                  0   H  
+      0.4133333333                  0                  0   H  
+      0.4166666667                  0                  0   H  
+              0.42                  0                  0   H  
+      0.4233333333                  0                  0   H  
+      0.4266666667                  0                  0   H  
+              0.43                  0                  0   H  
+      0.4333333333                  0                  0   H  
+      0.4366666667                  0                  0   H  
+              0.44                  0                  0   H  
+      0.4433333333                  0                  0   H  
+      0.4466666667                  0                  0   H  
+              0.45                  0                  0   H  
+      0.4533333333                  0                  0   H  
+      0.4566666667                  0                  0   H  
+              0.46                  0                  0   H  
+      0.4633333333                  0                  0   H  
+      0.4666666667                  0                  0   H  
+              0.47                  0                  0   H  
+      0.4733333333                  0                  0   H  
+      0.4766666667                  0                  0   H  
+              0.48                  0                  0   H  
+      0.4833333333                  0                  0   H  
+      0.4866666667                  0                  0   H  
+              0.49                  0                  0   H  
+      0.4933333333                  0                  0   H  
+      0.4966666667                  0                  0   H  
+               0.5                  0                  0   H  
+      0.5033333333                  0                  0   H  
+      0.5066666667                  0                  0   H  
+              0.51                  0                  0   H  
+      0.5133333333                  0                  0   H  
+      0.5166666667                  0                  0   H  
+              0.52                  0                  0   H  
+      0.5233333333                  0                  0   H  
+      0.5266666667                  0                  0   H  
+              0.53                  0                  0   H  
+      0.5333333333                  0                  0   H  
+      0.5366666667                  0                  0   H  
+              0.54                  0                  0   H  
+      0.5433333333                  0                  0   H  
+      0.5466666667                  0                  0   H  
+              0.55                  0                  0   H  
+      0.5533333333                  0                  0   H  
+      0.5566666667                  0                  0   H  
+              0.56                  0                  0   H  
+      0.5633333333                  0                  0   H  
+      0.5666666667                  0                  0   H  
+              0.57                  0                  0   H  
+      0.5733333333                  0                  0   H  
+      0.5766666667                  0                  0   H  
+              0.58                  0                  0   H  
+      0.5833333333                  0                  0   H  
+      0.5866666667                  0                  0   H  
+              0.59                  0                  0   H  
+      0.5933333333                  0                  0   H  
+      0.5966666667                  0                  0   H  
+               0.6                  0                  0   H  
+      0.6033333333                  0                  0   H  
+      0.6066666667                  0                  0   H  
+              0.61                  0                  0   H  
+      0.6133333333                  0                  0   H  
+      0.6166666667                  0                  0   H  
+              0.62                  0                  0   H  
+      0.6233333333                  0                  0   H  
+      0.6266666667                  0                  0   H  
+              0.63                  0                  0   H  
+      0.6333333333                  0                  0   H  
+      0.6366666667                  0                  0   H  
+              0.64                  0                  0   H  
+      0.6433333333                  0                  0   H  
+      0.6466666667                  0                  0   H  
+              0.65                  0                  0   H  
+      0.6533333333                  0                  0   H  
+      0.6566666667                  0                  0   H  
+              0.66                  0                  0   H  
+      0.6633333333                  0                  0   H  
+      0.6666666667                  0                  0   H   
+              0.67                  0                  0   H   
+      0.6733333333                  0                  0   H   
+      0.6766666667                  0                  0   H   
+              0.68                  0                  0   H   
+      0.6833333333                  0                  0   H   
+      0.6866666667                  0                  0   H   
+              0.69                  0                  0   H   
+      0.6933333333                  0                  0   H   
+      0.6966666667                  0                  0   H   
+               0.7                  0                  0   H   
+      0.7033333333                  0                  0   H   
+      0.7066666667                  0                  0   H   
+              0.71                  0                  0   H   
+      0.7133333333                  0                  0   H   
+      0.7166666667                  0                  0   H   
+              0.72                  0                  0   H   
+      0.7233333333                  0                  0   H   
+      0.7266666667                  0                  0   H   
+              0.73                  0                  0   H   
+      0.7333333333                  0                  0   H   
+      0.7366666667                  0                  0   H   
+              0.74                  0                  0   H   
+      0.7433333333                  0                  0   H   
+      0.7466666667                  0                  0   H   
+              0.75                  0                  0   H   
+      0.7533333333                  0                  0   H   
+      0.7566666667                  0                  0   H   
+              0.76                  0                  0   H   
+      0.7633333333                  0                  0   H   
+      0.7666666667                  0                  0   H   
+              0.77                  0                  0   H   
+      0.7733333333                  0                  0   H   
+      0.7766666667                  0                  0   H   
+              0.78                  0                  0   H   
+      0.7833333333                  0                  0   H   
+      0.7866666667                  0                  0   H   
+              0.79                  0                  0   H   
+      0.7933333333                  0                  0   H   
+      0.7966666667                  0                  0   H   
+               0.8                  0                  0   H   
+      0.8033333333                  0                  0   H   
+      0.8066666667                  0                  0   H   
+              0.81                  0                  0   H   
+      0.8133333333                  0                  0   H   
+      0.8166666667                  0                  0   H   
+              0.82                  0                  0   H   
+      0.8233333333                  0                  0   H   
+      0.8266666667                  0                  0   H   
+              0.83                  0                  0   H   
+      0.8333333333                  0                  0   H   
+      0.8366666667                  0                  0   H   
+              0.84                  0                  0   H   
+      0.8433333333                  0                  0   H   
+      0.8466666667                  0                  0   H   
+              0.85                  0                  0   H   
+      0.8533333333                  0                  0   H   
+      0.8566666667                  0                  0   H   
+              0.86                  0                  0   H   
+      0.8633333333                  0                  0   H   
+      0.8666666667                  0                  0   H   
+              0.87                  0                  0   H   
+      0.8733333333                  0                  0   H   
+      0.8766666667                  0                  0   H   
+              0.88                  0                  0   H   
+      0.8833333333                  0                  0   H   
+      0.8866666667                  0                  0   H   
+              0.89                  0                  0   H   
+      0.8933333333                  0                  0   H   
+      0.8966666667                  0                  0   H   
+               0.9                  0                  0   H   
+      0.9033333333                  0                  0   H   
+      0.9066666667                  0                  0   H   
+              0.91                  0                  0   H   
+      0.9133333333                  0                  0   H   
+      0.9166666667                  0                  0   H   
+              0.92                  0                  0   H   
+      0.9233333333                  0                  0   H   
+      0.9266666667                  0                  0   H   
+              0.93                  0                  0   H   
+      0.9333333333                  0                  0   H   
+      0.9366666667                  0                  0   H   
+              0.94                  0                  0   H   
+      0.9433333333                  0                  0   H   
+      0.9466666667                  0                  0   H   
+              0.95                  0                  0   H   
+      0.9533333333                  0                  0   H   
+      0.9566666667                  0                  0   H   
+              0.96                  0                  0   H   
+      0.9633333333                  0                  0   H   
+      0.9666666667                  0                  0   H   
+              0.97                  0                  0   H   
+      0.9733333333                  0                  0   H   
+      0.9766666667                  0                  0   H   
+              0.98                  0                  0   H   
+      0.9833333333                  0                  0   H   
+      0.9866666667                  0                  0   H   
+              0.99                  0                  0   H   
+      0.9933333333                  0                  0   H   
+      0.9966666667                  0                  0   H   
+
+Isotope
+0
+1 +1.0
+
+PBCFlag
+1
+
+################################################################################
+# ------- Parameters for relaxation simulations -------
+#
+# RFlag is the relaxation method flag.
+#  1  ==>  Steepest descent
+#  2  ==>  Conjugate gradient
+#  3  ==>  Variable metric
+#  4  ==>  Find transition state using mode following
+#  5  ==>  Relax cell and atomic coordinates
+#  6  ==>  BFGS
+# Making RFlag negative means numeric rather than analytic forces are used.    
+#
+# CellRelaxMode defines the way the cell vectors are relaxed:
+#  0  ==>  Free relaxation. Note that this requires the cell vectors to be
+#          entered in a standard manner:
+#          a1 = ( a,  0,  0)
+#          a2 = (bx, by,  0)
+#          a3 = (cx, cy, cz)
+#  1  ==>  Volume relaxed at fixed shape
+#  2  ==>  Relax along axis 1 only
+#  3  ==>  Relax along axis 2 only
+#  4  ==>  Relax along axis 3 only
+#
+# FTol is the highest force allowed in a relaxed structure. Units are
+# rydbergs/bohr radius.
+#
+# MaxDisplacement is the maximum distance any atom can move in any one update.
+# Currently only used by variable metric minimization.
+#
+# StressTol is the highest trace of the stress allowed in a relaxed structure.
+# Units are MBars.
+#
+# Pinned determines which atoms are pinned. Variables are:
+# Number of pinned atoms and the index for each pinned atom.
+#
+# Constrain determines constraints to be applied to atomic motion. Variables
+# are:
+# Number of constrained atoms 
+# The index of atom and normal to plane of constraint
+#
+# ReactionCoordinate defines the constraint direction for a drag calculation of
+# a minimum energy pathway. Variables are:
+# Type
+# Coordinates of atoms
+#
+# MaxNSteps: see molecular dynamics section
+################################################################################
+RFlag
+3
+
+CellRelaxMode
+0
+
+FTol
+0.0001
+
+MaxDisplacement
+0.1
+
+StressTol
+0.001
+
+Pinned
+0
+1
+
+Constrain
+0
+1 1.0 1.0 0.0
+
+ReactionCoordinate
+0
+
+################################################################################
+# ------- Parameters for molecular dynamics simulations -------
+#
+# AtomTemperature is the temperature of the atoms in kelvin.
+#
+# TemperatureTolerance is the fractional error in the temperature allowed
+# before temperature rescaling. A negative value means constant energy MD is to
+# be used.
+#
+# NoseHoover is set if a Nose-Hoover thermostat is to be used. The value given
+# is the relaxation time in femto seconds. A negative value turns this
+# thermostat off.
+# NOTE: This works alongside temperature rescaling. To use only this thermostat,
+# set TemperatureTolerance to a negative value.
+#
+# KickAtom allows for stochastic events that give atoms sudden increases in
+# kinetic energy. The values are: Number of atoms that can be kicked
+#                                     (0 ==> No kicking)
+#                                 The energy of a kick (Ry)
+#                                 The number of time steps between kicks
+# MaxNSteps is the number of time steps to be used for MD, or the maximum number
+# of line minimizations to be used in static relaxation.
+#
+# MDTimeStep is the MD time step in femto seconds.
+#
+# AutoSave gives the number of time steps between subsequent saves of atomic
+# configurations. A value < 1 implies save only at the end of the simulation.
+################################################################################
+AtomTemperature
+300.0
+
+TemperatureTolerance
+0.1
+
+NoseHoover
+-1.0
+
+KickAtom
+0 0.05 200
+
+MaxNSteps
+1000
+
+MDTimeStep
+1.0
+
+AutoSave
+10
+
+################################################################################
+# ------- Parameters for defined motion simulations -------
+#
+# DefinedMotion corresponds to the displacement of one atom following a given
+# trajectory. The values are:
+# Index for the moving atom
+# Type of motion:
+#   0) constant velocity (a0/fs)
+#   1) oscillating
+# Type of evolution for the electrons:
+#   0) Adiabatic
+#   1) Non-adiabatic
+# Parameters for the motion in x, y and z.
+#   o For constant velocity: the component of the velocity.
+#   o For an oscillating atom: amplitude, angular frequency and phase
+################################################################################
+DefinedMotion
+1 0 0
+0.1 0.0 0.0
+
+################################################################################
+# ------- Parameters controlling I/O -------
+#
+# Verbosity determines the amount of output produced by the program.
+#
+# WriteBondData sets two flags and a distance related to bond data.
+#  flag 1: bond lengths (1 ==> write; 0 ==> do not write)
+#  flag 2: bond angles  (1 ==> write; 0 ==> do not write)
+#  distance: the cutoff radius used to distinguish between atoms that are or
+#            are not bonded to each other. 
+#
+# MovieRate is the number of MD time steps in between frames of the movie
+# dumped to the .xyz file. A value of 0 implies no frames are to be stored.
+#
+# VelocityRate is the number of MD time steps between dumps of atomic
+# velocities to the .vel file. A value of 0 implies no velocities are to be
+# stored.
+#
+# WavefunctionFlag determines whether the eigenvectors are to be written to a
+# file:
+#  0  ==>  Do not write out eigenvectors
+#  1  ==>  Write out eigenvectors
+#  2  ==>  Write out eigenvectors and the overlap matrix
+#          (required by plotdos)
+#
+# PartialPopulationFlag determines whether Mulliken population analysis is to
+# be applied to eigenstates with energies within a given window or not. This is
+# useful for determining the location in space of localised states.
+#  0  ==>  Do not evaluate partial populations
+#  n  ==>  Evaluate partial populations for |n| energy
+#          windows. This requires energy windows to be
+#          defined (ELo and EHi in eV). If n>0, the
+#          energies are defined relative to the vacuum.
+#          If n <0 the energies are defined relative to
+#          the Fermi level.
+#
+# HamiltonianFlag determines if the Hamiltonian (and overlap) matrix is to be
+# written out to file or not.
+#  0  ==> Do not write out Hamiltonian
+#  1  ==> Do write out Hamiltonian
+#
+# WriteEnergyFlag determines if a detailed breakdown of the energy is written
+# out or not.
+#  0  ==>  Do not write out breakdown
+#  1  ==>  Write out breakdown
+################################################################################
+Verbosity
+1
+
+WriteBondData
+0 0 6.0
+
+MovieRate
+0
+
+VelocityRate
+0
+
+WavefunctionFlag
+0
+
+PartialPopulationFlag
+0
+0.0 1.0
+
+WriteEnergyFlag
+0
+
+HamiltonianFlag
+0
+
+################################################################################
+# ------- Parameters that should seldom be changed -------
+#
+# BasisFlag determines whether or not auxiliary basis functions are used.
+#  0  ==>  Include all functions
+#  n  ==>  Ignore last n angular momentum states
+#
+# Seed is the seed for the random number generator
+#
+# OnSiteElectrostatics is set when the 1/r terms are to be neglected in
+# self-consistent tight binding, but the onsite Hubbard U is to be retained.
+# 0  ==>  Keep inter-site
+# 1  ==>  No inter-site
+################################################################################
+BasisFlag
+0
+
+Seed
+12345
+ 
+OnSiteElectrostatics 
+0

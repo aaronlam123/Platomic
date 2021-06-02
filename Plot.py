@@ -5,6 +5,8 @@ import numpy as np
 import scipy.special as sp
 import custom_pyqtgraph
 
+from Transmission.Transmission import get_energy_gamma_transmission_XYZ
+
 
 """ Deprecated functions
 def draw_atom(radius, position, widget, colour, wireframe=False):
@@ -120,3 +122,11 @@ def draw_sphOrbWf(atoms, widget, mode, rows, cols, scaler, r, g, b, a):
         mi = gl.GLMeshItem(meshdata=md, smooth=True, edgeColor=(r, g, b, a), drawEdges=True, drawFaces=False)
         mi.translate(*atoms[i].get_xyz())
         widget.addItem(mi)
+
+
+def draw_transmission(widget):
+    energy, gamma, transmission = get_energy_gamma_transmission_XYZ(0, 2, 667)
+    vertexes = np.dstack((energy.flatten(), gamma.flatten()))
+    vertexes = np.dstack((vertexes, transmission.flatten()))
+    mi = gl.GLMeshItem(vertexes=vertexes, color=(1, 1, 1, 1))
+    widget.addItem(mi)

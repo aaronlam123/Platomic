@@ -31,9 +31,9 @@ def orbital(eig_val, m, l, rows, cols, scaler):
 
     return gl.MeshData(vertexes=verts, faces=faces)
 
-    # Adapted from https://pyqtgraph.readthedocs.io/en/latest/_modules/pyqtgraph/opengl/GLViewWidget.html
 
 
+# Adapted from https://pyqtgraph.readthedocs.io/en/latest/_modules/pyqtgraph/opengl/GLViewWidget.html
 def scaledQImage(widget, multiplier):
     """
     Read the current buffer pixels out as a QImage.
