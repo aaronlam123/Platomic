@@ -61,8 +61,8 @@ def correct_quantum(quantum):
 def create_orbital_dict(file):  # returns orbitals for each element
     orb_dict = {}
     quantum_dict = {}
-    elements = get_last_char(file, "Chemical symbol           :")
-    orbitals = get_last_char(file, "Number of orbitals        :")
+    elements = get_last_char("Chemical symbol           :", file)
+    orbitals = get_last_char("Number of orbitals        :", file)
     assert len(elements) == len(orbitals) != 0
     for i in range(len(elements)):
         new_entry = {str(elements[i]): orbitals[i]}
@@ -151,7 +151,7 @@ def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms u
     return atoms
 
 
-def xyz_to_plato_input(xyz_file, input_file="default.in"):
+def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -178,11 +178,12 @@ def xyz_to_plato_input(xyz_file, input_file="default.in"):
 
 
 if __name__ == '__main__':
-    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    pass
+    #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
-    for i in range(12):
-        atoms_main[i].check()
-        print('\n')
+    #for i in range(12):
+        #atoms_main[i].check()
+        #print('\n')
 
-    #xyz_to_plato_input("benzene.xyz"))
+    #xyz_to_plato_input("benzene.xyz")
 

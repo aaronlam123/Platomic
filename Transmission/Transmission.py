@@ -54,7 +54,7 @@ def get_energy_gamma_transmission(start, end, points, input_file="H300_ref.in"):
             continue
         number = round(i, 4)
         file = str(name) + "_" + str(number) + "_trans.csv"
-        ds = pd.read_csv('./csv3/' + file, sep=',', header=0)
+        ds = pd.read_csv('./csv4/' + file, sep=',', header=0)
 
         if energy is None:
             energy = np.array(ds["E(Ry)"])
@@ -76,7 +76,7 @@ def get_energy_gamma_transmission_XYZ(start, end, points, input_file="H300_ref.i
         name = os.path.splitext(basename)[0]
         number = round(i, 4)
         file = str(name) + "_" + str(number) + "_trans.csv"
-        ds = pd.read_csv('./Transmission/csv3/' + file, sep=',', header=0)
+        ds = pd.read_csv('./Transmission/csv4/' + file, sep=',', header=0)
         for j in range(len(np.array(ds["E(Ry)"]))):
             X.append(i)
             Y.append(np.array(ds["E(Ry)"], dtype=float)[j])
@@ -100,15 +100,24 @@ def get_energy_gamma_transmission_tuple(start, end, points, divide, input_file="
 
 
 if __name__ == '__main__':
-    #all_input_files(0, 2, 667)
-    #run_input_files(0, 2, 667)
+    x_ticks = [0, 0.5, 1, 1.5, 2]
+    y_ticks = [-1, -0.5, 0, 0.5, 1]
 
+    plt.rcParams.update({'font.size': 10})
     energy, gamma, transmission = get_energy_gamma_transmission(0, 2, 667)
     energy, gamma = np.meshgrid(gamma, energy)
-    print(energy.shape)
-    print(gamma.shape)
-    print(transmission.shape)
     fig = plt.figure()
     ax = fig.gca(projection='3d')
-    ax.plot_surface(energy, gamma, transmission, rstride=1, cstride=1, cmap='inferno', linewidth=0, antialiased=True)
+    surf = ax.plot_surface(energy, gamma, transmission, rstride=1, cstride=1, cmap='inferno', linewidth=0, antialiased=True)
+    fig.colorbar(surf, ax=ax, shrink=0.4, aspect=15, pad=0.15, fraction=0.05)
+    ax.view_init(elev=15., azim=-25)
+    ax.set_ylabel('Energy (Ry)')
+    ax.set_xlabel('Gamma')
+    ax.set_zlabel('Transmission')
+    ax.set_xticks(x_ticks)
+    ax.set_yticks(y_ticks)
+    ax.xaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+    ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
+    ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     plt.show()
+
