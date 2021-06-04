@@ -1,5 +1,5 @@
 from pyqtgraph.Qt import QtCore, QtGui
-from Plot import draw_atom, draw_bond
+from plot import draw_atom, draw_bond
 import pyqtgraph.opengl as gl
 import numpy as np
 import sys

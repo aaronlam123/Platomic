@@ -1,6 +1,6 @@
 from matplotlib import cm
 
-from Input import *
+from input import *
 from subprocess import PIPE, run
 import pandas as pd
 import numpy as np

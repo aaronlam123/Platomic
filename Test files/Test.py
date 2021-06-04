@@ -3,7 +3,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 import scipy.special as sp
-from custom_pyqtgraph import orbital
+from custom import orbital
 
 np.os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "2"
 app = QtGui.QApplication([])

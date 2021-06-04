@@ -1,9 +1,8 @@
 from PyQt5 import QtWidgets, QtGui, uic
-from Plot import *
-from Input import input_file_setup, xyz_to_plato_input
-from custom_pyqtgraph import scaledQImage
+from plot import *
+from input import input_file_setup, xyz_to_plato_input
+from custom import scaledQImage
 from subprocess import PIPE, run
-import pyqtgraph as pg
 import math
 import os
 import numpy as np
@@ -21,9 +20,9 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__(*args, **kwargs)
 
         # Load the UI Page
-        uic.loadUi('mainwindow5.ui', self)
+        uic.loadUi('config/mainwindow5.ui', self)
         self.setWindowTitle('Platomic')
-        self.setWindowIcon(QtGui.QIcon("platomic.png"))
+        self.setWindowIcon(QtGui.QIcon("config/platomic.png"))
         self.multiplier = int(screen_width / 1920)
 
         # Initialise state
@@ -162,7 +161,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         ### AttributeFileTab
         # attributeTextEdit
-        with open("attributes.txt", "r") as f:
+        with open("config/attributes.txt", "r") as f:
             contents = f.readlines()
         for line, content in enumerate(contents):
             self.attributeTextEdit.insertPlainText(content)
@@ -190,7 +189,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
-        self.atoms = input_file_setup(self.inputFilename + ".out", "attributes.txt", self.inputFilename + ".wf")
+        self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
         self.draw()
@@ -292,8 +291,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # sphOrbWfCheckBox
 
     def draw(self):
-        draw_transmission(self.openGLWidget)
-        return
+        #draw_transmission(self.openGLWidget)
+        #return
         atoms_off = self.toggleAtomsButton.isChecked()
         self.openGLWidget.clear()
 
@@ -416,7 +415,7 @@ class MainWindow(QtWidgets.QMainWindow):
     # attributeTextEdit
     # saveAttributeFileButton
     def onSaveAttributeFileButtonClicked(self):
-        with open("attributes.txt", 'w') as f:
+        with open("config/attributes.txt", 'w') as f:
             f.write(str(self.attributeTextEdit.toPlainText()))
         self.writeToLogs("Attribute file attributes.txt modified successfully. Settings will be applied on next "
                          "execution", "green")
@@ -449,8 +448,7 @@ if __name__ == '__main__':
     # size = screen.size()
     # print('Size: %d x %d' % (size.width(), size.height()))
 
-    default_input = input_file_setup("benzene.out", "attributes.txt", "benzene.wf")
-    # atoms_input = input_file_setup("OCTANE10.out", "attributes.txt", "OCTANE10.wf")
+    default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
     main = MainWindow(default_input, resolution.width)
     main.show()
     sys.exit(app.exec_())

@@ -2,7 +2,7 @@ import ntpath
 import pyqtgraph
 from PyQt5 import QtGui
 import shlex
-from Atom import Atom
+from atom import Atom
 import os
 
 
@@ -15,7 +15,7 @@ def lines_that_start_with(string, f):  # returns the line which contains string 
 
 
 # returns last char which contains string in f
-def get_last_char(file, string):
+def get_last_char(string, file):
     array = []
     with open(file, "r") as f:
         for line in lines_that_contain(string, f):
@@ -178,7 +178,7 @@ def xyz_to_plato_input(xyz_file, input_file="default.in"):
 
 
 if __name__ == '__main__':
-    atoms_main = input_file_setup("benzene.out", "attributes.txt", "benzene.wf")
+    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
     for i in range(12):
         atoms_main[i].check()

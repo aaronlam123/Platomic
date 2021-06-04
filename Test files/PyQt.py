@@ -62,7 +62,7 @@ class Widget(QtWidgets.QWidget): #or use QtWidgets.QOpenGLWidget
                 x = radius * np.outer(np.cos(u), np.sin(v)) + hex_coords[i][0]
                 y = radius * np.outer(np.sin(u), np.sin(v)) + hex_coords[i][1]
                 z = radius * np.outer(np.ones(np.size(u)), np.cos(v)) + center_z
-                self.axes.plot_wireframe(x, y, z, color='red', linewidth=0.01)  # plot wireframe
+                self.axes.plot_wireframe(x, y, z, color='red', linewidth=0.1)  # plot wireframe
                 self.axes.plot([hex_coords[i][0], hex_coords[i - 1][0]],
                                [hex_coords[i][1], hex_coords[i - 1][1]],
                                [0, 0], color='black')  # plot carbon bonds
