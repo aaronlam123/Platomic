@@ -75,7 +75,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="setupSettingsTab">
        <attribute name="title">
@@ -673,7 +673,7 @@ p, li { white-space: pre-wrap; }
          </rect>
         </property>
         <property name="text">
-         <string>Rows: 10</string>
+         <string>Rows: 5</string>
         </property>
        </widget>
        <widget class="QLabel" name="bondColSliderLabel">
@@ -686,7 +686,7 @@ p, li { white-space: pre-wrap; }
          </rect>
         </property>
         <property name="text">
-         <string>Columns: 20</string>
+         <string>Columns: 10</string>
         </property>
        </widget>
        <widget class="QLabel" name="label_18">

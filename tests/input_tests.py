@@ -1,8 +1,5 @@
-import io
 import unittest
-
 import numpy as np
-
 from input import *
 
 
@@ -10,6 +7,9 @@ class TestInput(unittest.TestCase):
     def setUp(self):
         with open("benzene_.in", "w") as f:
             pass
+
+    def tearDown(self):
+        os.remove("benzene_.in")
 
     def test_lines_that_contain(self):
         with open("test_files/test_output.txt", "r") as self.f:
@@ -261,6 +261,3 @@ class TestInput(unittest.TestCase):
         with open("benzene_.in") as generated:
             with open("test_files/correct.in") as correct:
                 self.assertListEqual(list(generated.readlines()), list(correct.readlines()))
-
-    def tearDown(self):
-        os.remove("benzene_.in")

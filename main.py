@@ -82,7 +82,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bondThresholdSlider.valueChanged.connect(self.setBondThresholdSliderLabel)
 
         # switchToAttrFileTabButton
-        self.switchToAttrFileTabButton.clicked.connect(self.onSwitchToAttrfileTabButtonClicked)
+        self.switchToAttrFileTabButton.clicked.connect(self.onSwitchToAttrFileTabButtonClicked)
 
         ### orbitalSettingsTab
         # advOrbWfCheckBox
@@ -281,7 +281,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # switchToAttrFileTabButton
 
-    def onSwitchToAttrfileTabButtonClicked(self):
+    def onSwitchToAttrFileTabButtonClicked(self):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.attributeFileTab))
 
         ### orbitalSettingsTab
