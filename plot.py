@@ -124,9 +124,27 @@ def draw_sphOrbWf(atoms, widget, mode, rows, cols, scaler, r, g, b, a):
         widget.addItem(mi)
 
 
-def draw_transmission(widget):
-    energy, gamma, transmission = get_energy_gamma_transmission_XYZ(0, 2, 667)
-    vertexes = np.dstack((energy.flatten(), gamma.flatten()))
-    vertexes = np.dstack((vertexes, transmission.flatten()))
-    mi = gl.GLMeshItem(vertexes=vertexes, color=(1, 1, 1, 1))
-    widget.addItem(mi)
+def draw_sphOrbFaces(atoms, widget, mode, rows, cols, scaler, r, g, b, a):
+    for i in range(len(atoms)):
+        radius = np.sum(np.square(atoms[i].get_eigenvector(mode)))
+        md = gl.MeshData.sphere(rows=rows, cols=cols, radius=radius * scaler)
+        mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(r, g, b, a), drawEdges=False, drawFaces=True, shader='balloon')
+        mi.translate(*atoms[i].get_xyz())
+        mi.setGLOptions('translucent')
+        widget.addItem(mi)
+
+
+def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, b, a):
+    for i in range(len(atoms)):
+        for j in range(len(atoms[i].get_quantum_dict())):
+            quantum_dict = atoms[i].get_quantum_dict()
+            tr = pg.Transform3D()
+            tr.rotate(theta * 180 / np.pi, 0, 0, 1)
+            tr.rotate(phi * 180 / np.pi, 0, 1, 0)
+            md = custom.orbital(atoms[i].get_eigenvector(value)[j], quantum_dict[j][2], quantum_dict[j][1], row, cols, scaler)
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(r, g, b, a), drawEdges=False, drawFaces=True)
+            mi.setTransform(tr)
+            mi.translate(*atoms[i].get_xyz())
+            mi.setGLOptions('translucent')
+            widget.addItem(mi)
+

@@ -10,7 +10,6 @@ import sys
 import pyautogui
 import traceback
 
-
 np.seterr(divide='ignore', invalid='ignore')
 
 
@@ -86,16 +85,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
         ### orbitalSettingsTab
         # advOrbWfCheckBox
-        self.advOrbWfCheckBox.toggled.connect(self.draw)
+        self.advOrbWfCheckBox.stateChanged.connect(self.draw)
 
         # advOrbHorzCheckBox
-        self.advOrbHorzCheckBox.toggled.connect(self.draw)
+        self.advOrbHorzCheckBox.stateChanged.connect(self.draw)
 
         # advOrbVertCheckBox
-        self.advOrbVertCheckBox.toggled.connect(self.draw)
+        self.advOrbVertCheckBox.stateChanged.connect(self.draw)
 
         # sphOrbWfCheckBox
-        self.sphOrbWfCheckBox.toggled.connect(self.draw)
+        self.sphOrbWfCheckBox.stateChanged.connect(self.draw)
+
+        # sphOrbFacesCheckBox
+        self.sphOrbFacesCheckBox.stateChanged.connect(self.draw)
+
+        # advOrbFacesCheckBox
+        self.advOrbFacesCheckBox.stateChanged.connect(self.draw)
 
         # orbColSlider
         self.orbCol = 20
@@ -196,6 +201,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
 
         # generateInputFileButton
+
     def onGenerateInputFileButtonClicked(self):
         self.inputTextEdit.clear()
         try:
@@ -211,14 +217,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # openFileButton
         # openFileLineEdit
+
     def onOpenFileButtonClicked(self):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(parent=self, caption='Open file',
-                                                    filter="XYZ File (*.xyz);;All Files (*.*)")
+                                                            filter="XYZ File (*.xyz);;All Files (*.*)")
 
         if filename:
             self.openFileLineEdit.setText(filename)
 
         # SwitchToInputFileTabButton
+
     def onSwitchToInputFileTabButtonClicked(self):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.inputFileTab))
 
@@ -291,8 +299,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # sphOrbWfCheckBox
 
     def draw(self):
-        #draw_transmission(self.openGLWidget)
-        #return
         atoms_off = self.toggleAtomsButton.isChecked()
         self.openGLWidget.clear()
 
@@ -315,6 +321,14 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.sphOrbWfCheckBox.isChecked():
             draw_sphOrbWf(self.atoms, self.openGLWidget, self.mode, self.orbRow, self.orbCol, self.orbScaler, self.R,
                           self.G, self.B, self.A)
+
+        if self.sphOrbFacesCheckBox.isChecked():
+            draw_sphOrbFaces(self.atoms, self.openGLWidget, self.mode, self.orbRow, self.orbCol, self.orbScaler, self.R,
+                             self.G, self.B, self.A)
+
+        if self.advOrbFacesCheckBox.isChecked():
+            draw_advOrbFaces(self.atoms, self.openGLWidget, self.mode, self.orbRow, self.orbCol, self.orbScaler,
+                          self.theta, self.phi, self.R, self.G, self.B, self.A)
 
         # orbColSlider
         # orbColSliderLabel
@@ -392,7 +406,6 @@ class MainWindow(QtWidgets.QMainWindow):
                                                             filter="PNG Image (*.png);;JPEG Image (*.jpg);;All Files (*.*)")
 
         scaledQImage(self.openGLWidget, self.multiplier).save(filename)
-
 
     # toggleAtomsButton
     def onToggleAtomsButtonClicked(self):

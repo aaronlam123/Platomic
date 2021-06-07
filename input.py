@@ -178,12 +178,12 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
 
 
 if __name__ == '__main__':
-    pass
-    #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    #pass
+    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
-    #for i in range(12):
-        #atoms_main[i].check()
-        #print('\n')
+    for i in range(12):
+        atoms_main[i].check()
+        print('\n')
 
     #xyz_to_plato_input("benzene.xyz")
 
