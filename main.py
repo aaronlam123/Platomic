@@ -57,12 +57,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.atomRowSlider.valueChanged.connect(self.setAtomRowSliderLabel)
 
         # bondColSlider
-        self.bondCol = 10
+        self.bondCol = 20
         # bondColSliderLabel
         self.bondColSlider.valueChanged.connect(self.setBondColSliderLabel)
 
         # bondRowSlider
-        self.bondRow = 5
+        self.bondRow = 10
         # bondRowSliderLabel
         self.bondRowSlider.valueChanged.connect(self.setBondRowSliderLabel)
 
@@ -131,7 +131,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.R = 1.00
         self.G = 0.00
         self.B = 1.00
-        self.A = 1.00
+        self.A = 0.50
         self.colourRSlider.valueChanged.connect(self.setColourRSliderLabel)
         self.colourGSlider.valueChanged.connect(self.setColourGSliderLabel)
         self.colourBSlider.valueChanged.connect(self.setColourBSliderLabel)
@@ -182,10 +182,14 @@ class MainWindow(QtWidgets.QMainWindow):
     ### setupSettingsTab
     # executeButton
     def onExecuteButtonClicked(self):
+        if os.name == 'nt':
+            self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
+            return
         try:
             command = "(cd ./Plato/bin && ./tb1 ../../" + self.inputFilename + ")"
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
+            return
         result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
         if result.returncode:
             self.writeToLogs(result.stderr, "red")
@@ -195,7 +199,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
-        self.horizontalSlider.setMinimum(0)
+        #self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
         self.draw()
         self.writeToLogs("Execution carried out successfully.", "green")
@@ -211,8 +215,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 contents = f.readlines()
             for line, content in enumerate(contents):
                 self.inputTextEdit.insertPlainText(content)
+        except FileNotFoundError:
+            self.writeErrorToLogs("Error: No default input file found, check that config/default.in exists.")
+            return
         except IOError:
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
+            return
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
 
         # openFileButton

@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import MagicMock
 from PyQt5.QtCore import Qt
+
 from main import *
 from PyQt5.QtTest import QTest
 
@@ -15,9 +16,12 @@ class TestMain(unittest.TestCase):
         self.main = MainWindow(default_input, resolution.width)
         with open("benzene.in", "w") as f:
             pass
+        with open("benzene_.in", "w") as f:
+            pass
         with open("attributes.txt", "w") as f:
             pass
         self.main.writeToLogs = MagicMock()
+        self.main.writeErrorToLogs = MagicMock()
         self.main.draw = MagicMock()
         self.main.openGLWidget.setBackgroundColor = MagicMock()
         self.main.draw_advOrbWf = MagicMock()
@@ -27,30 +31,65 @@ class TestMain(unittest.TestCase):
         self.main.draw_sphOrbFaces = MagicMock()
         self.main.draw_advOrbFaces = MagicMock()
 
-        #self.main.toggleAtomsButton.setChecked(False)
-        #self.main.advOrbWfCheckBox.setChecked(False)
-        #self.main.advOrbHorzCheckBox.setChecked(False)
-        #self.main.advOrbVertCheckBox.setChecked(False)
-        #self.main.sphOrbWfCheckBox.setChecked(False)
-        #self.main.sphOrbFacesCheckBox.setChecked(False)
-        #self.main.advOrbFacesCheckBox.setChecked(False)
+        # self.main.toggleAtomsButton.setChecked(False)
+        # self.main.advOrbWfCheckBox.setChecked(False)
+        # self.main.advOrbHorzCheckBox.setChecked(False)
+        # self.main.advOrbVertCheckBox.setChecked(False)
+        # self.main.sphOrbWfCheckBox.setChecked(False)
+        # self.main.sphOrbFacesCheckBox.setChecked(False)
+        # self.main.advOrbFacesCheckBox.setChecked(False)
 
     def tearDown(self):
         os.remove("benzene.in")
+        os.remove("benzene_.in")
         os.remove("attributes.txt")
-        with open("../config/attributes.txt", 'r') as source:
-            with open("config/attributes.txt", 'w') as f:
-                for line in source:
-                    f.write(line)
+        copy_file_from_main_config("config/attributes.txt")
 
-    def test_onExecuteButtonClicked(self):
-        pass
+    if os.name == 'nt':
+        def test_onExecuteButtonClicked_on_windows(self):
+            QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with("Plato back-end execution is not supported on Windows systems.")
+    else:
+        def test_onExecuteButtonClicked_with_no_input_file(self):
+            QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with(
+                "No Plato input file found, click generate before clicking execute.")
+            unittest.TestCase.assertRaises(self, expected_exception=TypeError)
 
-    def test_onGenerateInputFileButtonClicked(self):
-        pass
+        def test_onExecuteButtonClicked_with_input_file(self):
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+            QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+            QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called()
+            self.main.draw.assert_called_once()
+
+    def test_onGenerateInputFileButtonClicked_and_file_exists(self):
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+        self.assertEqual(self.main.inputFilename, "benzene_")
+        with open("test_files/correct.in") as correct:
+            self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
+        self.main.writeToLogs.assert_called_with("Input file benzene_.in generated successfully.", "green")
+
+    def test_onGenerateInputFileButtonClicked_with_nonexistent_file(self):
+        self.main.openFileLineEdit.setText("test_files/nonexistent.xyz")
+        QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+        self.main.writeErrorToLogs.assert_called_with("Error: No .xyz file selected to generate Plato input file.")
+        unittest.TestCase.assertRaises(self, expected_exception=IOError)
+
+    def test_onGenerateInputFileButtonClicked_with_nonexistent_default_input(self):
+        os.remove("config/default.in")
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+        self.main.writeErrorToLogs.assert_called_with(
+            "Error: No default input file found, check that config/default.in exists.")
+        unittest.TestCase.assertRaises(self, expected_exception=FileNotFoundError)
+        copy_file_from_main_config("config/default.in")
 
     def test_onOpenFileButtonClicked(self):
         pass
+        #QTest.mouseClick(self.main.openFileButton, Qt.LeftButton)
+        #self.assertEqual(self.main.openFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/benzene.xyz")
 
     def test_onSwitchToInputFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToInputFileTabButton, Qt.LeftButton)
@@ -104,15 +143,15 @@ class TestMain(unittest.TestCase):
 
     def test_draws_advOrbWf(self):
         pass
-        #QTest.mousePress(self.main.advOrbWfCheckBox, Qt.LeftButton)
-        #self.main.advOrbWfCheckBox.pressed()
-        #QTest.mouseDClick(self.main.advOrbWfCheckBox, Qt.LeftButton)
-        #self.main.draw()
-        #self.main.draw_advOrbWf()
+        # QTest.mousePress(self.main.advOrbWfCheckBox, Qt.LeftButton)
+        # self.main.advOrbWfCheckBox.pressed()
+        # QTest.mouseDClick(self.main.advOrbWfCheckBox, Qt.LeftButton)
+        # self.main.draw()
+        # self.main.draw_advOrbWf()
 
-        #QTest.mouseClick(self.main.advOrbWfCheckBox, Qt.LeftButton)
-        #self.main.draw.assert_called_once()
-        #self.main.draw_advOrbWf.assert_called_once()
+        # QTest.mouseClick(self.main.advOrbWfCheckBox, Qt.LeftButton)
+        # self.main.draw.assert_called_once()
+        # self.main.draw_advOrbWf.assert_called_once()
 
     def test_setOrbColSliderLabel(self):
         self.main.orbColSlider.setValue(60)
@@ -205,6 +244,13 @@ class TestMain(unittest.TestCase):
 
     def test_writeErrorToLogs(self):
         pass
+
+
+def copy_file_from_main_config(filename):
+    with open("../" + filename, 'r') as source:
+        with open(filename, 'w') as f:
+            for line in source:
+                f.write(line)
 
 
 if __name__ == "__main__":

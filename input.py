@@ -155,8 +155,11 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
-    with open(input_file, "r") as f:
-        contents = f.readlines()
+    try:
+        with open(input_file, "r") as f:
+            contents = f.readlines()
+    except IOError:
+        raise FileNotFoundError
 
     try:
         with open(xyz_file, "r") as xyz:
@@ -164,7 +167,7 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
             xyz.readline()
             xyz_contents = xyz.readlines()
     except IOError:
-        raise
+        raise IOError
 
     contents.insert(243, natoms)
     for line, content in enumerate(xyz_contents):
