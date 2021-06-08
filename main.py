@@ -47,22 +47,22 @@ class MainWindow(QtWidgets.QMainWindow):
 
         ### atomSettingsTab
         # atomColSlider
-        self.atomCol = 20
+        self.atomCol = self.atomColSlider.value()
         # atomColSliderLabel
         self.atomColSlider.valueChanged.connect(self.setAtomColSliderLabel)
 
         # atomRowSlider
-        self.atomRow = 10
+        self.atomRow = self.atomRowSlider.value()
         # atomRowSliderLabel
         self.atomRowSlider.valueChanged.connect(self.setAtomRowSliderLabel)
 
         # bondColSlider
-        self.bondCol = 20
+        self.bondCol = self.bondColSlider.value()
         # bondColSliderLabel
         self.bondColSlider.valueChanged.connect(self.setBondColSliderLabel)
 
         # bondRowSlider
-        self.bondRow = 10
+        self.bondRow = self.bondRowSlider.value()
         # bondRowSliderLabel
         self.bondRowSlider.valueChanged.connect(self.setBondRowSliderLabel)
 
@@ -71,12 +71,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.brightnessSlider.valueChanged.connect(self.setBrightnessSliderLabel)
 
         # bondRadiusSlider
-        self.bondRadius = 0.1
+        self.bondRadius = 0.15
         # bondRadiusSliderLabel
         self.bondRadiusSlider.valueChanged.connect(self.setBondRadiusSliderLabel)
 
         # bondThresholdSlider
-        self.bondThreshold = 3
+        self.bondThreshold = 3.0
         # bondThersholdSliderlabel
         self.bondThresholdSlider.valueChanged.connect(self.setBondThresholdSliderLabel)
 
@@ -103,27 +103,27 @@ class MainWindow(QtWidgets.QMainWindow):
         self.advOrbFacesCheckBox.stateChanged.connect(self.draw)
 
         # orbColSlider
-        self.orbCol = 20
+        self.orbCol = self.orbColSlider.value()
         # orbColSliderLabel
         self.orbColSlider.valueChanged.connect(self.setOrbColSliderLabel)
 
         # orbRowSlider
-        self.orbRow = 20
+        self.orbRow = self.orbRowSlider.value()
         # orbRowSliderLabel
         self.orbRowSlider.valueChanged.connect(self.setOrbRowSliderLabel)
 
         # orbScalerSlider
-        self.orbScaler = 8
+        self.orbScaler = self.orbScalerSlider.value()
         # orbScalerSliderLabel
         self.orbScalerSlider.valueChanged.connect(self.setScalerSliderLabel)
 
         # thetaSlider
-        self.theta = 0
+        self.theta = self.thetaSlider.value()
         # thetaSliderLabel
         self.thetaSlider.valueChanged.connect(self.setThetaSliderLabel)
 
         # phiSlider
-        self.phi = 0
+        self.phi = self.phiSlider.value()
         # phiSliderLabel
         self.phiSlider.valueChanged.connect(self.setPhiSliderLabel)
 
@@ -199,7 +199,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
-        #self.horizontalSlider.setMinimum(0)
+        self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
         self.draw()
         self.writeToLogs("Execution carried out successfully.", "green")

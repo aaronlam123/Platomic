@@ -23,21 +23,8 @@ class TestMain(unittest.TestCase):
         self.main.writeToLogs = MagicMock()
         self.main.writeErrorToLogs = MagicMock()
         self.main.draw = MagicMock()
+        self.main.openGLWidget.reset = MagicMock()
         self.main.openGLWidget.setBackgroundColor = MagicMock()
-        self.main.draw_advOrbWf = MagicMock()
-        self.main.draw_advOrbHorz = MagicMock()
-        self.main.draw_advOrbVert = MagicMock()
-        self.main.draw_sphOrbWf = MagicMock()
-        self.main.draw_sphOrbFaces = MagicMock()
-        self.main.draw_advOrbFaces = MagicMock()
-
-        # self.main.toggleAtomsButton.setChecked(False)
-        # self.main.advOrbWfCheckBox.setChecked(False)
-        # self.main.advOrbHorzCheckBox.setChecked(False)
-        # self.main.advOrbVertCheckBox.setChecked(False)
-        # self.main.sphOrbWfCheckBox.setChecked(False)
-        # self.main.sphOrbFacesCheckBox.setChecked(False)
-        # self.main.advOrbFacesCheckBox.setChecked(False)
 
     def tearDown(self):
         os.remove("benzene.in")
@@ -61,7 +48,6 @@ class TestMain(unittest.TestCase):
             QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
             self.main.writeToLogs.assert_called()
-            self.main.draw.assert_called_once()
 
     def test_onGenerateInputFileButtonClicked_and_file_exists(self):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
@@ -141,18 +127,6 @@ class TestMain(unittest.TestCase):
         QTest.mouseClick(self.main.switchToAttrFileTabButton, Qt.LeftButton)
         self.assertEqual(self.main.mainWindow.currentIndex(), self.main.mainWindow.indexOf(self.main.attributeFileTab))
 
-    def test_draws_advOrbWf(self):
-        pass
-        # QTest.mousePress(self.main.advOrbWfCheckBox, Qt.LeftButton)
-        # self.main.advOrbWfCheckBox.pressed()
-        # QTest.mouseDClick(self.main.advOrbWfCheckBox, Qt.LeftButton)
-        # self.main.draw()
-        # self.main.draw_advOrbWf()
-
-        # QTest.mouseClick(self.main.advOrbWfCheckBox, Qt.LeftButton)
-        # self.main.draw.assert_called_once()
-        # self.main.draw_advOrbWf.assert_called_once()
-
     def test_setOrbColSliderLabel(self):
         self.main.orbColSlider.setValue(60)
         self.assertIs(self.main.orbCol, 60)
@@ -214,13 +188,24 @@ class TestMain(unittest.TestCase):
         self.main.draw.assert_called_once()
 
     def test_onResetViewButtonClicked(self):
-        pass
+        QTest.mouseClick(self.main.resetViewButton, Qt.LeftButton)
+        self.main.openGLWidget.reset.assert_called_once()
+        self.main.openGLWidget.setBackgroundColor.assert_called_once()
+        self.main.writeToLogs.assert_called_once()
 
     def test_onSaveImageButtonClicked(self):
         pass
 
-    def test_onToggleAtomsButtonClicked(self):
-        pass
+    def test_onToggleAtomsButtonClicked_on(self):
+        QTest.mouseClick(self.main.toggleAtomsButton, Qt.LeftButton)
+        self.main.writeToLogs.assert_called_with("Atoms toggled off.", "grey")
+        self.main.draw.assert_called_once()
+
+    def test_onToggleAtomsButtonClicked_off(self):
+        self.main.toggleAtomsButton.setChecked(True)
+        QTest.mouseClick(self.main.toggleAtomsButton, Qt.LeftButton)
+        self.main.writeToLogs.assert_called_with("Atoms toggled on.", "grey")
+        self.main.draw.assert_called_once()
 
     def test_onSaveInputFileButtonClicked(self):
         self.main.inputFilename = "benzene"

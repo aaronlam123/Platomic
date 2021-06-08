@@ -33,11 +33,8 @@ def orbital(eig_val, m, l, rows, cols, scaler):
 
 
 
-# Adapted from https://pyqtgraph.readthedocs.io/en/latest/_modules/pyqtgraph/opengl/GLViewWidget.html
+# Adapted from https://pyqtgraph.readthedocs.io/
 def scaledQImage(widget, multiplier):
-    """
-    Read the current buffer pixels out as a QImage.
-    """
     w = widget.width() * multiplier
     h = widget.height() * multiplier
     widget.repaint()
