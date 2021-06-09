@@ -1,6 +1,7 @@
+import filecmp
 import unittest
 from unittest.mock import MagicMock
-from PyQt5.QtCore import Qt
+from PyQt5.QtCore import Qt, QTimer
 
 from main import *
 from PyQt5.QtTest import QTest
@@ -25,12 +26,8 @@ class TestMain(unittest.TestCase):
         self.main.draw = MagicMock()
         self.main.openGLWidget.reset = MagicMock()
         self.main.openGLWidget.setBackgroundColor = MagicMock()
-
-    def tearDown(self):
-        os.remove("benzene.in")
-        os.remove("benzene_.in")
-        os.remove("attributes.txt")
-        copy_file_from_main_config("config/attributes.txt")
+        self.addCleanup(cleanUp)
+        self.doCleanups()
 
     if os.name == 'nt':
         def test_onExecuteButtonClicked_on_windows(self):
@@ -184,7 +181,7 @@ class TestMain(unittest.TestCase):
     def test_setHorizontalSliderLabel(self):
         self.main.horizontalSlider.setValue(5)
         self.assertIs(self.main.mode, 5)
-        self.assertEqual(self.main.horizontalSliderLabel.text(), "Mode: 6")
+        self.assertEqual(self.main.horizontalSliderLabel.text(), "MO: 6")
         self.main.draw.assert_called_once()
 
     def test_onResetViewButtonClicked(self):
@@ -195,6 +192,9 @@ class TestMain(unittest.TestCase):
 
     def test_onSaveImageButtonClicked(self):
         pass
+        #QTest.mouseClick(self.main.saveImageButton, Qt.LeftButton)
+        #self.assertTrue(filecmp.cmp("test.png", "test_files/correct.png"))
+        #os.remove("test.png")
 
     def test_onToggleAtomsButtonClicked_on(self):
         QTest.mouseClick(self.main.toggleAtomsButton, Qt.LeftButton)
@@ -238,5 +238,8 @@ def copy_file_from_main_config(filename):
                 f.write(line)
 
 
-if __name__ == "__main__":
-    unittest.main()
+def cleanUp():
+    os.remove("benzene.in")
+    os.remove("benzene_.in")
+    os.remove("attributes.txt")
+    copy_file_from_main_config("config/attributes.txt")

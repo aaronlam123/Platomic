@@ -1,0 +1,18 @@
+# .coveragerc to control coverage.py
+[run]
+branch = True
+omit =
+        *Roaming*
+        *_test*
+        *Transmission*
+        */usr/local/lib*
+        */__init__.py
+
+
+[report]
+omit =
+        *_test*
+        *Roaming*
+        *Transmission*
+        */usr/local/lib*
+        */__init__.py

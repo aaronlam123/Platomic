@@ -192,7 +192,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="setupSettingsTab">
        <attribute name="title">
@@ -422,7 +422,7 @@ p, li { white-space: pre-wrap; }
          </rect>
         </property>
         <property name="text">
-         <string>Mode: 1</string>
+         <string>MO: 1</string>
         </property>
        </widget>
        <widget class="QPushButton" name="saveImageButton">

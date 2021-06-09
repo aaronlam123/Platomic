@@ -11,6 +11,10 @@ import pyautogui
 import traceback
 
 np.seterr(divide='ignore', invalid='ignore')
+resolution = pyautogui.size()
+os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
+app = QtWidgets.QApplication(sys.argv)
+default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -398,7 +402,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def setHorizontalSliderLabel(self, value):
         self.mode = value
         self.draw()
-        self.horizontalSliderLabel.setText("Mode: " + str(value + 1))
+        self.horizontalSliderLabel.setText("MO: " + str(value + 1))
 
     # openGLWidget
 
@@ -458,18 +462,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    resolution = pyautogui.size()
-    # print(resolution)
-    os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
-    # QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_EnableHighDpiScaling, True)
-    # QtWidgets.QApplication.setAttribute(QtCore.Qt.AA_UseHighDpiPixmaps, True)
-    app = QtWidgets.QApplication(sys.argv)
-    # screen = app.primaryScreen()
-    # print('Screen: %s' % screen.name())
-    # size = screen.size()
-    # print('Size: %d x %d' % (size.width(), size.height()))
-
-    default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
     main = MainWindow(default_input, resolution.width)
     main.show()
     sys.exit(app.exec_())
