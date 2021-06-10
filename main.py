@@ -127,7 +127,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.thetaSlider.valueChanged.connect(self.setThetaSliderLabel)
 
         # phiSlider
-        self.phi = self.phiSlider.value()
+        self.phi = math.radians(self.phiSlider.value())
         # phiSliderLabel
         self.phiSlider.valueChanged.connect(self.setPhiSliderLabel)
 
@@ -403,6 +403,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mode = value
         self.draw()
         self.horizontalSliderLabel.setText("MO: " + str(value + 1))
+        self.horizontalSliderEnergyLabel.setText("Energy (eV): " + self.atoms[0].get_eigenenergy(value))
 
     # openGLWidget
 

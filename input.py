@@ -1,4 +1,6 @@
 import ntpath
+from decimal import Decimal
+
 import pyqtgraph
 from PyQt5 import QtGui
 import shlex
@@ -112,23 +114,27 @@ def total_orbitals(atoms, orb_dict):  # finds total number of orbitals in system
 def eig_arr_from_wf(file, atoms, orb_dict):  # returns 2D array with all eigenvalues split by mode
     all_modes = []
     a_mode = []
+    energies = []
     total = total_orbitals(atoms, orb_dict)
+    four_places = "{:.4f}"
     with open(file, "r") as f:
         lines = f.readlines()
         for i, line in enumerate(lines):
             if i == 0:
+                energies.append(four_places.format(float(line.split()[0])))
                 continue
             if i % (total + 1) == 0:
                 all_modes.append(a_mode)
                 a_mode = []
+                energies.append(four_places.format(float(line.split()[0])))
                 continue
             a_mode.append(line.strip())
     all_modes.append(a_mode)
-    return all_modes
+    return all_modes, energies
 
 
 # sets 2D array of eigenvalues split by mode per atom, sets orbital count and quantum dict #
-def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes):
+def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies):
     for i in range(len(all_modes)):
         orbital = 0
         for j in range(len(atoms)):
@@ -140,14 +146,15 @@ def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes):
             atoms[j].set_eigenvector(mode_i)
             atoms[j].set_total_orbitals(len(all_modes))
             atoms[j].set_quantum_dict(quantum_dict.get(atoms[j].get_symbol(), None))
+            atoms[j].set_eigenenergies(energies)
 
 
 def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms using .out, attributes.txt and .wf
     orb_dict, quantum_dict = create_orbital_dict(out_file)
     atoms = create_all_atoms(out_file)
     set_attr_from_file(attributes_file, atoms)
-    all_modes = eig_arr_from_wf(wf_file, atoms, orb_dict)
-    set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes)
+    all_modes, energies = eig_arr_from_wf(wf_file, atoms, orb_dict)
+    set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies)
     return atoms
 
 
@@ -181,12 +188,10 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
 
 
 if __name__ == '__main__':
-    #pass
     atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
     for i in range(12):
         atoms_main[i].check()
         print('\n')
 
-    #xyz_to_plato_input("benzene.xyz")
-
+    # xyz_to_plato_input("benzene.xyz")

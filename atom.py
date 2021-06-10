@@ -13,6 +13,7 @@ class Atom:
         self.__eigenvector = None
         self.__total_orbitals = None
         self.__quantum_dict = None
+        self.__eigenenergies = None
 
     # Getter functions
     def get_symbol(self):
@@ -39,6 +40,12 @@ class Atom:
     def get_quantum_dict(self):
         return self.__quantum_dict
 
+    def get_eigenenergies(self):
+        return self.__eigenenergies
+
+    def get_eigenenergy(self, mode):
+        return self.__eigenenergies[mode]
+
     # Setter functions
     def set_colour(self, colour):
         self.__colour = colour
@@ -63,6 +70,9 @@ class Atom:
     def set_quantum_dict(self, quantum_dict):
         self.__quantum_dict = quantum_dict
 
+    def set_eigenenergies(self, eigenenergies):
+        self.__eigenenergies = eigenenergies
+
     def check(self):
         print(self.__symbol)
         print(self.__x)
@@ -74,3 +84,4 @@ class Atom:
         print(self.__eigenvector)
         print(np.array(self.__eigenvector).astype(float).shape)
         print(self.__quantum_dict)
+        print(self.__eigenenergies)

@@ -91,9 +91,9 @@ class TestMain(unittest.TestCase):
         self.main.draw.assert_called_once()
 
     def test_setBondColSliderLabel(self):
-        self.main.bondColSlider.setValue(15)
-        self.assertIs(self.main.bondCol, 15)
-        self.assertEqual(self.main.bondColSliderLabel.text(), "Columns: 15")
+        self.main.bondColSlider.setValue(30)
+        self.assertIs(self.main.bondCol, 30)
+        self.assertEqual(self.main.bondColSliderLabel.text(), "Columns: 30")
         self.main.draw.assert_called_once()
 
     def test_setBondRowSliderLabel(self):
@@ -178,10 +178,16 @@ class TestMain(unittest.TestCase):
         self.assertEqual(self.main.colourASliderLabel.text(), "A: 0.8")
         self.main.draw.assert_called_once()
 
-    def test_setHorizontalSliderLabel(self):
+    def test_setHorizontalSliderOrbitalLabel(self):
         self.main.horizontalSlider.setValue(5)
         self.assertIs(self.main.mode, 5)
         self.assertEqual(self.main.horizontalSliderLabel.text(), "MO: 6")
+        self.main.draw.assert_called_once()
+
+    def test_setHorizontalSliderEnergyLabel(self):
+        self.main.horizontalSlider.setValue(6)
+        self.assertIs(self.main.mode, 6)
+        self.assertEqual(self.main.horizontalSliderEnergyLabel.text(), "Energy (eV): -11.7604")
         self.main.draw.assert_called_once()
 
     def test_onResetViewButtonClicked(self):

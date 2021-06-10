@@ -33,19 +33,20 @@ class TestInput(unittest.TestCase):
         self.assertEqual(get_lines_between("test_files/test_output.txt", "n l m     energy     occupancy    radius",
                                            "---------------------------", "----------------", False, True, 1),
                          ['1 0 0   -0.349079     1.000000     2.305467'])
-        self.assertEqual(get_lines_between("test_files/test_output.txt", "Atomic positions (a0):", "Total forces (Ry/a0):"),
-                         ['C       0.00000      2.65076      0.00000',
-                          'H       0.00000      4.70597      0.00000',
-                          'C      -2.29562      1.32538      0.00000',
-                          'H      -4.07550      2.35299      0.00000',
-                          'C      -2.29562     -1.32538      0.00000',
-                          'H      -4.07550     -2.35299      0.00000',
-                          'C       0.00000     -2.65076      0.00000',
-                          'H       0.00000     -4.70597      0.00000',
-                          'C       2.29562     -1.32538      0.00000',
-                          'H       4.07550     -2.35299      0.00000',
-                          'C       2.29562      1.32538      0.00000',
-                          'H       4.07550      2.35299      0.00000'])
+        self.assertEqual(
+            get_lines_between("test_files/test_output.txt", "Atomic positions (a0):", "Total forces (Ry/a0):"),
+            ['C       0.00000      2.65076      0.00000',
+             'H       0.00000      4.70597      0.00000',
+             'C      -2.29562      1.32538      0.00000',
+             'H      -4.07550      2.35299      0.00000',
+             'C      -2.29562     -1.32538      0.00000',
+             'H      -4.07550     -2.35299      0.00000',
+             'C       0.00000     -2.65076      0.00000',
+             'H       0.00000     -4.70597      0.00000',
+             'C       2.29562     -1.32538      0.00000',
+             'H       4.07550     -2.35299      0.00000',
+             'C       2.29562      1.32538      0.00000',
+             'H       4.07550      2.35299      0.00000'])
 
     def test_correct_quantum(self):
         self.assertEqual(correct_quantum(['2 0 0', '2 1 0', '2 1 1', '2 1 2']),
@@ -74,7 +75,7 @@ class TestInput(unittest.TestCase):
     def test_eig_arr_from_wf(self):
         orb_dict, quantum_dict = create_orbital_dict("test_files/test_output.txt")
         atoms = create_all_atoms("test_files/test_output.txt")
-        all_modes = eig_arr_from_wf("test_files/test_wavefunction.wf", atoms, orb_dict)
+        all_modes, energies = eig_arr_from_wf("test_files/test_wavefunction.wf", atoms, orb_dict)
         self.assertEqual(all_modes, [
             ['0.3817691135', '-5.551115123e-17', '-1.1379786e-13', '0.1062330322', '0.09816125964', '0.3817654057',
              '-3.90037174e-17', '-0.09200168623', '0.05311435587', '0.09815985379', '0.3817654057', '1.292969444e-17',
@@ -243,12 +244,18 @@ class TestInput(unittest.TestCase):
              '0.2545324426', '0.1469424642', '-0.00816741351', '0.2832377631', '4.991955594e-17', '3.642989342e-13',
              '-0.2939057163', '0.008165652713', '-0.2832295924', '1.652220903e-17', '-0.2545324426', '0.1469424642',
              '-0.00816741351', '0.2832295924', '-7.603363275e-17', '0.2545324426', '0.1469424642', '0.00816741351']])
+        self.assertEqual(energies, ['-22.8993', '-19.1861', '-19.1860', '-14.4556', '-14.4556', '-12.3487', '-11.7604',
+                                    '-11.2757', '-10.9047', '-10.9046', '-9.3503', '-9.3502', '-3.3950', '-1.2600',
+                                    '-1.2599', '2.9095', '2.9095', '4.6567', '4.9440', '5.4748', '5.4748', '7.4076',
+                                    '7.4077', '7.9895', '11.2405', '11.2406', '11.3210', '11.3211', '13.0015',
+                                    '13.7314']
+                         )
 
     def test_set_eig_to_atoms(self):
         orb_dict, quantum_dict = create_orbital_dict("test_files/test_output.txt")
         atoms = create_all_atoms("test_files/test_output.txt")
-        all_modes = eig_arr_from_wf("test_files/test_wavefunction.wf", atoms, orb_dict)
-        set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes)
+        all_modes, energies = eig_arr_from_wf("test_files/test_wavefunction.wf", atoms, orb_dict)
+        set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies)
         np.testing.assert_array_almost_equal(atoms[0].get_eigenvector(0),
                                              [3.81769113e-01, -5.55111512e-17, -1.13797860e-13, 1.06233032e-01])
         np.testing.assert_array_almost_equal(atoms[0].get_eigenvector(11),
