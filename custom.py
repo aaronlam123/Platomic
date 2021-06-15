@@ -1,9 +1,6 @@
-from OpenGL.GL import glReadPixels, GL_RGBA, GL_UNSIGNED_BYTE
 import numpy as np
 import scipy.special as sp
 import pyqtgraph.opengl as gl
-import pyqtgraph as pg
-
 
 # Adapted from https://pyqtgraph.readthedocs.io/en/latest/_modules/pyqtgraph/opengl/MeshData.html
 def orbital(eig_val, m, l, rows, cols, scaler):
@@ -30,26 +27,3 @@ def orbital(eig_val, m, l, rows, cols, scaler):
         faces[start + cols:start + (cols * 2)] = rowtemplate2 + row * cols
 
     return gl.MeshData(vertexes=verts, faces=faces)
-
-
-
-# Adapted from https://pyqtgraph.readthedocs.io/
-def scaledQImage(widget, multiplier):
-    w = widget.width() * multiplier
-    h = widget.height() * multiplier
-    widget.repaint()
-    pixels = np.empty((h, w, 4), dtype=np.ubyte)
-    pixels[:] = 128
-    pixels[..., 0] = 50
-    pixels[..., 3] = 255
-
-    glReadPixels(0, 0, w, h, GL_RGBA, GL_UNSIGNED_BYTE, pixels)
-
-    # swap B,R channels for Qt
-    tmp = pixels[..., 0].copy()
-    pixels[..., 0] = pixels[..., 2]
-    pixels[..., 2] = tmp
-    pixels = pixels[::-1]  # flip vertical
-
-    img = pg.functions.makeQImage(pixels, transpose=False)
-    return img

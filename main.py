@@ -1,7 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, uic
 from plot import *
 from input import input_file_setup, xyz_to_plato_input
-from custom import scaledQImage
 from subprocess import PIPE, run
 import math
 import os
@@ -19,8 +18,8 @@ default_input = input_file_setup("config/benzene.out", "config/attributes.txt", 
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, atoms, screen_width, *args, **kwargs):
-        super(MainWindow, self).__init__(*args, **kwargs)
+    def __init__(self, atoms, screen_width):
+        super(MainWindow, self).__init__()
 
         # Load the UI Page
         uic.loadUi('config/mainwindow5.ui', self)
@@ -73,6 +72,25 @@ class MainWindow(QtWidgets.QMainWindow):
         # brightnessSlider
         # brightnessSliderLabel
         self.brightnessSlider.valueChanged.connect(self.setBrightnessSliderLabel)
+
+        # labelCheckBoxSymbol
+        # labelCheckBoxPosition
+        # labelCheckBoxRadius
+        # fontComboBox
+        # sizeComboBox
+        # offsetComboBox
+        self.labelCheckBoxSymbol.stateChanged.connect(self.setLabelCheckBoxSymbol)
+        self.labelCheckBoxPosition.stateChanged.connect(self.setLabelCheckBoxPosition)
+        self.labelCheckBoxRadius.stateChanged.connect(self.setLabelCheckBoxRadius)
+        self.fontComboBox.currentIndexChanged.connect(self.setFontComboBox)
+        self.sizeComboBox.currentIndexChanged.connect(self.setSizeComboBox)
+        self.offsetComboBox.currentIndexChanged.connect(self.setOffsetComboBox)
+        self.fontComboBox.addItems(["Arial", "Cambria", "Helvetica", "Times New Roman"])
+        self.sizeComboBox.addItems(["12", "14", "16", "18", "20", "24", "30"])
+        self.offsetComboBox.addItems(["x", "y", "z"])
+        self.openGLWidget.font = "Arial"
+        self.openGLWidget.size = 12
+        self.openGLWidget.offset = 0
 
         # bondRadiusSlider
         self.bondRadius = 0.15
@@ -150,6 +168,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # openGLWidget
         self.openGLWidget.opts['distance'] = 15
+        self.openGLWidget.multiplier = self.multiplier
+        self.openGLWidget.atoms = self.atoms
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
         self.draw()
@@ -282,6 +302,36 @@ class MainWindow(QtWidgets.QMainWindow):
         self.backgroundColor = (value, value, value)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
         self.brightnessSliderLabel.setText("Brightness: " + str(value))
+
+        # labelCheckBoxSymbol
+        # labelCheckBoxPosition
+        # labelCheckBoxRadius
+        # fontComboBox
+        # sizeComboBox
+        # offsetComboBox
+    def setLabelCheckBoxSymbol(self, state):
+        self.openGLWidget.symbol = state
+        self.openGLWidget.update()
+
+    def setLabelCheckBoxPosition(self, state):
+        self.openGLWidget.position = state
+        self.openGLWidget.update()
+
+    def setLabelCheckBoxRadius(self, state):
+        self.openGLWidget.radius = state
+        self.openGLWidget.update()
+
+    def setFontComboBox(self, state):
+        self.openGLWidget.font = self.fontComboBox.currentText()
+        self.openGLWidget.update()
+
+    def setSizeComboBox(self, state):
+        self.openGLWidget.size = int(self.sizeComboBox.currentText())
+        self.openGLWidget.update()
+
+    def setOffsetComboBox(self, state):
+        self.openGLWidget.offset = state
+        self.openGLWidget.update()
 
         # bondRadiusSlider
         # bondRadiusSliderLabel
@@ -418,7 +468,7 @@ class MainWindow(QtWidgets.QMainWindow):
         filename, _ = QtWidgets.QFileDialog.getSaveFileName(parent=self, caption='Save image',
                                                             filter="PNG Image (*.png);;JPEG Image (*.jpg);;All Files (*.*)")
 
-        scaledQImage(self.openGLWidget, self.multiplier).save(filename)
+        self.openGLWidget.readQImage().save(filename)
 
     # toggleAtomsButton
     def onToggleAtomsButtonClicked(self):
