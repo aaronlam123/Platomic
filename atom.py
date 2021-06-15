@@ -2,11 +2,12 @@ import numpy as np
 
 
 class Atom:
-    def __init__(self, symbol, x, y, z, colour=None, radius=None, eigenvector=None):
+    def __init__(self, symbol, x, y, z, index, colour=None, radius=None, eigenvector=None):
         self.__symbol = symbol
         self.__x = x
         self.__y = y
         self.__z = z
+        self.__index = index
         self.__colour = None
         self.__radius = None
         self.__bonding = None
@@ -14,6 +15,9 @@ class Atom:
         self.__total_orbitals = None
         self.__quantum_dict = None
         self.__eigenenergies = None
+        self.__isSelected = False
+        self.__mi = None
+
 
     # Getter functions
     def get_symbol(self):
@@ -46,6 +50,15 @@ class Atom:
     def get_eigenenergy(self, mode):
         return self.__eigenenergies[mode]
 
+    def get_isSelected(self):
+        return self.__isSelected
+
+    def get_mi(self):
+        return self.__mi
+
+    def get_index(self):
+        return self.__index
+
     # Setter functions
     def set_colour(self, colour):
         self.__colour = colour
@@ -73,6 +86,12 @@ class Atom:
     def set_eigenenergies(self, eigenenergies):
         self.__eigenenergies = eigenenergies
 
+    def set_isSelected(self, state):
+        self.__isSelected = state
+
+    def set_mi(self, mi):
+        self.__mi = mi
+
     def check(self):
         print(self.__symbol)
         print(self.__x)
@@ -85,3 +104,4 @@ class Atom:
         print(np.array(self.__eigenvector).astype(float).shape)
         print(self.__quantum_dict)
         print(self.__eigenenergies)
+        print(self.__isSelected)

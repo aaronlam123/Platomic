@@ -4,6 +4,7 @@ import pyqtgraph as pg
 import numpy as np
 import scipy.special as sp
 import custom
+import pandas as pd
 
 from Transmission.Transmission import get_energy_gamma_transmission_XYZ
 
@@ -40,6 +41,17 @@ def draw_atoms(atoms, widget, rows, cols):
         mi = gl.GLMeshItem(meshdata=md, smooth=True, color=atoms[i].get_colour())
         mi.translate(*atoms[i].get_xyz())
         widget.addItem(mi)
+        atoms[i].set_mi(mi)
+
+
+def draw_selection(atoms, widget, rows, cols):
+    for i in range(len(atoms)):
+        if atoms[i].get_isSelected():
+            md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius() + 0.02)
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(1, 1, 0, 0.5), drawEdges=False, drawFaces=True)
+            mi.translate(*atoms[i].get_xyz())
+            mi.setGLOptions('translucent')
+            widget.addItem(mi)
 
 
 def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
@@ -128,7 +140,7 @@ def draw_sphOrbFaces(atoms, widget, mode, rows, cols, scaler, r, g, b, a):
     for i in range(len(atoms)):
         radius = np.sum(np.square(atoms[i].get_eigenvector(mode)))
         md = gl.MeshData.sphere(rows=rows, cols=cols, radius=radius * scaler)
-        mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(r, g, b, a), drawEdges=False, drawFaces=True, shader='balloon')
+        mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(r, g, b, a), drawEdges=False, drawFaces=True)
         mi.translate(*atoms[i].get_xyz())
         mi.setGLOptions('translucent')
         widget.addItem(mi)
@@ -148,3 +160,46 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
             mi.setGLOptions('translucent')
             widget.addItem(mi)
 
+
+def transmission_graph(widget, input_file):
+    df = pd.read_csv(input_file + ".csv", sep=",", quoting=3)
+    for i in list(df):
+        if i == "E(Ry)":
+            continue
+        widget.plot(df["E(Ry)"], df[i])
+    return list(df)[1:]
+
+
+def transmission_graph2(widget, input_file, index, eigenenergies):
+    widget.clear()
+    #widget.setXRange(0, 1)
+    #widget.setYRange(0, 1)
+    widget.setLabel("left", text="Transmission")
+    widget.setLabel("bottom", text="Energy", units="Ry")
+    df = pd.read_csv(input_file + ".csv", sep=",", quoting=3)
+    #print(df["E(Ry)"])
+    #print(df[index])
+    widget.plot(df["E(Ry)"], df[index])
+    for i in eigenenergies:
+        widget.addItem(pg.InfiniteLine(pos=(float(i) / 13.6, 0)))
+
+
+
+"""
+def transmission_graph(widget, selected, input_file):
+    ds = pd.read_csv(input_file + ".csv", sep=',', header=0)
+    energy = np.array(ds["E(Ry)"])
+    transmission = None
+    for i in range(selected * selected):
+        if transmission is None:
+            transmission = np.zeros((len(energy), 1))
+        column = np.resize(np.array(ds[" 1 - 2"]), (len(energy), 1))
+        transmission = np.append(transmission, column, axis=1)
+
+    widget.plot(energy, transmission)
+"""
+
+if __name__ == '__main__':
+    energy, transmission, widget = transmission_graph2(None, "benzene_trans", " 1 - 3")
+    #print(energy)
+    #print(transmission)

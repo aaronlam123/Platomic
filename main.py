@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, uic
 from plot import *
-from input import input_file_setup, xyz_to_plato_input
+from input import input_file_setup, xyz_to_plato_input, trans_plato_input
 from subprocess import PIPE, run
 import math
 import os
@@ -30,6 +30,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # Initialise state
         self.atoms = atoms
         self.inputFilename = None
+        self.transInputFilename = None
+        self.selected = []
         self.mode = 0
 
         ###### Initialise propertiesWindow ######
@@ -37,16 +39,48 @@ class MainWindow(QtWidgets.QMainWindow):
         # executeButton
         self.executeButton.clicked.connect(self.onExecuteButtonClicked)
 
+        # executeTransButton
+        self.executeTransButton.clicked.connect(self.onTransExecuteButtonClicked)
+
         # generateInputFileButton
         self.generateInputFileButton.clicked.connect(self.onGenerateInputFileButtonClicked)
 
+        # generateTransInputFileButton
+        self.generateTransInputFileButton.clicked.connect(self.onGenerateTransInputFileButtonClicked)
+
+        # openFileLineEdit
         # openFileButton
         self.openFileButton.clicked.connect(self.onOpenFileButtonClicked)
 
-        # openFileLineEdit
-
-        # SwitchToInputFileTabButton
+        # switchToInputFileTabButton
         self.switchToInputFileTabButton.clicked.connect(self.onSwitchToInputFileTabButtonClicked)
+
+        # switchToTransInputFileTabButton
+        self.switchToTransInputFileTabButton.clicked.connect(self.onSwitchToTransInputFileTabButtonClicked)
+
+        # checkBoxIndex
+        # checkBoxSymbol
+        # checkBoxPosition
+        # checkBoxRadius
+        # fontComboBox
+        # sizeComboBox
+        # offsetComboBox
+        self.checkBoxIndex.stateChanged.connect(self.setCheckBoxIndex)
+        self.checkBoxSymbol.stateChanged.connect(self.setCheckBoxSymbol)
+        self.checkBoxPosition.stateChanged.connect(self.setCheckBoxPosition)
+        self.checkBoxRadius.stateChanged.connect(self.setCheckBoxRadius)
+        self.fontComboBox.currentIndexChanged.connect(self.setFontComboBox)
+        self.sizeComboBox.currentIndexChanged.connect(self.setSizeComboBox)
+        self.offsetComboBox.currentIndexChanged.connect(self.setOffsetComboBox)
+        self.fontComboBox.addItems(["Arial", "Cambria", "Helvetica", "Times New Roman"])
+        self.sizeComboBox.addItems(["12", "14", "16", "18", "20", "24", "30"])
+        self.offsetComboBox.addItems(["x", "y", "z"])
+        self.openGLWidget.font = "Arial"
+        self.openGLWidget.size = 12
+        self.openGLWidget.offset = 0
+
+        ### graphSettingsTab
+        self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
 
         ### atomSettingsTab
         # atomColSlider
@@ -72,25 +106,6 @@ class MainWindow(QtWidgets.QMainWindow):
         # brightnessSlider
         # brightnessSliderLabel
         self.brightnessSlider.valueChanged.connect(self.setBrightnessSliderLabel)
-
-        # labelCheckBoxSymbol
-        # labelCheckBoxPosition
-        # labelCheckBoxRadius
-        # fontComboBox
-        # sizeComboBox
-        # offsetComboBox
-        self.labelCheckBoxSymbol.stateChanged.connect(self.setLabelCheckBoxSymbol)
-        self.labelCheckBoxPosition.stateChanged.connect(self.setLabelCheckBoxPosition)
-        self.labelCheckBoxRadius.stateChanged.connect(self.setLabelCheckBoxRadius)
-        self.fontComboBox.currentIndexChanged.connect(self.setFontComboBox)
-        self.sizeComboBox.currentIndexChanged.connect(self.setSizeComboBox)
-        self.offsetComboBox.currentIndexChanged.connect(self.setOffsetComboBox)
-        self.fontComboBox.addItems(["Arial", "Cambria", "Helvetica", "Times New Roman"])
-        self.sizeComboBox.addItems(["12", "14", "16", "18", "20", "24", "30"])
-        self.offsetComboBox.addItems(["x", "y", "z"])
-        self.openGLWidget.font = "Arial"
-        self.openGLWidget.size = 12
-        self.openGLWidget.offset = 0
 
         # bondRadiusSlider
         self.bondRadius = 0.15
@@ -172,6 +187,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.atoms = self.atoms
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
+        self.openGLWidget.clicked.connect(self.onSelection)
         self.draw()
 
         # resetViewButton
@@ -197,6 +213,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # saveAttributeFileButton
         self.saveAttributeFileButton.clicked.connect(self.onSaveAttributeFileButtonClicked)
+
+        ### transInputFileTab
+        # transInputTextEdit
+
+        # saveTransInputFileButton
+        self.saveTransInputFileButton.clicked.connect(self.onSaveTransInputFileButtonClicked)
 
         ### fullConsoleTab
         # fullConsoleTextEdit
@@ -228,6 +250,29 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw()
         self.writeToLogs("Execution carried out successfully.", "green")
 
+    def onTransExecuteButtonClicked(self):
+        self.transInputFilename = "benzene_trans"
+        headers = transmission_graph(self.graphWidget, self.transInputFilename)
+        self.graphComboBox.addItems(headers)
+
+        if os.name == 'nt':
+            self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
+            return
+        try:
+            command = "(cd ./Plato/bin && ./tb1 ../../" + self.transInputFilename + ")"
+        except TypeError:
+            self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
+            return
+        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
+        if result.returncode:
+            self.writeToLogs(result.stderr, "red")
+            if result.stdout:
+                self.writeToLogs(result.stdout, "red")
+            return
+        if result.stdout:
+            self.writeToLogs(result.stdout, "black")
+        self.writeToLogs("Execution carried out successfully.", "green")
+
         # generateInputFileButton
 
     def onGenerateInputFileButtonClicked(self):
@@ -247,6 +292,30 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
 
+    def onGenerateTransInputFileButtonClicked(self):
+        self.transInputTextEdit.clear()
+        try:
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.selected)
+            self.transInputFilename = filename
+            with open(filename + ".in", "r") as f:
+                contents = f.readlines()
+            for line, content in enumerate(contents):
+                self.transInputTextEdit.insertPlainText(content)
+        except IOError:
+            self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
+            return
+        except AssertionError:
+            self.writeErrorToLogs(
+                "Error: No terminals selected, you must select at least two terminals. Select a terminal by right clicking on an atom.")
+            return
+        except FileNotFoundError:
+            self.writeErrorToLogs("Error: No default transmission input file found, check that config/default_trans.in exists.")
+            return
+        except IOError:
+            self.writeErrorToLogs("Error: No .xyz file selected to generate Plato transmission input file.")
+            return
+        self.writeToLogs("Transmission input file " + self.transInputFilename + ".in generated successfully.", "green")
+
         # openFileButton
         # openFileLineEdit
 
@@ -261,6 +330,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onSwitchToInputFileTabButtonClicked(self):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.inputFileTab))
+
+        # SwitchToTransInputFileTabButton
+
+    def onSwitchToTransInputFileTabButtonClicked(self):
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.transInputFileTab))
+
+        ### graphSettingsTab
+    def setGraphComboBox(self):
+        #print(self.graphComboBox.currentText())
+        transmission_graph2(self.graphWidget, self.transInputFilename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
 
         ### atomSettingsTab
         # atomColSlider
@@ -303,21 +382,26 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
         self.brightnessSliderLabel.setText("Brightness: " + str(value))
 
-        # labelCheckBoxSymbol
-        # labelCheckBoxPosition
-        # labelCheckBoxRadius
+        # checkBoxIndex
+        # checkBoxSymbol
+        # checkBoxPosition
+        # checkBoxRadius
         # fontComboBox
         # sizeComboBox
         # offsetComboBox
-    def setLabelCheckBoxSymbol(self, state):
+    def setCheckBoxIndex(self, state):
+        self.openGLWidget.index = state
+        self.openGLWidget.update()
+
+    def setCheckBoxSymbol(self, state):
         self.openGLWidget.symbol = state
         self.openGLWidget.update()
 
-    def setLabelCheckBoxPosition(self, state):
+    def setCheckBoxPosition(self, state):
         self.openGLWidget.position = state
         self.openGLWidget.update()
 
-    def setLabelCheckBoxRadius(self, state):
+    def setCheckBoxRadius(self, state):
         self.openGLWidget.radius = state
         self.openGLWidget.update()
 
@@ -368,6 +452,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if not atoms_off:
             draw_atoms(self.atoms, self.openGLWidget, self.atomRow, self.atomCol)
             draw_bonds(self.atoms, self.openGLWidget, self.bondRow, self.bondCol, self.bondRadius, self.bondThreshold)
+            draw_selection(self.atoms, self.openGLWidget, self.atomRow, self.atomCol)
 
         # Plot orbitals
         if self.advOrbWfCheckBox.isChecked():
@@ -456,6 +541,19 @@ class MainWindow(QtWidgets.QMainWindow):
         self.horizontalSliderEnergyLabel.setText("Energy (eV): " + self.atoms[0].get_eigenenergy(value))
 
     # openGLWidget
+    def onSelection(self):
+        self.selected = []
+        self.draw()
+        for i in range(len(self.atoms)):
+            if self.atoms[i].get_isSelected():
+                self.selected.append(i + 1)
+        if len(self.selected) == 0:
+            self.writeToLogs("No terminals selected.", "orange")
+            return
+        selection = "Selected terminals by atom index: "
+        for j in range(len(self.selected)):
+            selection = selection + str(self.selected[j]) + ", "
+        self.writeToLogs(selection[:-2], "orange")
 
     # resetViewButton
     def onResetViewButtonClicked(self):
@@ -495,6 +593,14 @@ class MainWindow(QtWidgets.QMainWindow):
             f.write(str(self.attributeTextEdit.toPlainText()))
         self.writeToLogs("Attribute file attributes.txt modified successfully. Settings will be applied on next "
                          "execution", "green")
+
+    ### transInputFileTab
+    # transInputTextEdit
+    # saveTransInputFileButton
+    def onSaveTransInputFileButtonClicked(self):
+        with open(self.transInputFilename + ".in", 'w') as f:
+            f.write(str(self.transInputTextEdit.toPlainText()))
+        self.writeToLogs("Transmission input file " + self.transInputFilename + ".in saved successfully.", "green")
 
     ### fullConsoleTab
     # fullConsoleTextEdit

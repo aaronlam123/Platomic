@@ -7,10 +7,12 @@ import numpy as np
 
 
 class GLView(GLViewWidget):
+    clicked = pg.QtCore.pyqtSignal()
     def __init__(self, parent=None):
         super().__init__(parent)
         self.multiplier = None
         self.atoms = None
+        self.index = True
         self.symbol = None
         self.position = None
         self.radius = None
@@ -20,13 +22,21 @@ class GLView(GLViewWidget):
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
+        if ev.button() != 2:
+            return
+
         items = self.itemsAt((ev.x(), ev.y(), 1, 1))
-        #print(items)
-        for i, item in enumerate(items):
-            if ev.button() != 2:
-                break
-            items[i].setColor(QColor("blue"))
-            break
+
+        for i in range(len(self.atoms)-1, -1, -1):
+            if self.atoms[i].get_mi() in items:
+                if self.atoms[i].get_isSelected():
+                    self.atoms[i].set_isSelected(False)
+                    self.clicked.emit()
+                    break
+                else:
+                    self.atoms[i].set_isSelected(True)
+                    self.clicked.emit()
+                    break
 
     def itemsAt(self, region=None):
         """
@@ -64,6 +74,9 @@ class GLView(GLViewWidget):
 
         for i in range(len(self.atoms)):
             xyz = np.array(self.atoms[i].get_xyz())
+            if self.index:
+                self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_index()), font)
+                xyz[self.offset] = xyz[self.offset] - offset
             if self.symbol:
                 self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_symbol()), font)
                 xyz[self.offset] = xyz[self.offset] - offset

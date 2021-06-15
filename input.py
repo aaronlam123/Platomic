@@ -50,6 +50,15 @@ def get_lines_between(file, start, end, end_opt="second end", skip_line=True, po
         array.pop()
     return array
 
+def get_line_number(file, string):
+    line_count = 1
+    with open(file, "r") as f:
+        for line in f:
+            if line.strip() == string:
+                return line_count
+            line_count += 1
+    return line_count + 1
+
 
 def correct_quantum(quantum):
     quantum_array = []
@@ -84,7 +93,7 @@ def create_all_atoms(file):  # creates orbitals for each element using .out
     xyz = get_lines_between(file, "Atomic positions (a0):", "Total forces (Ry/a0):")
     for i in range(len(xyz)):
         xyz_split = xyz[i].split()
-        new_entry = Atom(*xyz_split)
+        new_entry = Atom(*xyz_split, i + 1)
         array.append(new_entry)
     return array
 
@@ -176,9 +185,10 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
     except IOError:
         raise IOError
 
-    contents.insert(243, natoms)
+    contents.insert(get_line_number(input_file, "NAtom"), natoms)
+    line_number = get_line_number(input_file, "Atoms") + 1
     for line, content in enumerate(xyz_contents):
-        contents.insert(line + 250, content)
+        contents.insert(line + line_number, content)
 
     with open(str(name) + "_.in", "w") as f:
         contents = "".join(contents)
@@ -186,12 +196,52 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
 
     return name + "_"
 
+def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
+    basename = ntpath.basename(xyz_file)
+    name = os.path.splitext(basename)[0]
+
+    if len(selected) <= 1:
+        raise AssertionError
+
+    try:
+        with open(input_file, "r") as f:
+            contents = f.readlines()
+    except IOError:
+        raise FileNotFoundError
+
+    try:
+        with open(xyz_file, "r") as xyz:
+            natoms = xyz.readline().strip()
+            xyz.readline()
+            xyz_contents = xyz.readlines()
+    except IOError:
+        raise IOError
+
+    terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
+    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 -0.4281406\n")
+    for i in range(len(selected)):
+        contents.insert(terminal_line_count + i + 1, "0.0 0.10 0.001 0 1 " + str(selected[i]) + "\n")
+
+    contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
+    line_number = get_line_number(input_file, "Atoms") + i + 3
+    for line, content in enumerate(xyz_contents):
+        contents.insert(line + line_number, content)
+
+    with open(str(name) + "_trans.in", "w") as f:
+        contents = "".join(contents)
+        f.writelines(contents)
+
+    return name + "_trans"
+
 
 if __name__ == '__main__':
-    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    pass
+    #print(get_line_number("config/default.in", "Atoms"))
 
-    for i in range(12):
-        atoms_main[i].check()
-        print('\n')
+    #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+
+    #for i in range(12):
+        #atoms_main[i].check()
+        #print('\n')
 
     # xyz_to_plato_input("benzene.xyz")
