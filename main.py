@@ -23,14 +23,14 @@ class MainWindow(QtWidgets.QMainWindow):
         super(MainWindow, self).__init__()
 
         # Load the UI Page
-        uic.loadUi('config/mainwindow5.ui', self)
-        self.setWindowTitle('Platomic')
+        uic.loadUi("config/mainwindow5.ui", self)
+        self.setWindowTitle("Platomic")
         self.setWindowIcon(QIcon("config/platomic.png"))
         self.multiplier = int(screen_width / 1920)
 
         # Initialise state
         self.atoms = atoms
-        self.inputFilename = None
+        self.inputFilename = "example/benzene.xyz"
         self.transInputFilename = None
         self.currInputFilename = None
         self.transSelected = []
@@ -261,20 +261,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
+        self.openGLWidget.atoms = self.atoms
         self.draw()
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
         self.writeToLogs("Execution carried out successfully.", "green")
+        self.transSelected = []
+        self.currentSelectedA = []
+        self.currentSelectedB = []
 
     def onTransExecuteButtonClicked(self):
-        self.transInputFilename = "benzene_trans.csv"
-        headers = transmission_graph(self.graphWidget, self.transInputFilename)
-        self.graphComboBox.addItems(headers)
-
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
             return
         try:
-            command = "(cd ./Plato/bin && ./tb1 ../../" + self.transInputFilename + ")"
+            command = "(cd ./Plato/bin && ./tb1 ../../" + self.inputFilename + ")"
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
             return
@@ -288,10 +288,14 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs(result.stdout, "black")
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Execution carried out successfully.", "green")
+        headers = transmission_graph(self.graphWidget, self.inputFilename + "_trans.csv")
+        self.graphComboBox.addItems(headers)
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
+        self.writeToLogs("Graphs plotted successfully.", "green")
 
     def onCurrExecuteButtonClicked(self):
         self.currInputFilename = "benzene_curr"
-        self.writeToLogs("Current: " + find_current_in_file(self.currInputFilename + ".out") + " mA.", "green")
+        self.writeToLogs("Current: " + find_current_in_file(self.inputFilename + ".out") + " mA.", "green")
 
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
@@ -332,8 +336,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
 
     def onGenerateTransInputFileButtonClicked(self):
+        self.inputTextEdit.clear()
         try:
-            filename = xyz_to_plato_input(self.openFileLineEdit.text())
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -350,24 +355,17 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
             return
-        self.writeToLogs("Transmission input file " + self.transInputFilename + ".in generated successfully.", "green")
+        self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
 
     def onGenerateCurrInputFileButtonClicked(self):
         self.inputTextEdit.clear()
         try:
-            filename = xyz_to_plato_input(self.openFileLineEdit.text())
+            filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA, self.currentSelectedB)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
             for line, content in enumerate(contents):
                 self.inputTextEdit.insertPlainText(content)
-        except FileNotFoundError:
-            self.writeErrorToLogs(
-                "Error: No default current input file found, check that config/default_curr.in exists.")
-            return
-        except IOError:
-            self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
-            return
         except AssertionError:
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
@@ -375,10 +373,20 @@ class MainWindow(QtWidgets.QMainWindow):
         except ValueError:
             self.writeErrorToLogs(
                 "Error: Insufficient atoms for region A (min. one required). Select atoms for A by middle clicking.")
+            return
         except ZeroDivisionError:
             self.writeErrorToLogs(
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
-        self.writeToLogs("Current input file " + self.currentInputFilename + ".in generated successfully.", "green")
+            return
+        except FileNotFoundError:
+            self.writeErrorToLogs(
+                "Error: No default current input file found, check that config/default_curr.in exists.")
+            return
+        except IOError:
+            self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
+            return
+
+        self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
 
         # openFileButton
         # openFileLineEdit
@@ -423,7 +431,7 @@ class MainWindow(QtWidgets.QMainWindow):
         headers = transmission_graph(self.graphWidget, self.openCsvFileLineEdit.text())
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
-        self.writeToLogs("Execution carried out successfully.", "green")
+        self.writeToLogs("Graphs plotted successfully.", "green")
 
     # SwitchToInputFileTabButton
 

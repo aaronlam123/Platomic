@@ -276,8 +276,8 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/de
         contents.insert(line + line_number, content)
 
     current_line_count = get_line_number(input_file, "OpenBoundaryCurrent") + 1
-    region_A = str(len(regionA)) + " " + " ".join(regionA) + "\n"
-    region_B = str(len(regionB)) + " " + " ".join(regionB) + "\n"
+    region_A = str(len(regionA)) + " " + " ".join(map(str, regionA)) + "\n"
+    region_B = str(len(regionB)) + " " + " ".join(map(str, regionB)) + "\n"
     contents.insert(current_line_count + 3, region_A)
     contents.insert(current_line_count + 4, region_B)
 
