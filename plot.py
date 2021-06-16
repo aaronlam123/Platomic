@@ -6,34 +6,6 @@ import scipy.special as sp
 import custom
 import pandas as pd
 
-from Transmission.Transmission import get_energy_gamma_transmission_XYZ
-
-
-""" Deprecated functions
-def draw_atom(radius, position, widget, colour, wireframe=False):
-    md = gl.MeshData.sphere(rows=10, cols=20, radius=radius)
-    mi = gl.GLMeshItem(meshdata=md, smooth=True, color=colour, shader="balloon")
-    if wireframe:
-        mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(0, 0, 0, 1), shader="balloon", drawEdges=True,
-                           drawFaces=False)
-    mi.translate(*position)
-    widget.addItem(mi)
-
-
-def draw_bond(p1, p2, widget, bond_radius=0.1):
-    v = p2 - p1
-    theta = np.arctan2(v[1], v[0])
-    phi = np.arctan2(np.linalg.norm(v[:2]), v[2])
-    tr = pg.Transform3D()
-    tr.translate(*p1)
-    tr.rotate(theta * 180 / np.pi, 0, 0, 1)
-    tr.rotate(phi * 180 / np.pi, 0, 1, 0)
-    md = gl.MeshData.cylinder(rows=10, cols=20, radius=[bond_radius, bond_radius], length=distance.euclidean(p1, p2))
-    mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(0.6, 0.6, 0.6, 0), shader="balloon", drawFaces=True)
-    mi.setTransform(tr)
-    widget.addItem(mi)
-"""
-
 
 def draw_atoms(atoms, widget, rows, cols):
     for i in range(len(atoms)):
@@ -175,7 +147,7 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
 
 
 def transmission_graph(widget, input_file):
-    df = pd.read_csv(input_file + ".csv", sep=",", quoting=3)
+    df = pd.read_csv(input_file, sep=",", quoting=3)
     for i in list(df):
         if i == "E(Ry)":
             continue
@@ -185,16 +157,18 @@ def transmission_graph(widget, input_file):
 
 def transmission_graph2(widget, input_file, index, eigenenergies):
     widget.clear()
-    #widget.setXRange(0, 1)
-    #widget.setYRange(0, 1)
     widget.setLabel("left", text="Transmission")
     widget.setLabel("bottom", text="Energy", units="Ry")
-    df = pd.read_csv(input_file + ".csv", sep=",", quoting=3)
-    #print(df["E(Ry)"])
-    #print(df[index])
+    df = pd.read_csv(input_file, sep=",", quoting=3)
     widget.plot(df["E(Ry)"], df[index])
     for i in eigenenergies:
         widget.addItem(pg.InfiniteLine(pos=(float(i) / 13.6, 0)))
+
+def current_graph(widget, x, y):
+    widget.clear()
+    widget.setLabel("left", text="Current", units="mA")
+    widget.setLabel("bottom", text="Bias", units="V")
+    widget.plot(x, y)
 
 
 

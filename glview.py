@@ -22,6 +22,7 @@ class GLView(GLViewWidget):
         self.font = None
         self.size = None
         self.offset = None
+        self.colour = None
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
@@ -87,7 +88,7 @@ class GLView(GLViewWidget):
         font = QtGui.QFont()
         font.setFamily(self.font)
         font.setPixelSize(self.size)
-        self.qglColor(QColor(255, 0, 0, 255))
+        self.qglColor(QColor(self.colour))
         offset = 0.5
 
         for i in range(len(self.atoms)):

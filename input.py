@@ -1,6 +1,6 @@
 import ntpath
+from datetime import datetime
 from decimal import Decimal
-
 import pyqtgraph
 from PyQt5 import QtGui
 import shlex
@@ -190,11 +190,13 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
-    with open(str(name) + "_.in", "w") as f:
+    now = datetime.now()
+    date = now.strftime("%d-%m_%H%M%S")
+    with open(str(name) + "_" + date + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_"
+    return name + "_" + date
 
 def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     basename = ntpath.basename(xyz_file)
@@ -227,11 +229,13 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
-    with open(str(name) + "_trans.in", "w") as f:
+    now = datetime.now()
+    date = now.strftime("%d-%m_%H%M%S")
+    with open(str(name) + "_t_" + date + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_trans"
+    return name + "_t_" + date
 
 
 def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/default_curr.in"):
@@ -277,18 +281,28 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/de
     contents.insert(current_line_count + 3, region_A)
     contents.insert(current_line_count + 4, region_B)
 
-    with open(str(name) + "_curr.in", "w") as f:
+    now = datetime.now()
+    date = now.strftime("%d-%m_%H%M%S")
+    with open(str(name) + "_tc_" + date + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_curr"
+    return name + "_tc_" + date
+
+def find_current_in_file(file):
+    with open(file, "r") as f:
+        string = lines_that_contain("Current[0]", f)[0]
+    return string[13:-4]
 
 
 if __name__ == '__main__':
+    pass
+    #print(find_current_in_file("benzene_curr.out"))
     #print(get_line_number("config/default.in", "Atoms"))
-    curr_plato_input("benzene.xyz", ["1", "2"], ["3", "4"], ["5", "6"])
+    #curr_plato_input("benzene.xyz", ["1", "2"], ["3", "4"], ["5", "6"])
 
     #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    #xyz_to_plato_input("benzene.xyz")
 
     #for i in range(12):
         #atoms_main[i].check()
