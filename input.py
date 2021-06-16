@@ -278,8 +278,8 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/de
     current_line_count = get_line_number(input_file, "OpenBoundaryCurrent") + 1
     region_A = str(len(regionA)) + " " + " ".join(map(str, regionA)) + "\n"
     region_B = str(len(regionB)) + " " + " ".join(map(str, regionB)) + "\n"
-    contents.insert(current_line_count + 3, region_A)
-    contents.insert(current_line_count + 4, region_B)
+    contents.insert(current_line_count + i + 2, region_A)
+    contents.insert(current_line_count + i + 3, region_B)
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
@@ -299,7 +299,7 @@ if __name__ == '__main__':
     pass
     #print(find_current_in_file("benzene_curr.out"))
     #print(get_line_number("config/default.in", "Atoms"))
-    #curr_plato_input("benzene.xyz", ["1", "2"], ["3", "4"], ["5", "6"])
+    curr_plato_input("benzene.xyz", [1, 2, 3, 4, 5, 6], [3, 4, 5, 6, 7, 8, 9], [8, 6, 5, 4])
 
     #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
     #xyz_to_plato_input("benzene.xyz")

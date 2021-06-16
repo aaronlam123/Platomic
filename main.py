@@ -294,14 +294,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Graphs plotted successfully.", "green")
 
     def onCurrExecuteButtonClicked(self):
-        self.currInputFilename = "benzene_curr"
-        self.writeToLogs("Current: " + find_current_in_file(self.inputFilename + ".out") + " mA.", "green")
-
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
             return
         try:
-            command = "(cd ./Plato/bin && ./tb1 ../../" + self.currInputFilename + ")"
+            command = "(cd ./Plato/bin && ./tb1 ../../" + self.inputFilename + ")"
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
             return
@@ -313,8 +310,9 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
-        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Execution carried out successfully.", "green")
+        self.writeToLogs("Current: " + find_current_in_file(self.inputFilename + ".out") + " mA.", "green")
 
     # generateInputFileButton
 
