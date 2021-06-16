@@ -7,7 +7,10 @@ import numpy as np
 
 
 class GLView(GLViewWidget):
-    clicked = pg.QtCore.pyqtSignal()
+    left_clicked = pg.QtCore.pyqtSignal()
+    right_clicked = pg.QtCore.pyqtSignal()
+    middle_clicked = pg.QtCore.pyqtSignal()
+
     def __init__(self, parent=None):
         super().__init__(parent)
         self.multiplier = None
@@ -22,21 +25,36 @@ class GLView(GLViewWidget):
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
-        if ev.button() != 2:
-            return
 
         items = self.itemsAt((ev.x(), ev.y(), 1, 1))
 
-        for i in range(len(self.atoms)-1, -1, -1):
-            if self.atoms[i].get_mi() in items:
-                if self.atoms[i].get_isSelected():
-                    self.atoms[i].set_isSelected(False)
-                    self.clicked.emit()
-                    break
-                else:
-                    self.atoms[i].set_isSelected(True)
-                    self.clicked.emit()
-                    break
+        if ev.button() == 1 or ev.button() == 2 or ev.button() == 4:
+            for i in range(len(self.atoms)-1, -1, -1):
+                if self.atoms[i].get_mi() in items:
+                    if ev.button() == 1:
+                        if self.atoms[i].get_isSelectedTrans():
+                            self.atoms[i].set_isSelectedTrans(False)
+                        else:
+                            self.atoms[i].set_isSelectedTrans(True)
+                        self.left_clicked.emit()
+                        break
+
+                    if ev.button() == 2:
+                        if self.atoms[i].get_isSelectedCurrA():
+                            self.atoms[i].set_isSelectedCurrA(False)
+                        else:
+                            self.atoms[i].set_isSelectedCurrA(True)
+                        self.middle_clicked.emit()
+                        break
+
+                    if ev.button() == 4:
+                        if self.atoms[i].get_isSelectedCurrB():
+                            self.atoms[i].set_isSelectedCurrB(False)
+                        else:
+                            self.atoms[i].set_isSelectedCurrB(True)
+                        self.right_clicked.emit()
+                        break
+
 
     def itemsAt(self, region=None):
         """

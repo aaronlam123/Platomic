@@ -15,7 +15,9 @@ class Atom:
         self.__total_orbitals = None
         self.__quantum_dict = None
         self.__eigenenergies = None
-        self.__isSelected = False
+        self.__isSelectedTrans = False
+        self.__isSelectedCurrA = False
+        self.__isSelectedCurrB = False
         self.__mi = None
 
 
@@ -50,8 +52,14 @@ class Atom:
     def get_eigenenergy(self, mode):
         return self.__eigenenergies[mode]
 
-    def get_isSelected(self):
-        return self.__isSelected
+    def get_isSelectedTrans(self):
+        return self.__isSelectedTrans
+
+    def get_isSelectedCurrA(self):
+        return self.__isSelectedCurrA
+
+    def get_isSelectedCurrB(self):
+        return self.__isSelectedCurrB
 
     def get_mi(self):
         return self.__mi
@@ -86,8 +94,14 @@ class Atom:
     def set_eigenenergies(self, eigenenergies):
         self.__eigenenergies = eigenenergies
 
-    def set_isSelected(self, state):
-        self.__isSelected = state
+    def set_isSelectedTrans(self, state):
+        self.__isSelectedTrans = state
+
+    def set_isSelectedCurrA(self, state):
+        self.__isSelectedCurrA = state
+
+    def set_isSelectedCurrB(self, state):
+        self.__isSelectedCurrB = state
 
     def set_mi(self, mi):
         self.__mi = mi
@@ -104,4 +118,5 @@ class Atom:
         print(np.array(self.__eigenvector).astype(float).shape)
         print(self.__quantum_dict)
         print(self.__eigenenergies)
-        print(self.__isSelected)
+        print(self.__isSelectedTrans)
+        print(self.__isSelectedCurrA)

@@ -234,9 +234,59 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     return name + "_trans"
 
 
+def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/default_curr.in"):
+    basename = ntpath.basename(xyz_file)
+    name = os.path.splitext(basename)[0]
+
+    if len(selected) <= 1:
+        raise AssertionError
+
+    if len(regionA) <= 0:
+        raise ValueError
+
+    if len(regionB) <= 0:
+        raise ZeroDivisionError
+
+    try:
+        with open(input_file, "r") as f:
+            contents = f.readlines()
+    except IOError:
+        raise FileNotFoundError
+
+    try:
+        with open(xyz_file, "r") as xyz:
+            natoms = xyz.readline().strip()
+            xyz.readline()
+            xyz_contents = xyz.readlines()
+    except IOError:
+        raise IOError
+
+    terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
+    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 -0.4281406\n")
+    for i in range(len(selected)):
+        contents.insert(terminal_line_count + i + 1, "0.0 0.10 0.001 0 1 " + str(selected[i]) + "\n")
+
+    contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
+    line_number = get_line_number(input_file, "Atoms") + i + 3
+    for line, content in enumerate(xyz_contents):
+        contents.insert(line + line_number, content)
+
+    current_line_count = get_line_number(input_file, "OpenBoundaryCurrent") + 1
+    region_A = str(len(regionA)) + " " + " ".join(regionA) + "\n"
+    region_B = str(len(regionB)) + " " + " ".join(regionB) + "\n"
+    contents.insert(current_line_count + 3, region_A)
+    contents.insert(current_line_count + 4, region_B)
+
+    with open(str(name) + "_curr.in", "w") as f:
+        contents = "".join(contents)
+        f.writelines(contents)
+
+    return name + "_curr"
+
+
 if __name__ == '__main__':
-    pass
     #print(get_line_number("config/default.in", "Atoms"))
+    curr_plato_input("benzene.xyz", ["1", "2"], ["3", "4"], ["5", "6"])
 
     #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 

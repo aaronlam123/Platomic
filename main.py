@@ -1,6 +1,6 @@
 from PyQt5 import QtWidgets, QtGui, uic
 from plot import *
-from input import input_file_setup, xyz_to_plato_input, trans_plato_input
+from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input
 from subprocess import PIPE, run
 import math
 import os
@@ -31,7 +31,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.atoms = atoms
         self.inputFilename = None
         self.transInputFilename = None
-        self.selected = []
+        self.transSelected = []
+        self.currentSelectedA = []
+        self.currentSelectedB = []
         self.mode = 0
 
         ###### Initialise propertiesWindow ######
@@ -187,7 +189,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.atoms = self.atoms
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
-        self.openGLWidget.clicked.connect(self.onSelection)
+        self.openGLWidget.left_clicked.connect(self.onTransSelection)
+        self.openGLWidget.middle_clicked.connect(self.onCurrentSelectionA)
+        self.openGLWidget.right_clicked.connect(self.onCurrentSelectionB)
         self.draw()
 
         # resetViewButton
@@ -248,6 +252,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
         self.draw()
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
         self.writeToLogs("Execution carried out successfully.", "green")
 
     def onTransExecuteButtonClicked(self):
@@ -271,6 +276,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Execution carried out successfully.", "green")
 
         # generateInputFileButton
@@ -295,7 +301,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def onGenerateTransInputFileButtonClicked(self):
         self.transInputTextEdit.clear()
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.selected)
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
             self.transInputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -315,6 +321,38 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato transmission input file.")
             return
         self.writeToLogs("Transmission input file " + self.transInputFilename + ".in generated successfully.", "green")
+
+        def onGenerateCurrInputFileButtonClicked(self):
+            self.currInputTextEdit.clear()
+            try:
+                filename = curr_plato_input(self.openFileLineEdit.text(), self.currentSelectedA, self.currentSelectedB)
+                self.currInputFilename = filename
+                with open(filename + ".in", "r") as f:
+                    contents = f.readlines()
+                for line, content in enumerate(contents):
+                    self.currInputTextEdit.insertPlainText(content)
+            except IOError:
+                self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
+                return
+            except AssertionError:
+                self.writeErrorToLogs(
+                    "Error: Insufficient terminals selected, you must select at least two terminals. Select a terminal by left clicking on an atom.")
+                return
+            except ValueError:
+                self.writeErrorToLogs(
+                    "Error: Insufficient atoms for region A, you must select at least one atom. Select an atom by middle clicking on an atom.")
+            except ZeroDivisionError:
+                self.writeErrorToLogs(
+                    "Error: Insufficient atoms for region B, you must select at least one atom. Select an atom by right clicking on an atom.")
+            except FileNotFoundError:
+                self.writeErrorToLogs(
+                    "Error: No default current input file found, check that config/default_curr.in exists.")
+                return
+            except IOError:
+                self.writeErrorToLogs("Error: No .xyz file selected to generate Plato current input file.")
+                return
+            self.writeToLogs("Current input file " + self.currentInputFilename + ".in generated successfully.",
+                             "green")
 
         # openFileButton
         # openFileLineEdit
@@ -541,19 +579,50 @@ class MainWindow(QtWidgets.QMainWindow):
         self.horizontalSliderEnergyLabel.setText("Energy (eV): " + self.atoms[0].get_eigenenergy(value))
 
     # openGLWidget
-    def onSelection(self):
-        self.selected = []
+    def onTransSelection(self):
+        self.transSelected = []
         self.draw()
         for i in range(len(self.atoms)):
-            if self.atoms[i].get_isSelected():
-                self.selected.append(i + 1)
-        if len(self.selected) == 0:
+            if self.atoms[i].get_isSelectedTrans():
+                self.transSelected.append(i + 1)
+        if len(self.transSelected) == 0:
             self.writeToLogs("No terminals selected.", "orange")
             return
         selection = "Selected terminals by atom index: "
-        for j in range(len(self.selected)):
-            selection = selection + str(self.selected[j]) + ", "
+        for j in range(len(self.transSelected)):
+            selection = selection + str(self.transSelected[j]) + ", "
         self.writeToLogs(selection[:-2], "orange")
+        self.openGLWidget.update()
+
+    def onCurrentSelectionA(self):
+        self.currentSelectedA = []
+        self.draw()
+        for i in range(len(self.atoms)):
+            if self.atoms[i].get_isSelectedCurrA():
+                self.currentSelectedA.append(i + 1)
+        if len(self.currentSelectedA) == 0:
+            self.writeToLogs("No regions selected.", "purple")
+            return
+        selection = "Region A by atom index: "
+        for j in range(len(self.currentSelectedA)):
+            selection = selection + str(self.currentSelectedA[j]) + ", "
+        self.writeToLogs(selection[:-2], "purple")
+        self.openGLWidget.update()
+
+    def onCurrentSelectionB(self):
+        self.currentSelectedB = []
+        self.draw()
+        for i in range(len(self.atoms)):
+            if self.atoms[i].get_isSelectedCurrB():
+                self.currentSelectedB.append(i + 1)
+        if len(self.currentSelectedB) == 0:
+            self.writeToLogs("No regions selected.", "green")
+            return
+        selection = "Region B by atom index: "
+        for j in range(len(self.currentSelectedB)):
+            selection = selection + str(self.currentSelectedB[j]) + ", "
+        self.writeToLogs(selection[:-2], "green")
+        self.openGLWidget.update()
 
     # resetViewButton
     def onResetViewButtonClicked(self):

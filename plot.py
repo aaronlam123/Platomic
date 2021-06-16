@@ -46,12 +46,25 @@ def draw_atoms(atoms, widget, rows, cols):
 
 def draw_selection(atoms, widget, rows, cols):
     for i in range(len(atoms)):
-        if atoms[i].get_isSelected():
-            md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius() + 0.02)
+        md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius() + 0.02)
+        if atoms[i].get_isSelectedTrans():
             mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(1, 1, 0, 0.5), drawEdges=False, drawFaces=True)
             mi.translate(*atoms[i].get_xyz())
             mi.setGLOptions('translucent')
             widget.addItem(mi)
+        if atoms[i].get_isSelectedCurrA():
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, edgeColor=(1, 0, 1, 1), drawEdges=True, drawFaces=False)
+            mi.translate(*atoms[i].get_xyz())
+            widget.addItem(mi)
+        if atoms[i].get_isSelectedCurrB():
+            tr = pg.Transform3D()
+            tr.rotate(90 * 180 / np.pi, 0, 0, 1)
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, edgeColor=(0, 1, 0, 1), drawEdges=True, drawFaces=False)
+            mi.setTransform(tr)
+            mi.translate(*atoms[i].get_xyz())
+            widget.addItem(mi)
+
+
 
 
 def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
