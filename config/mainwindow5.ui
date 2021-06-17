@@ -187,7 +187,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="setupSettingsTab">
        <attribute name="title">
@@ -209,118 +209,104 @@ p, li { white-space: pre-wrap; }
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
-            <item row="2" column="0">
-             <widget class="QLineEdit" name="openFileLineEdit"/>
-            </item>
-            <item row="11" column="0">
-             <widget class="QPushButton" name="switchToInputFileTabButton">
-              <property name="text">
-               <string>Switch to Input File tab</string>
-              </property>
-             </widget>
-            </item>
-            <item row="5" column="0">
-             <widget class="QPushButton" name="generateInputFileButton">
-              <property name="text">
-               <string>Generate</string>
-              </property>
-             </widget>
-            </item>
-            <item row="7" column="0">
-             <widget class="QPushButton" name="generateTransInputFileButton">
-              <property name="text">
-               <string>Generate</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" alignment="Qt::AlignVCenter">
+            <item row="0" column="0">
              <widget class="QLabel" name="label">
               <property name="text">
                <string>Select or enter path of .xyz file:</string>
               </property>
              </widget>
             </item>
-            <item row="10" column="0" colspan="2" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_4">
+            <item row="1" column="0">
+             <widget class="QLineEdit" name="openFileLineEdit"/>
+            </item>
+            <item row="3" column="0">
+             <widget class="QPushButton" name="generateInputFileButton">
               <property name="text">
-               <string>View and / or edit Plato input file:</string>
+               <string>Generate Input File</string>
               </property>
              </widget>
             </item>
-            <item row="4" column="0" alignment="Qt::AlignBottom">
+            <item row="4" column="0">
+             <widget class="QPushButton" name="executeButton">
+              <property name="text">
+               <string>Display Molecule and MOs</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
+             <widget class="QLabel" name="label_34">
+              <property name="text">
+               <string>Generate transmission input file and calculate transmission:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QPushButton" name="generateTransInputFileButton">
+              <property name="text">
+               <string>Generate Transmission Input File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QPushButton" name="executeTransButton">
+              <property name="text">
+               <string>Calcule transmission</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLabel" name="label_35">
+              <property name="text">
+               <string>Generate current input file and calculate current:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
              <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>Generate Plato input file:</string>
+               <string>Generate and execute Plato input file:</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="1">
+            <item row="1" column="1">
              <widget class="QPushButton" name="openFileButton">
               <property name="text">
                <string>Open</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0" colspan="2" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_35">
-              <property name="text">
-               <string>Generate current input file:</string>
-              </property>
-             </widget>
-            </item>
             <item row="9" column="0">
              <widget class="QPushButton" name="generateCurrInputFileButton">
               <property name="text">
-               <string>Generate</string>
+               <string>Generate Current Input File</string>
               </property>
              </widget>
             </item>
-            <item row="17" column="0">
+            <item row="10" column="0">
              <widget class="QPushButton" name="executeCurrButton">
               <property name="text">
-               <string>Execute</string>
+               <string>Calculate current </string>
               </property>
              </widget>
             </item>
-            <item row="16" column="0" colspan="2" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_37">
+            <item row="12" column="0">
+             <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Calculate currents:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="0" colspan="2" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_33">
-              <property name="text">
-               <string>Calculate transmission:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0">
-             <widget class="QPushButton" name="executeTransButton">
-              <property name="text">
-               <string>Execute</string>
-              </property>
-             </widget>
-            </item>
-            <item row="12" column="0" colspan="2" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_5">
-              <property name="text">
-               <string>Execute Plato and display the molecule:</string>
+               <string>View and / or edit Plato input files:</string>
               </property>
              </widget>
             </item>
             <item row="13" column="0">
-             <widget class="QPushButton" name="executeButton">
+             <widget class="QPushButton" name="switchToInputFileTabButton">
               <property name="text">
-               <string>Execute</string>
+               <string>Switch to Input File tab</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0" colspan="2">
-             <widget class="QLabel" name="label_34">
+            <item row="11" column="0">
+             <widget class="QPushButton" name="executeCurrGraphButton">
               <property name="text">
-               <string>Generate transmission input file:</string>
+               <string>Plot current vs. bias</string>
               </property>
              </widget>
             </item>
@@ -342,83 +328,109 @@ p, li { white-space: pre-wrap; }
         <string>Load Files</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_16">
-        <item row="0" column="0" colspan="2">
-         <widget class="QLabel" name="label_41">
-          <property name="text">
-           <string>To view molecular orbitals, load your .out and .wf Plato files.</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="1">
-         <widget class="QPushButton" name="openWfFileButton">
-          <property name="enabled">
+        <item row="7" column="1">
+         <widget class="QScrollArea" name="scrollArea_6">
+          <property name="widgetResizable">
            <bool>true</bool>
           </property>
-          <property name="text">
-           <string>Open</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="0">
-         <widget class="QLineEdit" name="openCsvFileLineEdit"/>
-        </item>
-        <item row="2" column="0">
-         <widget class="QLineEdit" name="openOutFileLineEdit"/>
-        </item>
-        <item row="1" column="0">
-         <widget class="QLabel" name="label_6">
-          <property name="text">
-           <string>Select or enter path of .out file:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="4" column="0">
-         <widget class="QLineEdit" name="openWfFileLineEdit">
-          <property name="readOnly">
-           <bool>false</bool>
-          </property>
-         </widget>
-        </item>
-        <item row="6" column="0" colspan="2">
-         <widget class="QLabel" name="label_42">
-          <property name="text">
-           <string>To view transmission graphs, load your .csv file:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="7" column="1">
-         <widget class="QPushButton" name="openCsvFileButton">
-          <property name="text">
-           <string>Open</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QLabel" name="label_43">
-          <property name="text">
-           <string>Select or enter path of .wf file:</string>
-          </property>
-         </widget>
-        </item>
-        <item row="2" column="1">
-         <widget class="QPushButton" name="openOutFileButton">
-          <property name="text">
-           <string>Open</string>
-          </property>
-         </widget>
-        </item>
-        <item row="5" column="0">
-         <widget class="QPushButton" name="executeLoadedButton">
-          <property name="text">
-           <string>Execute</string>
-          </property>
-         </widget>
-        </item>
-        <item row="8" column="0">
-         <widget class="QPushButton" name="transExecuteLoadedButton">
-          <property name="text">
-           <string>Execute</string>
-          </property>
+          <widget class="QWidget" name="scrollAreaWidgetContents_7">
+           <property name="geometry">
+            <rect>
+             <x>0</x>
+             <y>0</y>
+             <width>357</width>
+             <height>837</height>
+            </rect>
+           </property>
+           <layout class="QGridLayout" name="gridLayout_17">
+            <item row="0" column="0" colspan="2">
+             <widget class="QLabel" name="label_41">
+              <property name="text">
+               <string>To view molecular orbitals, load a .out and .wf Plato file.</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Select or enter path of .out file:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLineEdit" name="openOutFileLineEdit"/>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="openOutFileButton">
+              <property name="text">
+               <string>Open</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0">
+             <widget class="QLabel" name="label_43">
+              <property name="text">
+               <string>Select or enter path of .wf file:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0">
+             <widget class="QLineEdit" name="openWfFileLineEdit">
+              <property name="readOnly">
+               <bool>false</bool>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="1">
+             <widget class="QPushButton" name="openWfFileButton">
+              <property name="enabled">
+               <bool>true</bool>
+              </property>
+              <property name="text">
+               <string>Open</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0">
+             <widget class="QPushButton" name="executeLoadedButton">
+              <property name="text">
+               <string>Execute</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0" colspan="2">
+             <widget class="QLabel" name="label_42">
+              <property name="text">
+               <string>To view transmission graphs, load a Plato .csv file:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Select or enter path of .csv file:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="8" column="0">
+             <widget class="QLineEdit" name="openCsvFileLineEdit"/>
+            </item>
+            <item row="8" column="1">
+             <widget class="QPushButton" name="openCsvFileButton">
+              <property name="text">
+               <string>Open</string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0">
+             <widget class="QPushButton" name="transExecuteLoadedButton">
+              <property name="text">
+               <string>Execute</string>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -693,17 +705,17 @@ p, li { white-space: pre-wrap; }
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">
-            <item row="0" column="0">
-             <widget class="QLabel" name="label_39">
-              <property name="text">
-               <string>Transmission Graph:</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_36">
               <property name="text">
                <string>Select graphs:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0">
+             <widget class="QLabel" name="label_39">
+              <property name="text">
+               <string>Transmission Graph:</string>
               </property>
              </widget>
             </item>

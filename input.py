@@ -50,6 +50,7 @@ def get_lines_between(file, start, end, end_opt="second end", skip_line=True, po
         array.pop()
     return array
 
+
 def get_line_number(file, string):
     line_count = 1
     with open(file, "r") as f:
@@ -192,11 +193,12 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
-    with open(str(name) + "_" + date + ".in", "w") as f:
+    with open(name + "_" + date + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
     return name + "_" + date
+
 
 def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     basename = ntpath.basename(xyz_file)
@@ -231,14 +233,15 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
-    with open(str(name) + "_t_" + date + ".in", "w") as f:
+    with open(name + "_t_" + date + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
     return name + "_t_" + date
 
 
-def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/default_curr.in"):
+def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma,
+                     input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -266,9 +269,9 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/de
         raise IOError
 
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
-    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 -0.4281406\n")
+    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 " + reference_pot + "\n")
     for i in range(len(selected)):
-        contents.insert(terminal_line_count + i + 1, "0.0 0.10 0.001 0 1 " + str(selected[i]) + "\n")
+        contents.insert(terminal_line_count + i + 1, bias + " " + gamma + " 0.001 0 1 " + str(selected[i]) + "\n")
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
     line_number = get_line_number(input_file, "Atoms") + i + 3
@@ -281,13 +284,13 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, input_file="config/de
     contents.insert(current_line_count + i + 2, region_A)
     contents.insert(current_line_count + i + 3, region_B)
 
-    now = datetime.now()
-    date = now.strftime("%d-%m_%H%M%S")
-    with open(str(name) + "_tc_" + date + ".in", "w") as f:
+    with open(name + "_" + bias + "V_G-" + gamma + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_tc_" + date
+    return name + "_" + bias + "V_G-" + gamma
+
+
 
 def find_current_in_file(file):
     with open(file, "r") as f:
@@ -297,15 +300,15 @@ def find_current_in_file(file):
 
 if __name__ == '__main__':
     pass
-    #print(find_current_in_file("benzene_curr.out"))
-    #print(get_line_number("config/default.in", "Atoms"))
+    # print(find_current_in_file("benzene_curr.out"))
+    # print(get_line_number("config/default.in", "Atoms"))
     curr_plato_input("benzene.xyz", [1, 2, 3, 4, 5, 6], [3, 4, 5, 6, 7, 8, 9], [8, 6, 5, 4])
 
-    #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
-    #xyz_to_plato_input("benzene.xyz")
+    # atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    # xyz_to_plato_input("benzene.xyz")
 
-    #for i in range(12):
-        #atoms_main[i].check()
-        #print('\n')
+    # for i in range(12):
+    # atoms_main[i].check()
+    # print('\n')
 
     # xyz_to_plato_input("benzene.xyz")

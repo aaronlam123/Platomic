@@ -26,35 +26,35 @@ class GLView(GLViewWidget):
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
-
         items = self.itemsAt((ev.x(), ev.y(), 1, 1))
 
-        if ev.button() == 1 or ev.button() == 2 or ev.button() == 4:
-            for i in range(len(self.atoms)-1, -1, -1):
-                if self.atoms[i].get_mi() in items:
-                    if ev.button() == 1:
-                        if self.atoms[i].get_isSelectedTrans():
-                            self.atoms[i].set_isSelectedTrans(False)
-                        else:
-                            self.atoms[i].set_isSelectedTrans(True)
-                        self.left_clicked.emit()
-                        break
+        if self.atoms is not None:
+            if ev.button() == 1 or ev.button() == 2 or ev.button() == 4:
+                for i in range(len(self.atoms)-1, -1, -1):
+                    if self.atoms[i].get_mi() in items:
+                        if ev.button() == 1:
+                            if self.atoms[i].get_isSelectedTrans():
+                                self.atoms[i].set_isSelectedTrans(False)
+                            else:
+                                self.atoms[i].set_isSelectedTrans(True)
+                            self.left_clicked.emit()
+                            break
 
-                    if ev.button() == 2:
-                        if self.atoms[i].get_isSelectedCurrA():
-                            self.atoms[i].set_isSelectedCurrA(False)
-                        else:
-                            self.atoms[i].set_isSelectedCurrA(True)
-                        self.middle_clicked.emit()
-                        break
+                        if ev.button() == 2:
+                            if self.atoms[i].get_isSelectedCurrA():
+                                self.atoms[i].set_isSelectedCurrA(False)
+                            else:
+                                self.atoms[i].set_isSelectedCurrA(True)
+                            self.middle_clicked.emit()
+                            break
 
-                    if ev.button() == 4:
-                        if self.atoms[i].get_isSelectedCurrB():
-                            self.atoms[i].set_isSelectedCurrB(False)
-                        else:
-                            self.atoms[i].set_isSelectedCurrB(True)
-                        self.right_clicked.emit()
-                        break
+                        if ev.button() == 4:
+                            if self.atoms[i].get_isSelectedCurrB():
+                                self.atoms[i].set_isSelectedCurrB(False)
+                            else:
+                                self.atoms[i].set_isSelectedCurrB(True)
+                            self.right_clicked.emit()
+                            break
 
 
     def itemsAt(self, region=None):
@@ -91,21 +91,22 @@ class GLView(GLViewWidget):
         self.qglColor(QColor(self.colour))
         offset = 0.5
 
-        for i in range(len(self.atoms)):
-            xyz = np.array(self.atoms[i].get_xyz())
-            if self.index:
-                self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_index()), font)
-                xyz[self.offset] = xyz[self.offset] - offset
-            if self.symbol:
-                self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_symbol()), font)
-                xyz[self.offset] = xyz[self.offset] - offset
-            if self.position:
-                self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_xyz()), font)
-                xyz[self.offset] = xyz[self.offset] - offset
-            if self.radius:
-                self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_radius()), font)
+        if self.atoms is not None:
+            for i in range(len(self.atoms)):
+                xyz = np.array(self.atoms[i].get_xyz())
+                if self.index:
+                    self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_index()), font)
+                    xyz[self.offset] = xyz[self.offset] - offset
+                if self.symbol:
+                    self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_symbol()), font)
+                    xyz[self.offset] = xyz[self.offset] - offset
+                if self.position:
+                    self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_xyz()), font)
+                    xyz[self.offset] = xyz[self.offset] - offset
+                if self.radius:
+                    self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_radius()), font)
 
-        self.render
+
         # self.renderText(0, 0, 0, '(0, 0, 0) CENTER')
         # self.renderText(1, 0, 0, '(1, 0, 0) RIGHT')
         # self.renderText(-1, 0, 0, '(-1, 0, 0) LEFT')

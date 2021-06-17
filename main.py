@@ -1,5 +1,7 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon, QColor
+
+from atom import Atom
 from plot import *
 from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file
 from subprocess import PIPE, run
@@ -14,12 +16,12 @@ np.seterr(divide='ignore', invalid='ignore')
 resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
-default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+#default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
 
 class MainWindow(QtWidgets.QMainWindow):
 
-    def __init__(self, atoms, screen_width):
+    def __init__(self, screen_width, atoms=None):
         super(MainWindow, self).__init__()
 
         # Load the UI Page
@@ -30,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Initialise state
         self.atoms = atoms
-        self.inputFilename = "example/benzene.xyz"
+        self.inputFilename = None
         self.transInputFilename = None
         self.currInputFilename = None
         self.transSelected = []
@@ -46,8 +48,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # executeTransButton
         self.executeTransButton.clicked.connect(self.onTransExecuteButtonClicked)
 
-        # executeCurrButton
-        self.executeCurrButton.clicked.connect(self.onCurrExecuteButtonClicked)
+        # executeCurrButton and executeCurrGraphButton
+        self.executeCurrButton.clicked.connect(self.onExecuteCurrButtonClicked)
+        self.executeCurrGraphButton.clicked.connect(self.onExecuteCurrGraphButtonClicked)
 
         # executeLoadedButton and transExecuteLoadedButton
         self.executeLoadedButton.clicked.connect(self.onExecuteLoadedButtonClicked)
@@ -202,13 +205,16 @@ class MainWindow(QtWidgets.QMainWindow):
         # openGLWidget
         self.openGLWidget.opts['distance'] = 15
         self.openGLWidget.multiplier = self.multiplier
-        self.openGLWidget.atoms = self.atoms
+        self.openGLWidget.atoms = [Atom("0", 0, -7, 0, "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
+                                   Atom("0", 0, -7.25, -1, "Hover over any (?) icons for help and / or additional information."),
+                                   Atom("0", 0, -7.5, -2, "For a full in-depth tutorial check out the User Guide.")]
+        #self.openGLWidget.atoms = self.atoms
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
         self.openGLWidget.left_clicked.connect(self.onTransSelection)
         self.openGLWidget.middle_clicked.connect(self.onCurrentSelectionA)
         self.openGLWidget.right_clicked.connect(self.onCurrentSelectionB)
-        self.draw()
+        #self.draw()
 
         # resetViewButton
         self.resetViewButton.clicked.connect(self.onResetViewButtonClicked)
@@ -293,7 +299,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
 
-    def onCurrExecuteButtonClicked(self):
+    def onExecuteCurrButtonClicked(self):
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
             return
@@ -310,9 +316,21 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
-        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Execution carried out successfully.", "green")
-        self.writeToLogs("Current: " + find_current_in_file(self.inputFilename + ".out") + " mA.", "green")
+        current = find_current_in_file(self.inputFilename + ".out")
+        self.writeToLogs("Current: " + current + " mA.", "green")
+        return float(current)
+
+    def onExecuteCurrGraphButtonClicked(self):
+        currents = []
+        array = np.linspace(0, 1, 5)
+        for i in array:
+            bias = round(i, 4)
+            self.onGenerateCurrInputFileButtonClicked(bias=str(bias))
+            currents.append(self.onExecuteCurrButtonClicked())
+        current_graph(self.graphWidget2, array, currents)
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
+        self.writeToLogs("Current vs. bias graphs plotted successfully.", "green")
 
     # generateInputFileButton
 
@@ -355,10 +373,10 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
 
-    def onGenerateCurrInputFileButtonClicked(self):
+    def onGenerateCurrInputFileButtonClicked(self, reference_pot="0", bias="0", gamma="0.1"):
         self.inputTextEdit.clear()
         try:
-            filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA, self.currentSelectedB)
+            filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA, self.currentSelectedB, reference_pot, bias, gamma)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -419,6 +437,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def onExecuteLoadedButtonClicked(self):
         self.atoms = input_file_setup(self.openOutFileLineEdit.text(), "config/attributes.txt",
                                           self.openWfFileLineEdit.text())
+        self.openGLWidget.atoms = self.atoms
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
         self.draw()
@@ -444,10 +463,10 @@ class MainWindow(QtWidgets.QMainWindow):
         ### graphSettingsTab
 
     def setGraphComboBox(self):
-        if self.transInputFilename is None:
+        if self.inputFilename is None:
             filename = self.openCsvFileLineEdit.text()
         else:
-            filename = self.transInputFilename + ".csv"
+            filename = self.inputFilename + ".csv"
         #transmission_graph2(self.graphWidget, filename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
 
         ### atomSettingsTab
@@ -757,6 +776,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    main = MainWindow(default_input, resolution.width)
+    main = MainWindow(resolution.width)
+    #main = MainWindow(resolution.width, default_input)
     main.show()
     sys.exit(app.exec_())
