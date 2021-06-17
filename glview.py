@@ -30,7 +30,7 @@ class GLView(GLViewWidget):
 
         if self.atoms is not None:
             if ev.button() == 1 or ev.button() == 2 or ev.button() == 4:
-                for i in range(len(self.atoms)-1, -1, -1):
+                for i in range(len(self.atoms) - 1, -1, -1):
                     if self.atoms[i].get_mi() in items:
                         if ev.button() == 1:
                             if self.atoms[i].get_isSelectedTrans():
@@ -56,13 +56,13 @@ class GLView(GLViewWidget):
                             self.right_clicked.emit()
                             break
 
-
     def itemsAt(self, region=None):
         """
         Return a list of the items displayed in the region (x, y, w, h)
         relative to the widget.
         """
-        region = (region[0] * self.multiplier, (self.height() - (region[1] + region[3])) * self.multiplier, region[2] * self.multiplier, region[3] * self.multiplier)
+        region = (region[0] * self.multiplier, (self.height() - (region[1] + region[3])) * self.multiplier,
+                  region[2] * self.multiplier, region[3] * self.multiplier)
 
         # buf = np.zeros(100000, dtype=np.uint)
         buf = glSelectBuffer(100000)
@@ -79,7 +79,6 @@ class GLView(GLViewWidget):
         items = [(h.near, h.names[0]) for h in hits]
         items.sort(key=lambda i: i[0])
         return [self._itemNames[i[1]] for i in items]
-
 
     def paintGL(self, *args, **kwds):
         # Call parent
@@ -105,7 +104,6 @@ class GLView(GLViewWidget):
                     xyz[self.offset] = xyz[self.offset] - offset
                 if self.radius:
                     self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_radius()), font)
-
 
         # self.renderText(0, 0, 0, '(0, 0, 0) CENTER')
         # self.renderText(1, 0, 0, '(1, 0, 0) RIGHT')

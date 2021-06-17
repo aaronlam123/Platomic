@@ -2,7 +2,7 @@ import numpy as np
 
 
 class Atom:
-    def __init__(self, symbol, x, y, z, index, colour=None, radius=None, eigenvector=None):
+    def __init__(self, symbol, x, y, z, index):
         self.__symbol = symbol
         self.__x = x
         self.__y = y
@@ -19,7 +19,6 @@ class Atom:
         self.__isSelectedCurrA = False
         self.__isSelectedCurrB = False
         self.__mi = None
-
 
     # Getter functions
     def get_symbol(self):

@@ -1,9 +1,9 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon, QColor
-
 from atom import Atom
 from plot import *
-from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, isfloat, isposfloat, isdigit
+from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, \
+    isfloat, isposfloat, isdigit
 from subprocess import PIPE, run
 import math
 import os
@@ -16,6 +16,8 @@ np.seterr(divide='ignore', invalid='ignore')
 resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
+
+
 # default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
 
@@ -286,7 +288,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currentSelectedB = []
         self.executeButton.setEnabled(False)
 
-
     def onTransExecuteButtonClicked(self):
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
@@ -341,7 +342,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def onExecuteCurrGraphButtonClicked(self):
         if not len(self.transSelected) == 2:
             self.writeErrorToLogs(
-                "Error: two terminals should be selected for current vs. bias graphs. Select terminals by left clicking atoms.")
+                "Error: at two terminals should be selected. Select terminals by left clicking atoms.")
             return
         if len(self.currentSelectedA) <= 0:
             self.writeErrorToLogs(
@@ -409,7 +410,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.inputTextEdit.clear()
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
-                                        self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(), current_calc)
+                                        self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
+                                        current_calc)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -502,7 +504,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
         bias = np.linspace(0, float(bias_v[:-1]), len(files))
         currents = []
-        files_full = [os.path.join(self.openDirLineEdit.text(), file) for file in os.listdir(self.openDirLineEdit.text())]
+        files_full = [os.path.join(self.openDirLineEdit.text(), file) for file in
+                      os.listdir(self.openDirLineEdit.text())]
         files_full.sort()
         for file in files_full:
             currents.append(float(find_current_in_file(file)))
@@ -529,7 +532,8 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             filename = self.inputFilename + "_trans.csv"
         if self.graphComboBoxKeys is not None:
-            transmission_graph(self.graphWidget, filename, self.graphComboBoxKeys[self.graphComboBox.currentIndex() - 1])
+            transmission_graph(self.graphWidget, filename,
+                               self.graphComboBoxKeys[self.graphComboBox.currentIndex() - 1])
 
         ### atomSettingsTab
         # atomColSlider
@@ -597,11 +601,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.radius = state
         self.openGLWidget.update()
 
-    def setFontComboBox(self, state):
+    def setFontComboBox(self):
         self.openGLWidget.font = self.fontComboBox.currentText()
         self.openGLWidget.update()
 
-    def setSizeComboBox(self, state):
+    def setSizeComboBox(self):
         self.openGLWidget.size = int(self.sizeComboBox.currentText())
         self.openGLWidget.update()
 
@@ -609,7 +613,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.offset = state
         self.openGLWidget.update()
 
-    def setColourComboBox(self, state):
+    def setColourComboBox(self):
         self.openGLWidget.colour = self.colourComboBox.currentText()
         self.openGLWidget.update()
 
@@ -837,7 +841,6 @@ class MainWindow(QtWidgets.QMainWindow):
         if not isfloat(string):
             self.writeErrorToLogs("Error: non-float '" + string + "' entered for reference potential.")
             self.referenceLineEdit.setText("")
-
 
     def onBiasLineEditChanged(self):
         string = self.biasLineEdit.text()

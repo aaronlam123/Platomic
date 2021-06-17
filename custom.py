@@ -2,6 +2,7 @@ import numpy as np
 import scipy.special as sp
 import pyqtgraph.opengl as gl
 
+
 # Adapted from https://pyqtgraph.readthedocs.io/en/latest/_modules/pyqtgraph/opengl/MeshData.html
 def orbital(eig_val, m, l, rows, cols, scaler):
     verts = np.empty((rows + 1, cols, 3), dtype=float)
