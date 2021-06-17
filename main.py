@@ -109,6 +109,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         ### graphSettingsTab
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
+        self.graphComboBoxKeys = None
 
         ### atomSettingsTab
         # atomColSlider
@@ -304,10 +305,11 @@ class MainWindow(QtWidgets.QMainWindow):
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
         self.writeToLogs("Execution carried out successfully.", "green")
-        headers = transmission_headers(self.inputFilename + "_trans.csv")
+        headers_mapped, headers = transmission_headers(self.inputFilename + "_trans.csv", self.transSelected)
         self.graphComboBox.clear()
         self.graphComboBox.addItems(["All"])
-        self.graphComboBox.addItems(headers)
+        self.graphComboBox.addItems(headers_mapped)
+        self.graphComboBoxKeys = headers
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
@@ -483,10 +485,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
 
     def onTransExecuteLoadedButtonClicked(self):
-        headers = transmission_headers(self.openCsvFileLineEdit.text())
+        headers_mapped, headers = transmission_headers(self.openCsvFileLineEdit.text(), None)
         self.graphComboBox.clear()
         self.graphComboBox.addItems(["All"])
-        self.graphComboBox.addItems(headers)
+        self.graphComboBox.addItems(headers_mapped)
+        self.graphComboBoxKeys = headers
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
 
@@ -525,7 +528,7 @@ class MainWindow(QtWidgets.QMainWindow):
             filename = self.openCsvFileLineEdit.text()
         else:
             filename = self.inputFilename + "_trans.csv"
-        transmission_graph(self.graphWidget, filename, self.graphComboBox.currentText())
+        transmission_graph(self.graphWidget, filename, self.graphComboBoxKeys(self.graphComboBox.currentIndex()))
 
         ### atomSettingsTab
         # atomColSlider

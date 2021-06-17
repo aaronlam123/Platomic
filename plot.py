@@ -147,9 +147,14 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
 
 
 
-def transmission_headers(input_file):
+def transmission_headers(input_file, transSelected):
     df = pd.read_csv(input_file, sep=",", quoting=3)
-    return list(df)[1:]
+    headers = list(df)[1:]
+    if transSelected is None:
+        return headers
+    for i, index in enumerate(transSelected):
+        headers = [ind.replace(str(i+1), index) for ind in headers]
+    return headers, list(df)[1:]
 
 
 def transmission_graph(widget, input_file, index):
@@ -177,7 +182,6 @@ def current_graph(widget, x, y):
     #pen=pg.mkPen(width=3)
 
 
-
 """
 def transmission_graph(widget, selected, input_file):
     ds = pd.read_csv(input_file + ".csv", sep=',', header=0)
@@ -193,6 +197,8 @@ def transmission_graph(widget, selected, input_file):
 """
 
 if __name__ == '__main__':
-    energy, transmission, widget = transmission_graph2(None, "benzene_trans", " 1 - 3")
+    pass
+    #print(transmission_headers("benzene_trans.csv", ["1", "4", "6"]))
+    #[' 1 - 2', ' 1 - 3', '2 - 3']
     #print(energy)
     #print(transmission)
