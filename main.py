@@ -17,6 +17,7 @@ resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
 #default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+RYDBERG = 13.605685
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -325,7 +326,7 @@ class MainWindow(QtWidgets.QMainWindow):
         currents = []
         array = np.linspace(0, 1, 5)
         for i in array:
-            bias = round(i, 4)
+            bias = round(i / RYDBERG, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=str(bias))
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, array, currents)
