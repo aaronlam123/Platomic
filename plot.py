@@ -151,7 +151,7 @@ def transmission_headers(input_file, transSelected):
     df = pd.read_csv(input_file, sep=",", quoting=3)
     headers = list(df)[1:]
     if transSelected is None:
-        return headers
+        return headers, headers
     for i, index in enumerate(transSelected):
         headers = [ind.replace(str(i+1), str(index)) for ind in headers]
     return headers, list(df)[1:]
