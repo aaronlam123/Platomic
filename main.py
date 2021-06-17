@@ -71,8 +71,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openOutFileButton.clicked.connect(self.onOpenOutFileButtonClicked)
         self.openWfFileButton.clicked.connect(self.onOpenWfFileButtonClicked)
         self.openCsvFileButton.clicked.connect(self.onOpenCsvFileButtonClicked)
-        self.biasMinLineEdit.editingFinished.connect(self.onBiasMinLineEditChanged)
-        self.biasMaxLineEdit.editingFinished.connect(self.onBiasMaxLineEditChanged)
+        self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
+        self.biasLineEdit.editingFinished.connect(self.onBiasLineEditChanged)
         self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
 
         # switchToInputFileTabButton
@@ -339,10 +339,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
-        array = np.linspace(float(self.biasMinLineEdit.text()), float(self.biasMaxLineEdit.text()), int(self.stepsLineEdit.text()))
+        array = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
         for i in array:
             bias = round(i, 4)
-            self.onGenerateCurrInputFileButtonClicked(bias=bias)
+            self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, array, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -389,11 +389,11 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
 
-    def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, gamma=0.1):
+    def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, gamma=0.1, current_calc=False):
         self.inputTextEdit.clear()
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
-                                        self.currentSelectedB, reference_pot, bias, gamma)
+                                        self.currentSelectedB, reference_pot, bias, gamma, current_calc)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -767,17 +767,17 @@ class MainWindow(QtWidgets.QMainWindow):
             f.write(str(self.inputTextEdit.toPlainText()))
         self.writeToLogs("Input file " + self.inputFilename + ".in saved successfully.", "green")
 
-    def onBiasMinLineEditChanged(self):
-        string = self.biasMinLineEdit.text()
+    def onReferenceLineEditChanged(self):
+        string = self.referenceLineEdit.text()
         if not isfloat(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for minimum bias.")
-            self.biasMinLineEdit.setText("")
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for reference potential.")
+            self.referenceLineEdit.setText("")
 
-    def onBiasMaxLineEditChanged(self):
-        string = self.biasMaxLineEdit.text()
+    def onBiasLineEditChanged(self):
+        string = self.biasLineEdit.text()
         if not isfloat(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for maximum bias.")
-            self.biasMaxLineEdit.setText("")
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for bias.")
+            self.biasLineEdit.setText("")
 
     def onStepsLineEditChanged(self):
         string = self.stepsLineEdit.text()

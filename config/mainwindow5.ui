@@ -38,7 +38,7 @@
       <property name="maximumSize">
        <size>
         <width>16777215</width>
-        <height>106</height>
+        <height>200</height>
        </size>
       </property>
       <property name="sizeIncrement">
@@ -215,13 +215,6 @@ p, li { white-space: pre-wrap; }
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
-            <item row="0" column="0" colspan="2">
-             <widget class="QLabel" name="label">
-              <property name="text">
-               <string>Select or enter path of .xyz file:</string>
-              </property>
-             </widget>
-            </item>
             <item row="1" column="2">
              <widget class="QPushButton" name="openFileButton">
               <property name="text">
@@ -233,6 +226,16 @@ p, li { white-space: pre-wrap; }
              <widget class="QLabel" name="label_3">
               <property name="text">
                <string>Generate and execute Plato input file:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="1" column="0" colspan="2">
+             <widget class="QLineEdit" name="openFileLineEdit"/>
+            </item>
+            <item row="3" column="0" colspan="2">
+             <widget class="QPushButton" name="generateInputFileButton">
+              <property name="text">
+               <string>Generate Input File</string>
               </property>
              </widget>
             </item>
@@ -250,6 +253,13 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
+            <item row="8" column="0" colspan="3">
+             <widget class="QLabel" name="label_35">
+              <property name="text">
+               <string>Generate current input file and calculate current:</string>
+              </property>
+             </widget>
+            </item>
             <item row="6" column="0" colspan="2">
              <widget class="QPushButton" name="generateTransInputFileButton">
               <property name="text">
@@ -257,10 +267,17 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="8" column="0" colspan="3">
-             <widget class="QLabel" name="label_35">
+            <item row="7" column="0" colspan="2">
+             <widget class="QPushButton" name="executeTransButton">
               <property name="text">
-               <string>Generate current input file and calculate current:</string>
+               <string>Calcule transmission</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="0" colspan="2">
+             <widget class="QLabel" name="label">
+              <property name="text">
+               <string>Select or enter path of .xyz file:</string>
               </property>
              </widget>
             </item>
@@ -271,45 +288,30 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="11" column="0" colspan="2">
-             <widget class="QLabel" name="label_33">
-              <property name="text">
-               <string>Generate current vs. bias graph:</string>
+            <item row="0" column="3" rowspan="18">
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
               </property>
-             </widget>
-            </item>
-            <item row="12" column="0">
-             <widget class="QLabel" name="label_37">
-              <property name="text">
-               <string>Bias min. (eV)</string>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>40</height>
+               </size>
               </property>
-             </widget>
-            </item>
-            <item row="12" column="1">
-             <widget class="QLineEdit" name="biasMinLineEdit">
-              <property name="text">
-               <string>0</string>
-              </property>
-             </widget>
+             </spacer>
             </item>
             <item row="13" column="0">
              <widget class="QLabel" name="label_44">
               <property name="text">
-               <string>Bias max. (eV)</string>
+               <string>Bias (eV) from 0 to:</string>
               </property>
              </widget>
             </item>
             <item row="13" column="1">
-             <widget class="QLineEdit" name="biasMaxLineEdit">
+             <widget class="QLineEdit" name="biasLineEdit">
               <property name="text">
                <string>1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="0">
-             <widget class="QLabel" name="label_45">
-              <property name="text">
-               <string>Steps</string>
               </property>
              </widget>
             </item>
@@ -320,34 +322,17 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="16" column="0" colspan="2">
-             <widget class="QLabel" name="label_4">
+            <item row="15" column="0" colspan="2">
+             <widget class="QPushButton" name="executeCurrGraphButton">
               <property name="text">
-               <string>View and / or edit Plato input files:</string>
+               <string>Plot current vs. bias</string>
               </property>
              </widget>
             </item>
-            <item row="17" column="0" colspan="2">
-             <widget class="QPushButton" name="switchToInputFileTabButton">
+            <item row="11" column="0" colspan="2">
+             <widget class="QLabel" name="label_33">
               <property name="text">
-               <string>Switch to Input File tab</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QLineEdit" name="openFileLineEdit"/>
-            </item>
-            <item row="7" column="0" colspan="2">
-             <widget class="QPushButton" name="executeTransButton">
-              <property name="text">
-               <string>Calcule transmission</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="2">
-             <widget class="QPushButton" name="generateInputFileButton">
-              <property name="text">
-               <string>Generate Input File</string>
+               <string>Generate current vs. bias graph:</string>
               </property>
              </widget>
             </item>
@@ -358,10 +343,38 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="15" column="0" colspan="2">
-             <widget class="QPushButton" name="executeCurrGraphButton">
+            <item row="16" column="0" colspan="2">
+             <widget class="QLabel" name="label_4">
               <property name="text">
-               <string>Plot current vs. bias</string>
+               <string>View and / or edit Plato input files:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="1">
+             <widget class="QLineEdit" name="referenceLineEdit">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="0" colspan="2">
+             <widget class="QPushButton" name="switchToInputFileTabButton">
+              <property name="text">
+               <string>Switch to Input File tab</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="0">
+             <widget class="QLabel" name="label_45">
+              <property name="text">
+               <string>Steps</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0">
+             <widget class="QLabel" name="label_37">
+              <property name="text">
+               <string>Reference Potential (eV)</string>
               </property>
              </widget>
             </item>
@@ -410,6 +423,19 @@ p, li { white-space: pre-wrap; }
                <string>To view molecular orbitals, load a .out and .wf Plato file.</string>
               </property>
              </widget>
+            </item>
+            <item row="0" column="2" rowspan="10">
+             <spacer name="verticalSpacer_2">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>816</height>
+               </size>
+              </property>
+             </spacer>
             </item>
             <item row="1" column="0">
              <widget class="QLabel" name="label_6">
@@ -517,19 +543,39 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>357</width>
-             <height>837</height>
+             <width>363</width>
+             <height>820</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_9">
-            <item row="0" column="5">
+            <item row="0" column="0" colspan="2">
+             <widget class="QLabel" name="horizontalSliderLabel">
+              <property name="text">
+               <string>Molecular Orbital: 1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="0" column="4">
              <widget class="QLabel" name="horizontalSliderEnergyLabel">
               <property name="text">
                <string>Energy (eV): -22.8993</string>
               </property>
              </widget>
             </item>
-            <item row="1" column="0" colspan="7">
+            <item row="0" column="5" rowspan="18">
+             <spacer name="verticalSpacer_3">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>799</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="1" column="0" colspan="5">
              <widget class="QSlider" name="horizontalSlider">
               <property name="autoFillBackground">
                <bool>false</bool>
@@ -548,21 +594,14 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="4" column="0" colspan="7" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_26">
+            <item row="2" column="0" colspan="3">
+             <widget class="QLabel" name="label_7">
               <property name="text">
-               <string>Reset Camera View:</string>
+               <string>Toggle Atoms On/Off:</string>
               </property>
              </widget>
             </item>
-            <item row="0" column="0" colspan="2">
-             <widget class="QLabel" name="horizontalSliderLabel">
-              <property name="text">
-               <string>Molecular Orbital: 1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="5">
+            <item row="3" column="0" colspan="2">
              <widget class="QPushButton" name="toggleAtomsButton">
               <property name="text">
                <string>Toggle Atoms</string>
@@ -575,108 +614,42 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="5" column="0" colspan="4">
+            <item row="4" column="0" colspan="2">
+             <widget class="QLabel" name="label_26">
+              <property name="text">
+               <string>Reset Camera View:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="5" column="0" colspan="2">
              <widget class="QPushButton" name="resetViewButton">
               <property name="text">
                <string>Reset</string>
               </property>
              </widget>
             </item>
-            <item row="6" column="0" colspan="7" alignment="Qt::AlignBottom">
+            <item row="6" column="0">
              <widget class="QLabel" name="label_27">
               <property name="text">
                <string>Save Image:</string>
               </property>
              </widget>
             </item>
-            <item row="7" column="0" colspan="4">
+            <item row="7" column="0" colspan="2">
              <widget class="QPushButton" name="saveImageButton">
               <property name="text">
                <string>Save</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0" colspan="8" alignment="Qt::AlignBottom">
+            <item row="8" column="0" colspan="3">
              <widget class="QLabel" name="label_25">
               <property name="text">
                <string>Set background brightness:</string>
               </property>
              </widget>
             </item>
-            <item row="2" column="0" colspan="7" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_7">
-              <property name="text">
-               <string>Toggle Atoms On/Off:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="0">
-             <widget class="QLabel" name="label_30">
-              <property name="text">
-               <string>Font:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="1" colspan="3">
-             <widget class="QComboBox" name="sizeComboBox">
-              <property name="currentText">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="13" column="0" colspan="8" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_29">
-              <property name="text">
-               <string>Label Formatting:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="14" column="1" colspan="5">
-             <widget class="QComboBox" name="fontComboBox">
-              <property name="currentText">
-               <string/>
-              </property>
-              <property name="currentIndex">
-               <number>-1</number>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0">
-             <widget class="QLabel" name="label_31">
-              <property name="text">
-               <string>Size:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="10" column="0" colspan="8" alignment="Qt::AlignBottom">
-             <widget class="QLabel" name="label_28">
-              <property name="text">
-               <string>Labels:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="17" column="2" colspan="3">
-             <widget class="QComboBox" name="colourComboBox">
-              <property name="currentText">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="16" column="3">
-             <widget class="QComboBox" name="offsetComboBox">
-              <property name="currentText">
-               <string/>
-              </property>
-             </widget>
-            </item>
-            <item row="17" column="0" colspan="2">
-             <widget class="QLabel" name="label_38">
-              <property name="text">
-               <string>Colour:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="9" column="0" colspan="5">
+            <item row="9" column="0" colspan="4">
              <widget class="QSlider" name="brightnessSlider">
               <property name="minimum">
                <number>0</number>
@@ -701,14 +674,21 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="9" column="5">
+            <item row="9" column="4">
              <widget class="QLabel" name="brightnessSliderLabel">
               <property name="text">
                <string>Brightness: 40</string>
               </property>
              </widget>
             </item>
-            <item row="11" column="0" colspan="2">
+            <item row="10" column="0">
+             <widget class="QLabel" name="label_28">
+              <property name="text">
+               <string>Labels:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="11" column="0">
              <widget class="QCheckBox" name="checkBoxIndex">
               <property name="text">
                <string>Index</string>
@@ -718,7 +698,7 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="11" column="3" colspan="2">
+            <item row="11" column="3">
              <widget class="QCheckBox" name="checkBoxSymbol">
               <property name="text">
                <string>Symbol</string>
@@ -739,10 +719,69 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="16" column="0" colspan="2">
+            <item row="13" column="0" colspan="2">
+             <widget class="QLabel" name="label_29">
+              <property name="text">
+               <string>Label Formatting:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="0">
+             <widget class="QLabel" name="label_30">
+              <property name="text">
+               <string>Font:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="14" column="1" colspan="2">
+             <widget class="QComboBox" name="fontComboBox">
+              <property name="currentText">
+               <string/>
+              </property>
+              <property name="currentIndex">
+               <number>-1</number>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="0">
+             <widget class="QLabel" name="label_31">
+              <property name="text">
+               <string>Size:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="1" colspan="2">
+             <widget class="QComboBox" name="sizeComboBox">
+              <property name="currentText">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="0">
              <widget class="QLabel" name="label_32">
               <property name="text">
                <string>Offset axis:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="16" column="3">
+             <widget class="QComboBox" name="offsetComboBox">
+              <property name="currentText">
+               <string/>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="0">
+             <widget class="QLabel" name="label_38">
+              <property name="text">
+               <string>Colour:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="2" colspan="2">
+             <widget class="QComboBox" name="colourComboBox">
+              <property name="currentText">
+               <string/>
               </property>
              </widget>
             </item>

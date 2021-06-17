@@ -243,7 +243,7 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     return name + "_t_" + date
 
 
-def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma,
+def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc,
                      input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
@@ -274,13 +274,12 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
     contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 " + str(reference_pot) + "\n")
     for i in range(len(selected)):
-        if i == 0:
-            contents.insert(terminal_line_count + i + 1,
-                            str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
-        if i == 1:
-            contents.insert(terminal_line_count + i + 1,
-                            str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
-        if i > 1:
+        if current_calc:
+            if i == 0:
+                contents.insert(terminal_line_count + i + 1, str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+            if i == 1:
+                contents.insert(terminal_line_count + i + 1, str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+        else:
             contents.insert(terminal_line_count + i + 1, str(bias / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
