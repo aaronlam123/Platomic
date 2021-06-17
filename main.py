@@ -300,7 +300,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs(result.stdout, "black")
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Execution carried out successfully.", "green")
-        headers = transmission_graph(self.graphWidget, self.inputFilename + "_trans.csv")
+        headers = transmission_headers(self.graphWidget, self.inputFilename + "_trans.csv")
+        self.graphComboBox.addItems("All")
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
@@ -346,7 +347,7 @@ class MainWindow(QtWidgets.QMainWindow):
             bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
-        current_graph(self.graphWidget2, bias, currents)
+        current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
@@ -508,8 +509,8 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.inputFilename is None:
             filename = self.openCsvFileLineEdit.text()
         else:
-            filename = self.inputFilename + ".csv"
-        # transmission_graph2(self.graphWidget, filename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
+            filename = self.inputFilename + "_trans.csv"
+        transmission_graph(self.graphWidget, filename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
 
         ### atomSettingsTab
         # atomColSlider
