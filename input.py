@@ -269,9 +269,15 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
         raise IOError
 
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
-    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 " + reference_pot + "\n")
+    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 " + str(reference_pot) + "\n")
     for i in range(len(selected)):
-        contents.insert(terminal_line_count + i + 1, bias + " " + gamma + " 0.001 0 1 " + str(selected[i]) + "\n")
+        if i == 0:
+            contents.insert(terminal_line_count + i + 1,
+                            str(bias * -0.5) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+        if i == 1:
+            contents.insert(terminal_line_count + i + 1,
+                            str(bias * 0.5) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+        contents.insert(terminal_line_count + i + 1, str(bias) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
     line_number = get_line_number(input_file, "Atoms") + i + 3
@@ -284,7 +290,7 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     contents.insert(current_line_count + i + 2, region_A)
     contents.insert(current_line_count + i + 3, region_B)
 
-    with open(name + "_" + bias + "V_G-" + gamma + ".in", "w") as f:
+    with open(name + "_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 

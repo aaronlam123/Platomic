@@ -16,7 +16,7 @@ np.seterr(divide='ignore', invalid='ignore')
 resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
-#default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+# default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 RYDBERG = 13.605685
 
 
@@ -206,16 +206,17 @@ class MainWindow(QtWidgets.QMainWindow):
         # openGLWidget
         self.openGLWidget.opts['distance'] = 15
         self.openGLWidget.multiplier = self.multiplier
-        self.openGLWidget.atoms = [Atom("0", 0, -7, 0, "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
-                                   Atom("0", 0, -7.25, -1, "Hover over any (?) icons for help and / or additional information."),
-                                   Atom("0", 0, -7.5, -2, "For a full in-depth tutorial check out the User Guide.")]
-        #self.openGLWidget.atoms = self.atoms
+        self.openGLWidget.atoms = [
+            Atom("0", 0, -7, 0, "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
+            Atom("0", 0, -7.25, -1, "Hover over any (?) icons for help and / or additional information."),
+            Atom("0", 0, -7.5, -2, "For a full in-depth tutorial check out the User Guide.")]
+        # self.openGLWidget.atoms = self.atoms
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
         self.openGLWidget.left_clicked.connect(self.onTransSelection)
         self.openGLWidget.middle_clicked.connect(self.onCurrentSelectionA)
         self.openGLWidget.right_clicked.connect(self.onCurrentSelectionB)
-        #self.draw()
+        # self.draw()
 
         # resetViewButton
         self.resetViewButton.clicked.connect(self.onResetViewButtonClicked)
@@ -323,11 +324,14 @@ class MainWindow(QtWidgets.QMainWindow):
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
+        if not len(self.transSelected) == 2:
+            self.writeErrorToLogs(
+                "Error: only two terminals should be selected for current vs. bias graphs. Select terminals by left clicking atoms.")
         currents = []
         array = np.linspace(0, 1, 5)
         for i in array:
             bias = round(i / RYDBERG, 4)
-            self.onGenerateCurrInputFileButtonClicked(bias=str(bias))
+            self.onGenerateCurrInputFileButtonClicked(bias=bias)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, array, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -374,10 +378,11 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
 
-    def onGenerateCurrInputFileButtonClicked(self, reference_pot="0", bias="0", gamma="0.1"):
+    def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, gamma=0.1):
         self.inputTextEdit.clear()
         try:
-            filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA, self.currentSelectedB, reference_pot, bias, gamma)
+            filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
+                                        self.currentSelectedB, reference_pot, bias, gamma)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -437,7 +442,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onExecuteLoadedButtonClicked(self):
         self.atoms = input_file_setup(self.openOutFileLineEdit.text(), "config/attributes.txt",
-                                          self.openWfFileLineEdit.text())
+                                      self.openWfFileLineEdit.text())
         self.openGLWidget.atoms = self.atoms
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
@@ -468,7 +473,7 @@ class MainWindow(QtWidgets.QMainWindow):
             filename = self.openCsvFileLineEdit.text()
         else:
             filename = self.inputFilename + ".csv"
-        #transmission_graph2(self.graphWidget, filename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
+        # transmission_graph2(self.graphWidget, filename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
 
         ### atomSettingsTab
         # atomColSlider
@@ -778,6 +783,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     main = MainWindow(resolution.width)
-    #main = MainWindow(resolution.width, default_input)
+    # main = MainWindow(resolution.width, default_input)
     main.show()
     sys.exit(app.exec_())
