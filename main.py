@@ -280,7 +280,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.transSelected = []
         self.currentSelectedA = []
         self.currentSelectedB = []
-        self.executeCurrButton.setEnabled(False)
+        self.executeButton.setEnabled(False)
 
 
     def onTransExecuteButtonClicked(self):
@@ -308,7 +308,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
-        self.transExecuteButton.setEnabled(False)
+        self.executeTransButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self):
         if os.name == 'nt':
@@ -374,7 +374,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
             return
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
-        self.executeCurrButton.setEnabled(True)
+        self.executeButton.setEnabled(True)
 
     def onGenerateTransInputFileButtonClicked(self):
         self.inputTextEdit.clear()
@@ -397,7 +397,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
             return
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
-        self.transExecuteButton.setEnabled(True)
+        self.executeTransButton.setEnabled(True)
 
     def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, gamma=0.1, current_calc=False):
         self.inputTextEdit.clear()
