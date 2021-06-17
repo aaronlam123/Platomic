@@ -350,8 +350,9 @@ class MainWindow(QtWidgets.QMainWindow):
         currents = []
         biases = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
         for i in biases:
-            self.writeToLogs("Running execution for bias " + bias + "V, " + str(i) + "/" + self.stepsLineEdit.text() + ".")
             bias = round(i, 4)
+            self.writeToLogs(
+                "Running execution for bias " + bias + "V, " + str(i) + "/" + self.stepsLineEdit.text() + ".")
             self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
