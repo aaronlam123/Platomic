@@ -339,7 +339,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
-        array = np.linspace(self.biasMinLineEdit.text(), self.biasMaxLineEdit.text(), self.stepsLineEdit.text())
+        array = np.linspace(float(self.biasMinLineEdit.text()), float(self.biasMaxLineEdit.text()), int(self.stepsLineEdit.text()))
         for i in array:
             bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=bias)
