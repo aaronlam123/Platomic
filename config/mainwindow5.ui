@@ -226,7 +226,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -255,6 +255,12 @@ p, li { white-space: pre-wrap; }
           </property>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
+          </property>
+          <property name="verticalScrollBarPolicy">
+           <enum>Qt::ScrollBarAsNeeded</enum>
+          </property>
+          <property name="horizontalScrollBarPolicy">
+           <enum>Qt::ScrollBarAlwaysOff</enum>
           </property>
           <property name="sizeAdjustPolicy">
            <enum>QAbstractScrollArea::AdjustIgnored</enum>
@@ -423,14 +429,7 @@ p, li { white-space: pre-wrap; }
             <item row="25" column="0">
              <widget class="QLabel" name="label_37">
               <property name="text">
-               <string>Reference Potential (eV)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="25" column="1">
-             <widget class="QLineEdit" name="referenceLineEdit">
-              <property name="text">
-               <string>0</string>
+               <string>Ref. Potential (eV)</string>
               </property>
              </widget>
             </item>
@@ -461,7 +460,7 @@ p, li { white-space: pre-wrap; }
             <item row="26" column="0">
              <widget class="QLabel" name="label_44">
               <property name="text">
-               <string>Bias (eV) from 0 to:</string>
+               <string>Max Bias (eV)</string>
               </property>
              </widget>
             </item>
@@ -484,7 +483,7 @@ p, li { white-space: pre-wrap; }
             <item row="9" column="0" colspan="3">
              <widget class="QLabel" name="label_34">
               <property name="text">
-               <string>Generate transmission input file and calculate transmission:</string>
+               <string>Calculate transmission across two terminals:</string>
               </property>
               <property name="alignment">
                <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
@@ -501,7 +500,7 @@ p, li { white-space: pre-wrap; }
             <item row="15" column="0" colspan="3">
              <widget class="QLabel" name="label_35">
               <property name="text">
-               <string>Generate current input file and calculate current:</string>
+               <string>Calculate current across two terminals:</string>
               </property>
              </widget>
             </item>
@@ -569,22 +568,6 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="33" column="0">
-             <spacer name="verticalSpacer_27">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>10</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
             <item row="19" column="0">
              <widget class="QLabel" name="label_48">
               <property name="text">
@@ -616,6 +599,29 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
+            <item row="25" column="1">
+             <widget class="QLineEdit" name="referenceLineEdit">
+              <property name="text">
+               <string>0</string>
+              </property>
+             </widget>
+            </item>
+            <item row="33" column="0">
+             <spacer name="verticalSpacer_27">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>10</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -638,10 +644,22 @@ p, li { white-space: pre-wrap; }
        <layout class="QGridLayout" name="gridLayout_16">
         <item row="7" column="1">
          <widget class="QScrollArea" name="scrollArea_6">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
           <property name="minimumSize">
            <size>
-            <width>359</width>
+            <width>0</width>
             <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>359</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="frameShadow">
@@ -655,8 +673,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
-             <height>735</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_17">
@@ -866,8 +884,14 @@ p, li { white-space: pre-wrap; }
          <widget class="QScrollArea" name="scrollArea_2">
           <property name="minimumSize">
            <size>
-            <width>359</width>
+            <width>0</width>
             <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>359</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="frameShadow">
@@ -881,8 +905,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
-             <height>641</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_9">
@@ -1303,8 +1327,14 @@ p, li { white-space: pre-wrap; }
          <widget class="QScrollArea" name="scrollArea_4">
           <property name="minimumSize">
            <size>
-            <width>359</width>
+            <width>0</width>
             <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>359</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="frameShadow">
@@ -1318,8 +1348,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
-             <height>750</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
@@ -1889,8 +1919,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
-             <height>719</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_15">
@@ -2344,8 +2374,14 @@ p, li { white-space: pre-wrap; }
          <widget class="QScrollArea" name="scrollArea_3">
           <property name="minimumSize">
            <size>
-            <width>359</width>
+            <width>0</width>
             <height>0</height>
+           </size>
+          </property>
+          <property name="maximumSize">
+           <size>
+            <width>359</width>
+            <height>16777215</height>
            </size>
           </property>
           <property name="frameShadow">
@@ -2359,8 +2395,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
-             <height>798</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">

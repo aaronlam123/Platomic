@@ -161,9 +161,9 @@ def transmission_graph(widget, input_file, index):
         for i in list(df):
             if i == "E(Ry)":
                 continue
-            widget.plot(df["E(Ry)"], df[i], pen=pg.mkPen(width=5))
+            widget.plot(df["E(Ry)"], df[i])
     else:
-        widget.plot(df["E(Ry)"], df[index], pen=pg.mkPen(width=3))
+        widget.plot(df["E(Ry)"], df[index])
     #if infinite:
         #for i in eigenenergies:
             #widget.addItem(pg.InfiniteLine(pos=(float(i) / 13.6, 0)))
@@ -173,7 +173,8 @@ def current_graph(widget, x, y):
     widget.clear()
     widget.setLabel("left", text="Current", units="mA")
     widget.setLabel("bottom", text="Bias", units="V")
-    widget.plot(x, y, pen=pg.mkPen('r', width=10))
+    widget.plot(x, y)
+    #pen=pg.mkPen(width=3)
 
 
 
