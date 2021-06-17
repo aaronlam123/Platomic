@@ -3,7 +3,7 @@ from PyQt5.QtGui import QIcon, QColor
 
 from atom import Atom
 from plot import *
-from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, isfloat, isdigit
+from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, isfloat, isposfloat, isdigit
 from subprocess import PIPE, run
 import math
 import os
@@ -99,13 +99,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.offsetComboBox.currentIndexChanged.connect(self.setOffsetComboBox)
         self.colourComboBox.currentIndexChanged.connect(self.setColourComboBox)
         self.fontComboBox.addItems(["Arial", "Cambria", "Helvetica", "Times New Roman"])
-        self.sizeComboBox.addItems(["12", "14", "16", "18", "20", "24", "30", "42"])
+        self.sizeComboBox.addItems(["14", "16", "18", "20", "24", "30", "42"])
         self.offsetComboBox.addItems(["X", "Y", "Z"])
-        self.colourComboBox.addItems(["Red", "Lime", "Blue", "Purple", "Orange", "Yellow"])
+        self.colourComboBox.addItems(["Orange", "Red", "Lime", "Blue", "Purple", "Yellow"])
         self.openGLWidget.font = "Arial"
-        self.openGLWidget.size = 12
+        self.openGLWidget.size = 14
         self.openGLWidget.offset = 0
-        self.openGLWidget.colour = "Red"
+        self.openGLWidget.colour = "Orange"
 
         ### graphSettingsTab
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
@@ -213,9 +213,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.opts['distance'] = 15
         self.openGLWidget.multiplier = self.multiplier
         self.openGLWidget.atoms = [
-            Atom("0", 0, -7, 0, "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
-            Atom("0", 0, -7.25, -1, "Hover over any (?) icons for help and / or additional information."),
-            Atom("0", 0, -7.5, -2, "For a full in-depth tutorial check out the User Guide.")]
+            Atom("0", 0, -9, 0, "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
+            Atom("0", 0, -9.25, -1, "Hover over any (?) icons for help and / or additional information."),
+            Atom("0", 0, -9.5, -2, "For a full in-depth tutorial check out the User Guide.")]
         # self.openGLWidget.atoms = self.atoms
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
@@ -350,6 +350,7 @@ class MainWindow(QtWidgets.QMainWindow):
         currents = []
         biases = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
         for i in biases:
+            self.writeToLogs("Running execution for bias " + bias + "V, " + str(i) + "/" + self.stepsLineEdit.text() + ".")
             bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
@@ -807,8 +808,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaLineEditChanged(self):
         string = self.gammaLineEdit.text()
-        if not isfloat(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for gamma.")
+        if not isposfloat(string):
+            self.writeErrorToLogs("Error: non-positive float '" + string + "' entered for gamma.")
             self.gammaLineEdit.setText("")
             self.gammaLineEdit2.setText("")
         else:
@@ -817,8 +818,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaLineEditChanged2(self):
         string = self.gammaLineEdit2.text()
-        if not isfloat(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for gamma.")
+        if not isposfloat(string):
+            self.writeErrorToLogs("Error: non-positive float '" + string + "' entered for gamma.")
             self.gammaLineEdit.setText("")
             self.gammaLineEdit2.setText("")
         else:
@@ -828,20 +829,20 @@ class MainWindow(QtWidgets.QMainWindow):
     def onReferenceLineEditChanged(self):
         string = self.referenceLineEdit.text()
         if not isfloat(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for reference potential.")
+            self.writeErrorToLogs("Error: non-float '" + string + "' entered for reference potential.")
             self.referenceLineEdit.setText("")
 
 
     def onBiasLineEditChanged(self):
         string = self.biasLineEdit.text()
         if not isfloat(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for bias.")
+            self.writeErrorToLogs("Error: non-float '" + string + "' entered for bias.")
             self.biasLineEdit.setText("")
 
     def onStepsLineEditChanged(self):
         string = self.stepsLineEdit.text()
         if not isdigit(string):
-            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for steps.")
+            self.writeErrorToLogs("Error: non-natural number '" + string + "' entered for steps.")
             self.stepsLineEdit.setText("")
 
     ### AttributeFileTab

@@ -276,9 +276,9 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     for i in range(len(selected)):
         if current_calc:
             if i == 0:
-                contents.insert(terminal_line_count + i + 1, str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
-            if i == 1:
                 contents.insert(terminal_line_count + i + 1, str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+            if i == 1:
+                contents.insert(terminal_line_count + i + 1, str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
         else:
             contents.insert(terminal_line_count + i + 1, str(bias / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
 
@@ -313,6 +313,17 @@ def isfloat(string):
     except ValueError:
         return False
     if float(string) == float("inf") or float(string) == float("-inf") or math.isnan(float(string)):
+        return False
+    return True
+
+def isposfloat(string):
+    try:
+        float(string)
+    except ValueError:
+        return False
+    if float(string) == float("inf") or float(string) == float("-inf") or math.isnan(float(string)):
+        return False
+    if float(string) < 0:
         return False
     return True
 
