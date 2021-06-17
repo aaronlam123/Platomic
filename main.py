@@ -278,6 +278,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.atoms = self.atoms
         self.draw()
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.displaySettingsTab))
         self.writeToLogs("Execution carried out successfully.", "green")
         self.transSelected = []
         self.currentSelectedA = []
@@ -308,6 +309,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
         self.executeTransButton.setEnabled(False)
 
@@ -355,6 +357,7 @@ class MainWindow(QtWidgets.QMainWindow):
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     # generateInputFileButton
