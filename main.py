@@ -302,9 +302,8 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
-        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Execution carried out successfully.", "green")
-        headers = transmission_headers(self.graphWidget, self.inputFilename + "_trans.csv")
+        headers = transmission_headers(self.inputFilename + "_trans.csv")
         self.graphComboBox.clear()
         self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers)
@@ -481,7 +480,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
 
     def onTransExecuteLoadedButtonClicked(self):
-        headers = transmission_graph(self.graphWidget, self.openCsvFileLineEdit.text())
+        headers = transmission_headers(self.openCsvFileLineEdit.text())
+        self.graphComboBox.clear()
+        self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
@@ -516,11 +517,12 @@ class MainWindow(QtWidgets.QMainWindow):
         ### graphSettingsTab
 
     def setGraphComboBox(self):
+        print(self.openCsvFileLineEdit.text())
         if self.inputFilename is None:
             filename = self.openCsvFileLineEdit.text()
         else:
             filename = self.inputFilename + "_trans.csv"
-        transmission_graph(self.graphWidget, filename, self.graphComboBox.currentText(), self.atoms[0].get_eigenenergies())
+        transmission_graph(self.graphWidget, filename, self.graphComboBox.currentText())
 
         ### atomSettingsTab
         # atomColSlider
@@ -724,7 +726,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def setHorizontalSliderLabel(self, value):
         self.mode = value
         self.draw()
-        self.horizontalSliderLabel.setText("MO: " + str(value + 1))
+        self.horizontalSliderLabel.setText("Molecular Orbital: " + str(value + 1))
         self.horizontalSliderEnergyLabel.setText("Energy (eV): " + self.atoms[0].get_eigenenergy(value))
 
     # openGLWidget

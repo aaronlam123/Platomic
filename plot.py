@@ -147,12 +147,12 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
 
 
 
-def transmission_headers(widget, input_file):
+def transmission_headers(input_file):
     df = pd.read_csv(input_file, sep=",", quoting=3)
     return list(df)[1:]
 
 
-def transmission_graph(widget, input_file, index, eigenenergies, infinite=True):
+def transmission_graph(widget, input_file, index):
     widget.clear()
     widget.setLabel("left", text="Transmission")
     widget.setLabel("bottom", text="Energy", units="Ry")
@@ -161,19 +161,19 @@ def transmission_graph(widget, input_file, index, eigenenergies, infinite=True):
         for i in list(df):
             if i == "E(Ry)":
                 continue
-            widget.plot(df["E(Ry)"], df[i])
+            widget.plot(df["E(Ry)"], df[i], pen=pg.mkPen(width=5))
     else:
-        widget.plot(df["E(Ry)"], df[index])
-    if infinite:
-        for i in eigenenergies:
-            widget.addItem(pg.InfiniteLine(pos=(float(i) / 13.6, 0)))
+        widget.plot(df["E(Ry)"], df[index], pen=pg.mkPen(width=3))
+    #if infinite:
+        #for i in eigenenergies:
+            #widget.addItem(pg.InfiniteLine(pos=(float(i) / 13.6, 0)))
 
 
 def current_graph(widget, x, y):
     widget.clear()
     widget.setLabel("left", text="Current", units="mA")
     widget.setLabel("bottom", text="Bias", units="V")
-    widget.plot(x, y)
+    widget.plot(x, y, pen=pg.mkPen('r', width=10))
 
 
 
