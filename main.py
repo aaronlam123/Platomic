@@ -73,6 +73,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openWfFileButton.clicked.connect(self.onOpenWfFileButtonClicked)
         self.openCsvFileButton.clicked.connect(self.onOpenCsvFileButtonClicked)
         self.openDirButton.clicked.connect(self.onOpenDirButtonClicked)
+        self.gammaLineEdit.editingFinished.connect(self.onGammaLineEditChanged)
+        self.gammaLineEdit2.editingFinished.connect(self.onGammaLineEditChanged2)
         self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
         self.biasLineEdit.editingFinished.connect(self.onBiasLineEditChanged)
         self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
@@ -399,11 +401,11 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeTransButton.setEnabled(True)
 
-    def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, gamma=0.1, current_calc=False):
+    def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, current_calc=False):
         self.inputTextEdit.clear()
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
-                                        self.currentSelectedB, reference_pot, bias, gamma, current_calc)
+                                        self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(), current_calc)
             self.inputFilename = filename
             with open(filename + ".in", "r") as f:
                 contents = f.readlines()
@@ -801,11 +803,32 @@ class MainWindow(QtWidgets.QMainWindow):
             f.write(str(self.inputTextEdit.toPlainText()))
         self.writeToLogs("Input file " + self.inputFilename + ".in saved successfully.", "green")
 
+    def onGammaLineEditChanged(self):
+        string = self.gammaLineEdit.text()
+        if not isfloat(string):
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for gamma.")
+            self.gammaLineEdit.setText("")
+            self.gammaLineEdit2.setText("")
+        else:
+            self.gammaLineEdit.setText(string)
+            self.gammaLineEdit2.setText(string)
+
+    def onGammaLineEditChanged2(self):
+        string = self.gammaLineEdit2.text()
+        if not isfloat(string):
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for gamma.")
+            self.gammaLineEdit.setText("")
+            self.gammaLineEdit2.setText("")
+        else:
+            self.gammaLineEdit.setText(string)
+            self.gammaLineEdit2.setText(string)
+
     def onReferenceLineEditChanged(self):
         string = self.referenceLineEdit.text()
         if not isfloat(string):
             self.writeErrorToLogs("Error: invalid number '" + string + "' entered for reference potential.")
             self.referenceLineEdit.setText("")
+
 
     def onBiasLineEditChanged(self):
         string = self.biasLineEdit.text()
