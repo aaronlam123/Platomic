@@ -341,8 +341,8 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
-        bias = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
-        for i in bias:
+        biases = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
+        for i in biases:
             bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
@@ -488,8 +488,6 @@ class MainWindow(QtWidgets.QMainWindow):
         files_full.sort()
         for file in files_full:
             currents.append(float(find_current_in_file(file)))
-        print(currents)
-        print(bias)
         current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
