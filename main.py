@@ -326,7 +326,15 @@ class MainWindow(QtWidgets.QMainWindow):
     def onExecuteCurrGraphButtonClicked(self):
         if not len(self.transSelected) == 2:
             self.writeErrorToLogs(
-                "Error: only two terminals should be selected for current vs. bias graphs. Select terminals by left clicking atoms.")
+                "Error: two terminals should be selected for current vs. bias graphs. Select terminals by left clicking atoms.")
+            return
+        if len(self.currentSelectedA) <= 0:
+            self.writeErrorToLogs(
+                "Error: Insufficient atoms for region A (min. one required). Select atoms for A by right clicking.")
+            return
+        if len(self.currentSelectedB) <= 0:
+            self.writeErrorToLogs(
+                "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
         array = np.linspace(0, 1, 5)
