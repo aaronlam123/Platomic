@@ -277,7 +277,8 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
         if i == 1:
             contents.insert(terminal_line_count + i + 1,
                             str(bias * 0.5) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
-        contents.insert(terminal_line_count + i + 1, str(bias) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+        else:
+            contents.insert(terminal_line_count + i + 1, str(bias) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
     line_number = get_line_number(input_file, "Atoms") + i + 3
