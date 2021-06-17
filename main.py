@@ -528,7 +528,7 @@ class MainWindow(QtWidgets.QMainWindow):
             filename = self.openCsvFileLineEdit.text()
         else:
             filename = self.inputFilename + "_trans.csv"
-        transmission_graph(self.graphWidget, filename, self.graphComboBoxKeys(self.graphComboBox.currentIndex()))
+        transmission_graph(self.graphWidget, filename, self.graphComboBoxKeys[self.graphComboBox.currentIndex()])
 
         ### atomSettingsTab
         # atomColSlider
