@@ -3,7 +3,7 @@ from PyQt5.QtGui import QIcon, QColor
 
 from atom import Atom
 from plot import *
-from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file
+from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, isfloat, isdigit
 from subprocess import PIPE, run
 import math
 import os
@@ -17,7 +17,6 @@ resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
 # default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
-RYDBERG = 13.605685
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -72,6 +71,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openOutFileButton.clicked.connect(self.onOpenOutFileButtonClicked)
         self.openWfFileButton.clicked.connect(self.onOpenWfFileButtonClicked)
         self.openCsvFileButton.clicked.connect(self.onOpenCsvFileButtonClicked)
+        self.biasMinLineEdit.editingFinished.connect(self.onBiasMinLineEditChanged)
+        self.biasMaxLineEdit.editingFinished.connect(self.onBiasMaxLineEditChanged)
+        self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
 
         # switchToInputFileTabButton
         self.switchToInputFileTabButton.clicked.connect(self.onSwitchToInputFileTabButtonClicked)
@@ -337,9 +339,9 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
-        array = np.linspace(0, 1, 5)
+        array = np.linspace(self.biasMinLineEdit.text(), self.biasMaxLineEdit.text(), self.stepsLineEdit.text())
         for i in array:
-            bias = round(i / RYDBERG, 4)
+            bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=bias)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, array, currents)
@@ -764,6 +766,24 @@ class MainWindow(QtWidgets.QMainWindow):
         with open(self.inputFilename + ".in", 'w') as f:
             f.write(str(self.inputTextEdit.toPlainText()))
         self.writeToLogs("Input file " + self.inputFilename + ".in saved successfully.", "green")
+
+    def onBiasMinLineEditChanged(self):
+        string = self.biasMinLineEdit.text()
+        if not isfloat(string):
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for minimum bias.")
+            self.biasMinLineEdit.setText("")
+
+    def onBiasMaxLineEditChanged(self):
+        string = self.biasMaxLineEdit.text()
+        if not isfloat(string):
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for maximum bias.")
+            self.biasMaxLineEdit.setText("")
+
+    def onStepsLineEditChanged(self):
+        string = self.stepsLineEdit.text()
+        if not isdigit(string):
+            self.writeErrorToLogs("Error: invalid number '" + string + "' entered for steps.")
+            self.stepsLineEdit.setText("")
 
     ### AttributeFileTab
     # attributeTextEdit

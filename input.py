@@ -1,3 +1,4 @@
+import math
 import ntpath
 from datetime import datetime
 from decimal import Decimal
@@ -7,6 +8,8 @@ import shlex
 from atom import Atom
 import os
 
+
+RYDBERG = 13.605685
 
 def lines_that_contain(string, f):  # returns the line which contains string in f
     return [line for line in f if string in line]
@@ -273,12 +276,12 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     for i in range(len(selected)):
         if i == 0:
             contents.insert(terminal_line_count + i + 1,
-                            str(bias * -0.5) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+                            str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
         if i == 1:
             contents.insert(terminal_line_count + i + 1,
-                            str(bias * 0.5) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+                            str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
         if i > 1:
-            contents.insert(terminal_line_count + i + 1, str(bias) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
+            contents.insert(terminal_line_count + i + 1, str(bias / RYDBERG) + " " + str(gamma) + " 0.001 0 1 " + str(selected[i]) + "\n")
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
     line_number = get_line_number(input_file, "Atoms") + i + 3
@@ -304,6 +307,21 @@ def find_current_in_file(file):
         string = lines_that_contain("Current[0]", f)[0]
     return string[13:-4]
 
+def isfloat(string):
+    try:
+        float(string)
+    except ValueError:
+        return False
+    if float(string) == float("inf") or float(string) == float("-inf") or math.isnan(float(string)):
+        return False
+    return True
+
+def isdigit(string):
+    if not string.isdigit():
+        return False
+    if string.strip() == "0":
+        return False
+    return True
 
 if __name__ == '__main__':
     # print(find_current_in_file("benzene_curr.out"))
