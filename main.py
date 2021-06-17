@@ -280,6 +280,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.transSelected = []
         self.currentSelectedA = []
         self.currentSelectedB = []
+        self.executeCurrButton.setEnabled(False)
+
 
     def onTransExecuteButtonClicked(self):
         if os.name == 'nt':
@@ -301,10 +303,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Execution carried out successfully.", "green")
         headers = transmission_headers(self.graphWidget, self.inputFilename + "_trans.csv")
+        self.graphComboBox.clear()
         self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
+        self.transExecuteButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self):
         if os.name == 'nt':
@@ -326,6 +330,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
         current = find_current_in_file(self.inputFilename + ".out")
         self.writeToLogs("Current: " + current + " mA.", "green")
+        self.executeCurrButton.setEnabled(False)
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
@@ -369,6 +374,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
             return
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
+        self.executeCurrButton.setEnabled(True)
 
     def onGenerateTransInputFileButtonClicked(self):
         self.inputTextEdit.clear()
@@ -391,6 +397,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
             return
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
+        self.transExecuteButton.setEnabled(True)
 
     def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, gamma=0.1, current_calc=False):
         self.inputTextEdit.clear()
@@ -423,6 +430,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
 
         self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
+        self.executeCurrButton.setEnabled(True)
 
         # openFileButton
         # openFileLineEdit
