@@ -301,7 +301,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Execution carried out successfully.", "green")
         headers = transmission_headers(self.graphWidget, self.inputFilename + "_trans.csv")
-        self.graphComboBox.addItems("All")
+        self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
