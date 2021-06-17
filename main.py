@@ -327,6 +327,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if not len(self.transSelected) == 2:
             self.writeErrorToLogs(
                 "Error: only two terminals should be selected for current vs. bias graphs. Select terminals by left clicking atoms.")
+            return
         currents = []
         array = np.linspace(0, 1, 5)
         for i in array:

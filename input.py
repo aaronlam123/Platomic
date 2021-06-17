@@ -294,7 +294,7 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_" + bias + "V_G-" + gamma
+    return name + "_" + str(bias) + "V_G-" + str(gamma)
 
 
 
