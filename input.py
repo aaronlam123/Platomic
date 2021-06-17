@@ -293,12 +293,13 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     contents.insert(current_line_count + i + 2, region_A)
     contents.insert(current_line_count + i + 3, region_B)
 
-    with open(name + "_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
+    now = datetime.now()
+    date = now.strftime("%d-%m_%H%M%S")
+    with open(name + "_c_" + date + "_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_" + str(bias) + "V_G-" + str(gamma)
-
+    return name + "_c_" + date + "_" + str(bias) + "V_G-" + str(gamma)
 
 
 def find_current_in_file(file):
@@ -321,6 +322,8 @@ def isdigit(string):
     if string.strip() == "0":
         return False
     return True
+
+
 
 if __name__ == '__main__':
     # print(find_current_in_file("benzene_curr.out"))

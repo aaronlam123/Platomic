@@ -55,6 +55,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # executeLoadedButton and transExecuteLoadedButton
         self.executeLoadedButton.clicked.connect(self.onExecuteLoadedButtonClicked)
         self.transExecuteLoadedButton.clicked.connect(self.onTransExecuteLoadedButtonClicked)
+        self.currExecuteLoadedButton.clicked.connect(self.onCurrExecuteLoadedButtonClicked)
 
         # generateInputFileButton
         self.generateInputFileButton.clicked.connect(self.onGenerateInputFileButtonClicked)
@@ -71,6 +72,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openOutFileButton.clicked.connect(self.onOpenOutFileButtonClicked)
         self.openWfFileButton.clicked.connect(self.onOpenWfFileButtonClicked)
         self.openCsvFileButton.clicked.connect(self.onOpenCsvFileButtonClicked)
+        self.openDirButton.clicked.connect(self.onOpenDirButtonClicked)
         self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
         self.biasLineEdit.editingFinished.connect(self.onBiasLineEditChanged)
         self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
@@ -339,14 +341,14 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
-        array = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
-        for i in array:
+        bias = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
+        for i in bias:
             bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
-        current_graph(self.graphWidget2, array, currents)
+        current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
-        self.writeToLogs("Current vs. bias graphs plotted successfully.", "green")
+        self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     # generateInputFileButton
 
@@ -451,6 +453,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if filename:
             self.openCsvFileLineEdit.setText(filename)
 
+    def onOpenDirButtonClicked(self):
+        dirname = QtWidgets.QFileDialog.getExistingDirectory(parent=self, caption='Select directory')
+
+        if dirname:
+            self.openDirLineEdit.setText(dirname)
+
     def onExecuteLoadedButtonClicked(self):
         self.atoms = input_file_setup(self.openOutFileLineEdit.text(), "config/attributes.txt",
                                       self.openWfFileLineEdit.text())
@@ -466,6 +474,25 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(headers)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
+
+    def onCurrExecuteLoadedButtonClicked(self):
+        files = os.listdir(self.openDirLineEdit.text())
+        if len(files) < 2:
+            self.writeErrorToLogs("Error: Must have at least two .out files in directory.")
+        files.sort()
+        bias_v = files[-1].split("_")[-2]
+        self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
+        bias = np.linspace(0, float(bias_v[:-1]), len(files))
+        currents = []
+        files_full = [os.path.join(self.openDirLineEdit.text(), file) for file in os.listdir(self.openDirLineEdit.text())]
+        files_full.sort()
+        for file in files_full:
+            currents.append(float(find_current_in_file(file)))
+        print(currents)
+        print(bias)
+        current_graph(self.graphWidget2, bias, currents)
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
+        self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     # SwitchToInputFileTabButton
 
