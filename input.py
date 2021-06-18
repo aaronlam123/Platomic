@@ -340,6 +340,25 @@ def isdigit(string):
     return True
 
 
+def process_current_csv(directory_name):
+    files = os.listdir(directory_name)
+    files.sort()
+    bias_v = files[-1].split("_")[-2]
+    bias = pyqtgraph.np.linspace(0, float(bias_v[:-1]), len(files))
+    currents = []
+    files_full = [os.path.join(directory_name, file) for file in
+                  os.listdir(directory_name)]
+    files_full.sort()
+    for file in files_full:
+        currents.append(float(find_current_in_file(file)))
+    return bias_v, bias, currents
+
+
+def filename_no_ext(filepath):
+    basename = ntpath.basename(filepath)
+    return os.path.splitext(basename)[0]
+
+
 if __name__ == '__main__':
     pass
 

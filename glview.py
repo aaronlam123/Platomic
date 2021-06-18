@@ -105,12 +105,6 @@ class GLView(GLViewWidget):
                 if self.radius:
                     self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_radius()), font)
 
-        # self.renderText(0, 0, 0, '(0, 0, 0) CENTER')
-        # self.renderText(1, 0, 0, '(1, 0, 0) RIGHT')
-        # self.renderText(-1, 0, 0, '(-1, 0, 0) LEFT')
-        # self.renderText(0, 1, 0, '(0, 1, 0) DOWN')
-        # self.renderText(0, -1, 0, '(0, -1, 0) TOP')
-        # self.renderText(-4.07550, -2.35299, 0.0000, 'Hydrogen')
 
     def readQImage(self):
         w = self.width() * self.multiplier

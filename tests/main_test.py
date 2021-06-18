@@ -1,7 +1,7 @@
 import filecmp
 import unittest
 from unittest.mock import MagicMock
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt
 
 from main import *
 from PyQt5.QtTest import QTest
@@ -199,8 +199,8 @@ class TestMain(unittest.TestCase):
     def test_onSaveImageButtonClicked(self):
         pass
         #QTest.mouseClick(self.main.saveImageButton, Qt.LeftButton)
-        #self.assertTrue(filecmp.cmp("test.png", "test_files/correct.png"))
-        #os.remove("test.png")
+        #self.assertTrue(filecmp.cmp("correct.png", "test_files/correct.png"))
+        #os.remove("correct.png")
 
     def test_onToggleAtomsButtonClicked_on(self):
         QTest.mouseClick(self.main.toggleAtomsButton, Qt.LeftButton)

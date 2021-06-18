@@ -3,7 +3,7 @@ from PyQt5.QtGui import QIcon, QColor
 from atom import Atom
 from plot import *
 from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, \
-    isfloat, isposfloat, isdigit
+    isfloat, isposfloat, isdigit, process_current_csv, filename_no_ext
 from subprocess import PIPE, run
 import math
 import os
@@ -34,6 +34,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         # Initialise state
         self.atoms = atoms
+        self.csvFilename = None
         self.inputFilename = None
         self.transInputFilename = None
         self.currInputFilename = None
@@ -111,7 +112,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
         ### graphSettingsTab
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
-        self.graphComboBoxKeys = None
+        self.graphKeys = None
 
         ### atomSettingsTab
         # atomColSlider
@@ -258,23 +259,28 @@ class MainWindow(QtWidgets.QMainWindow):
     ###### Initialise propertiesWindow ######
     ### setupSettingsTab
     # executeButton
-    def onExecuteButtonClicked(self):
+
+    def execute(self):
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
-            return
+            return False
         try:
             command = "(cd ./Plato/bin && ./tb1 ../../" + self.inputFilename + ")"
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
-            return
+            return False
         result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
         if result.returncode:
             self.writeToLogs(result.stderr, "red")
             if result.stdout:
                 self.writeToLogs(result.stdout, "red")
-            return
+            return False
         if result.stdout:
             self.writeToLogs(result.stdout, "black")
+
+    def onExecuteButtonClicked(self):
+        if not self.execute():
+            return
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
@@ -289,50 +295,22 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeButton.setEnabled(False)
 
     def onTransExecuteButtonClicked(self):
-        if os.name == 'nt':
-            self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
+        if not self.execute():
             return
-        try:
-            command = "(cd ./Plato/bin && ./tb1 ../../" + self.inputFilename + ")"
-        except TypeError:
-            self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
-            return
-        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
-        if result.returncode:
-            self.writeToLogs(result.stderr, "red")
-            if result.stdout:
-                self.writeToLogs(result.stdout, "red")
-            return
-        if result.stdout:
-            self.writeToLogs(result.stdout, "black")
         self.writeToLogs("Execution carried out successfully.", "green")
-        headers_mapped, headers = transmission_headers(self.inputFilename + "_trans.csv", self.transSelected)
+        self.csvFilename = self.inputFilename + "_trans.csv"
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
+        self.graphKeys = headers
         self.graphComboBox.clear()
-        self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers_mapped)
-        self.graphComboBoxKeys = headers
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
         self.executeTransButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self):
-        if os.name == 'nt':
-            self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
+        if not self.execute():
             return
-        try:
-            command = "(cd ./Plato/bin && ./tb1 ../../" + self.inputFilename + ")"
-        except TypeError:
-            self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
-            return
-        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
-        if result.returncode:
-            self.writeToLogs(result.stderr, "red")
-            if result.stdout:
-                self.writeToLogs(result.stdout, "red")
-            return
-        if result.stdout:
-            self.writeToLogs(result.stdout, "black")
         self.writeToLogs("Execution carried out successfully.", "green")
         current = find_current_in_file(self.inputFilename + ".out")
         self.writeToLogs("Current: " + current + " mA.", "green")
@@ -365,15 +343,19 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # generateInputFileButton
 
+    def replaceTextEdit(self, filename):
+        self.inputTextEdit.clear()
+        with open(filename + ".in", "r") as f:
+            contents = f.readlines()
+        for line, content in enumerate(contents):
+            self.inputTextEdit.insertPlainText(content)
+
     def onGenerateInputFileButtonClicked(self):
         self.inputTextEdit.clear()
         try:
             filename = xyz_to_plato_input(self.openFileLineEdit.text())
             self.inputFilename = filename
-            with open(filename + ".in", "r") as f:
-                contents = f.readlines()
-            for line, content in enumerate(contents):
-                self.inputTextEdit.insertPlainText(content)
+            self.replaceTextEdit(filename + ".in")
         except FileNotFoundError:
             self.writeErrorToLogs("Error: No default input file found, check that config/default.in exists.")
             return
@@ -384,14 +366,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeButton.setEnabled(True)
 
     def onGenerateTransInputFileButtonClicked(self):
-        self.inputTextEdit.clear()
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
             self.inputFilename = filename
-            with open(filename + ".in", "r") as f:
-                contents = f.readlines()
-            for line, content in enumerate(contents):
-                self.inputTextEdit.insertPlainText(content)
+            self.replaceTextEdit(filename + ".in")
         except FileNotFoundError:
             self.writeErrorToLogs(
                 "Error: No default input file found, check that config/default_trans.in exists.")
@@ -407,16 +385,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeTransButton.setEnabled(True)
 
     def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, current_calc=False):
-        self.inputTextEdit.clear()
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
                                         current_calc)
             self.inputFilename = filename
-            with open(filename + ".in", "r") as f:
-                contents = f.readlines()
-            for line, content in enumerate(contents):
-                self.inputTextEdit.insertPlainText(content)
+            self.replaceTextEdit(filename + ".in")
         except AssertionError:
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
@@ -487,28 +461,21 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
 
     def onTransExecuteLoadedButtonClicked(self):
-        headers_mapped, headers = transmission_headers(self.openCsvFileLineEdit.text(), None)
+        self.csvFilename = self.openCsvFileLineEdit.text()
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
+        self.graphKeys = headers
         self.graphComboBox.clear()
-        self.graphComboBox.addItems(["All"])
         self.graphComboBox.addItems(headers_mapped)
-        self.graphComboBoxKeys = headers
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Graphs plotted successfully.", "green")
 
     def onCurrExecuteLoadedButtonClicked(self):
         files = os.listdir(self.openDirLineEdit.text())
         if len(files) < 2:
             self.writeErrorToLogs("Error: Must have at least two .out files in directory.")
-        files.sort()
-        bias_v = files[-1].split("_")[-2]
+        bias_v, bias, currents = process_current_csv(self.openDirLineEdit.text())
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
-        bias = np.linspace(0, float(bias_v[:-1]), len(files))
-        currents = []
-        files_full = [os.path.join(self.openDirLineEdit.text(), file) for file in
-                      os.listdir(self.openDirLineEdit.text())]
-        files_full.sort()
-        for file in files_full:
-            currents.append(float(find_current_in_file(file)))
         current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
@@ -526,14 +493,7 @@ class MainWindow(QtWidgets.QMainWindow):
         ### graphSettingsTab
 
     def setGraphComboBox(self):
-        print(self.openCsvFileLineEdit.text())
-        if self.inputFilename is None:
-            filename = self.openCsvFileLineEdit.text()
-        else:
-            filename = self.inputFilename + "_trans.csv"
-        if self.graphComboBoxKeys is not None:
-            transmission_graph(self.graphWidget, filename,
-                               self.graphComboBoxKeys[self.graphComboBox.currentIndex() - 1])
+        transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()])
 
         ### atomSettingsTab
         # atomColSlider

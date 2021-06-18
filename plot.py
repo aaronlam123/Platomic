@@ -1,3 +1,5 @@
+import os
+
 from scipy.spatial import distance
 import pyqtgraph.opengl as gl
 import pyqtgraph as pg
@@ -148,13 +150,14 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
 
 
 def transmission_headers(input_file, transSelected):
+    headers = ['All']
     df = pd.read_csv(input_file, sep=",", quoting=3)
-    headers = list(df)[1:]
-    if transSelected is None:
+    headers.extend(list(df)[1:])
+    if len(transSelected) == 0:
         return headers, headers
     for i, index in enumerate(transSelected):
-        headers = [ind.replace(str(i + 1), str(index)) for ind in headers]
-    return headers, list(df)[1:]
+        headers_mapped = [ind.replace(str(i + 1), str(index)) for ind in headers]
+    return headers_mapped, headers
 
 
 def transmission_graph(widget, input_file, index):
@@ -180,6 +183,7 @@ def current_graph(widget, x, y):
     widget.setLabel("bottom", text="Bias", units="V")
     widget.plot(x, y)
     # pen=pg.mkPen(width=3)
+
 
 
 """
