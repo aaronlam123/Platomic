@@ -227,6 +227,8 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
     contents.insert(terminal_line_count, str(len(selected.keys())) + " 1 -100.0 -0.4281406\n")
     for i, key in enumerate(selected):
+        if len(selected[key]) == 0:
+            continue
         contents.insert(terminal_line_count + i + 1, "0.0 0.10 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
