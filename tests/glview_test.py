@@ -20,32 +20,93 @@ class TestGlView(unittest.TestCase):
     def setUp(self):
         self.w = GLView()
         self.w.resize(800, 600)
-        self.w.atoms = [Atom("C", 0, 0, 0, 1), Atom("H", 1, 1, 0, 2), Atom("H", 2, 2, 0, 3)]
+        self.w.atoms = [Atom("C", 0, 0, 0, 1, 0.5), Atom("H", 1, 1, 0, 2, 0.5), Atom("H", 2, 2, 0, 3, 0.5)]
         self.w.multiplier = 2
         self.w.size = 10
         self.w.colour = "Red"
         self.w.font = "Arial"
-        md = gl.MeshData.sphere(rows=10, cols=20, radius=1)
+        md = gl.MeshData.sphere(rows=10, cols=20, radius=5)
         mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(1, 1, 1, 1))
         mi.translate(0, 0, 0)
         self.w.addItem(mi)
+        self.w.atoms[0].set_mi(mi)
+
         self.w.renderText = MagicMock()
-        # QTest.mouseClick(self.w, Qt.LeftButton)
-        # self.left_clicked_bool = False
-        # self.w.left_clicked.connect(self.left_click_called)
+        self.left_clicked_signal = MagicMock()
+        self.right_clicked_signal = MagicMock()
+        self.middle_clicked_signal = MagicMock()
+        self.w.left_clicked.connect(self.left_clicked_signal)
+        self.w.right_clicked.connect(self.right_clicked_signal)
+        self.w.middle_clicked.connect(self.middle_clicked_signal)
 
-    def left_click_called(self):
-        print("value")
+    def left_clicked_signal(self):
+        pass
 
-    def test_mousePressEvent(self):
-        QTest.mouseClick(self.w, Qt.RightButton, pos=QPoint(0, 0))
+    def right_clicked_signal(self):
+        pass
+
+    def middle_clicked_signal(self):
+        pass
+
+    def test_mousePressEvent_left_select(self):
+        QTest.mouseClick(self.w, Qt.LeftButton, pos=QPoint(200, 600))
+        self.assertTrue(self.w.atoms[0].get_isSelectedTrans())
+        self.left_clicked_signal.assert_called_once()
+
+    def test_mousePressEvent_left_deselect(self):
+        QTest.mouseClick(self.w, Qt.LeftButton, pos=QPoint(200, 600))
+        QTest.mouseClick(self.w, Qt.LeftButton, pos=QPoint(200, 600))
+        self.assertFalse(self.w.atoms[0].get_isSelectedTrans())
+        self.assertEqual(self.left_clicked_signal.call_count, 2)
+
+    def test_mousePressEvent_right_select(self):
+        QTest.mouseClick(self.w, Qt.RightButton, pos=QPoint(200, 600))
+        self.assertTrue(self.w.atoms[0].get_isSelectedCurrA())
+        self.right_clicked_signal.assert_called_once()
+
+    def test_mousePressEvent_right_deselect(self):
+        QTest.mouseClick(self.w, Qt.RightButton, pos=QPoint(200, 600))
+        QTest.mouseClick(self.w, Qt.RightButton, pos=QPoint(200, 600))
+        self.assertFalse(self.w.atoms[0].get_isSelectedCurrA())
+        self.assertEqual(self.right_clicked_signal.call_count, 2)
+
+    def test_mousePressEvent_middle_select(self):
+        QTest.mouseClick(self.w, Qt.MiddleButton, pos=QPoint(200, 600))
+        self.assertTrue(self.w.atoms[0].get_isSelectedCurrB())
+        self.middle_clicked_signal.assert_called_once()
+
+    def test_mousePressEvent_middle_deselect(self):
+        QTest.mouseClick(self.w, Qt.MiddleButton, pos=QPoint(200, 600))
+        QTest.mouseClick(self.w, Qt.MiddleButton, pos=QPoint(200, 600))
+        self.assertFalse(self.w.atoms[0].get_isSelectedCurrB())
+        self.assertEqual(self.middle_clicked_signal.call_count, 2)
 
     def test_itemsAt(self):
-        print(self.w.itemsAt(region=(0, 0, 500, 500)))
+        self.assertEqual(len(self.w.itemsAt(region=(0, 0, 500, 500))), 1)
 
-    def test_paintGL(self):
+    def test_paintGL_index(self):
         self.w.paintGL()
-        self.w.renderText.assert_called_once()
+        self.assertEqual(self.w.renderText.call_count, 3)
+
+    def test_paintGL_index_disable(self):
+        self.w.index = False
+        self.w.paintGL()
+        self.assertEqual(self.w.renderText.call_count, 0)
+
+    def test_paintGL_symbol(self):
+        self.w.symbol = True
+        self.w.paintGL()
+        self.assertEqual(self.w.renderText.call_count, 6)
+
+    def test_paintGL_position(self):
+        self.w.position = True
+        self.w.paintGL()
+        self.assertEqual(self.w.renderText.call_count, 6)
+
+    def test_paintGL_radius(self):
+        self.w.radius = True
+        self.w.paintGL()
+        self.assertEqual(self.w.renderText.call_count, 6)
 
     def test_readQImage(self):
         self.assertEqual(self.w.readQImage().width(), self.w.width() * self.w.multiplier)

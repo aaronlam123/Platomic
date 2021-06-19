@@ -1,11 +1,9 @@
-import os
-
 from scipy.spatial import distance
 import pyqtgraph.opengl as gl
 import pyqtgraph as pg
 import numpy as np
 import scipy.special as sp
-import custom
+import orbital
 import pandas as pd
 
 
@@ -69,8 +67,9 @@ def draw_advOrbWf(atoms, widget, value, row, cols, scaler, theta, phi, r, g, b, 
             tr = pg.Transform3D()
             tr.rotate(theta * 180 / np.pi, 0, 0, 1)
             tr.rotate(phi * 180 / np.pi, 0, 1, 0)
-            md = custom.orbital(atoms[i].get_eigenvector(value)[j], quantum_dict[j][2], quantum_dict[j][1], row, cols,
-                                scaler)
+            md = orbital.advanced_orbital(atoms[i].get_eigenvector(value)[j], quantum_dict[j][2], quantum_dict[j][1],
+                                          row, cols,
+                                          scaler)
             mi = gl.GLMeshItem(meshdata=md, smooth=True, edgeColor=(r, g, b, a), drawEdges=True, drawFaces=False)
             mi.setTransform(tr)
             mi.translate(*atoms[i].get_xyz())
@@ -140,24 +139,14 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
             tr = pg.Transform3D()
             tr.rotate(theta * 180 / np.pi, 0, 0, 1)
             tr.rotate(phi * 180 / np.pi, 0, 1, 0)
-            md = custom.orbital(atoms[i].get_eigenvector(value)[j], quantum_dict[j][2], quantum_dict[j][1], row, cols,
-                                scaler)
+            md = orbital.advanced_orbital(atoms[i].get_eigenvector(value)[j], quantum_dict[j][2], quantum_dict[j][1],
+                                          row, cols,
+                                          scaler)
             mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(r, g, b, a), drawEdges=False, drawFaces=True)
             mi.setTransform(tr)
             mi.translate(*atoms[i].get_xyz())
             mi.setGLOptions('translucent')
             widget.addItem(mi)
-
-
-def transmission_headers(input_file, transSelected):
-    headers = ['All']
-    df = pd.read_csv(input_file, sep=",", quoting=3)
-    headers.extend(list(df)[1:])
-    if len(transSelected) == 0:
-        return headers, headers
-    for i, index in enumerate(transSelected):
-        headers_mapped = [ind.replace(str(i + 1), str(index)) for ind in headers]
-    return headers_mapped, headers
 
 
 def transmission_graph(widget, input_file, index):
@@ -184,21 +173,6 @@ def current_graph(widget, x, y):
     widget.plot(x, y)
     # pen=pg.mkPen(width=3)
 
-
-
-"""
-def transmission_graph(widget, selected, input_file):
-    ds = pd.read_csv(input_file + ".csv", sep=',', header=0)
-    energy = np.array(ds["E(Ry)"])
-    transmission = None
-    for i in range(selected * selected):
-        if transmission is None:
-            transmission = np.zeros((len(energy), 1))
-        column = np.resize(np.array(ds[" 1 - 2"]), (len(energy), 1))
-        transmission = np.append(transmission, column, axis=1)
-
-    widget.plot(energy, transmission)
-"""
 
 if __name__ == '__main__':
     pass

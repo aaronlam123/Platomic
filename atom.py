@@ -2,14 +2,14 @@ import numpy as np
 
 
 class Atom:
-    def __init__(self, symbol, x, y, z, index):
+    def __init__(self, symbol, x, y, z, index, radius=None):
         self.__symbol = symbol
         self.__x = x
         self.__y = y
         self.__z = z
         self.__index = index
         self.__colour = None
-        self.__radius = None
+        self.__radius = radius
         self.__bonding = None
         self.__eigenvector = None
         self.__total_orbitals = None

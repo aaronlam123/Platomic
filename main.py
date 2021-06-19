@@ -1,9 +1,7 @@
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon, QColor
-from atom import Atom
 from plot import *
-from input import input_file_setup, xyz_to_plato_input, trans_plato_input, curr_plato_input, find_current_in_file, \
-    isfloat, isposfloat, isdigit, process_current_csv, filename_no_ext
+from input import *
 from subprocess import PIPE, run
 import math
 import os
@@ -216,17 +214,20 @@ class MainWindow(QtWidgets.QMainWindow):
         # openGLWidget
         self.openGLWidget.opts['distance'] = 15
         self.openGLWidget.multiplier = self.multiplier
-        self.openGLWidget.atoms = [
-            Atom("0", 0, -9, 0, "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
-            Atom("0", 0, -9.25, -1, "Hover over any (?) icons for help and / or additional information."),
-            Atom("0", 0, -9.5, -2, "For a full in-depth tutorial check out the User Guide.")]
-        # self.openGLWidget.atoms = self.atoms
+        if self.atoms == None:
+            self.openGLWidget.atoms = [
+                Atom("0", 0, -9, 0,
+                     "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
+                Atom("0", 0, -9.25, -1, "Hover over any (?) icons for help and / or additional information."),
+                Atom("0", 0, -9.5, -2, "For a full in-depth tutorial check out the User Guide.")]
+        else:
+            self.openGLWidget.atoms = self.atoms
+            self.draw()
         self.backgroundColor = (40, 40, 40)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
         self.openGLWidget.left_clicked.connect(self.onTransSelection)
-        self.openGLWidget.middle_clicked.connect(self.onCurrentSelectionA)
-        self.openGLWidget.right_clicked.connect(self.onCurrentSelectionB)
-        # self.draw()
+        self.openGLWidget.right_clicked.connect(self.onCurrentSelectionA)
+        self.openGLWidget.middle_clicked.connect(self.onCurrentSelectionB)
 
         # resetViewButton
         self.resetViewButton.clicked.connect(self.onResetViewButtonClicked)
@@ -351,11 +352,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.inputTextEdit.insertPlainText(content)
 
     def onGenerateInputFileButtonClicked(self):
-        self.inputTextEdit.clear()
         try:
             filename = xyz_to_plato_input(self.openFileLineEdit.text())
             self.inputFilename = filename
-            self.replaceTextEdit(filename + ".in")
+            self.replaceTextEdit(filename)
         except FileNotFoundError:
             self.writeErrorToLogs("Error: No default input file found, check that config/default.in exists.")
             return
@@ -369,7 +369,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
             self.inputFilename = filename
-            self.replaceTextEdit(filename + ".in")
+            self.replaceTextEdit(filename)
         except FileNotFoundError:
             self.writeErrorToLogs(
                 "Error: No default input file found, check that config/default_trans.in exists.")
@@ -390,7 +390,7 @@ class MainWindow(QtWidgets.QMainWindow):
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
                                         current_calc)
             self.inputFilename = filename
-            self.replaceTextEdit(filename + ".in")
+            self.replaceTextEdit(filename)
         except AssertionError:
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
@@ -484,11 +484,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onSwitchToInputFileTabButtonClicked(self):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.inputFileTab))
-
-        # SwitchToTransInputFileTabButton
-
-    def onSwitchToTransInputFileTabButtonClicked(self):
-        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.transInputFileTab))
 
         ### graphSettingsTab
 
@@ -738,12 +733,12 @@ class MainWindow(QtWidgets.QMainWindow):
             if self.atoms[i].get_isSelectedCurrB():
                 self.currentSelectedB.append(i + 1)
         if len(self.currentSelectedB) == 0:
-            self.writeToLogs("No regions selected.", "green")
+            self.writeToLogs("No regions selected.", "lime")
             return
         selection = "Region B by atom index: "
         for j in range(len(self.currentSelectedB)):
             selection = selection + str(self.currentSelectedB[j]) + ", "
-        self.writeToLogs(selection[:-2], "green")
+        self.writeToLogs(selection[:-2], "lime")
         self.openGLWidget.update()
 
     # resetViewButton

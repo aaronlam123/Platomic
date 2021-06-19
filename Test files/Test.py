@@ -3,7 +3,7 @@ from pyqtgraph.Qt import QtCore, QtGui
 import pyqtgraph as pg
 import pyqtgraph.opengl as gl
 import scipy.special as sp
-from custom import orbital
+from orbital import advanced_orbital
 
 np.os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "2"
 app = QtGui.QApplication([])
@@ -34,7 +34,7 @@ c = np.dstack((x, y))
 c = np.dstack((c, z))
 
 #md = gl.MeshData(vertexes=c)
-md = orbital(0.1, 2, 3, 30, 30)
+md = advanced_orbital(0.1, 2, 3, 30, 30)
 
 m1 = gl.GLMeshItem(meshdata=md, smooth=True, color=(0.5, 0.5, 0.5, 1), drawFaces=True)
 w.addItem(m1)

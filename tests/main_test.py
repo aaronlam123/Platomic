@@ -14,11 +14,7 @@ default_input = input_file_setup("config/benzene.out", "config/attributes.txt", 
 
 class TestMain(unittest.TestCase):
     def setUp(self):
-        self.main = MainWindow(default_input, resolution.width)
-        with open("benzene.in", "w") as f:
-            pass
-        with open("benzene_.in", "w") as f:
-            pass
+        self.main = MainWindow(resolution.width, default_input)
         with open("attributes.txt", "w") as f:
             pass
         self.main.writeToLogs = MagicMock()
@@ -29,11 +25,7 @@ class TestMain(unittest.TestCase):
         self.addCleanup(cleanUp)
         self.doCleanups()
 
-    if os.name == 'nt':
-        def test_onExecuteButtonClicked_on_windows(self):
-            QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
-            self.main.writeErrorToLogs.assert_called_with("Plato back-end execution is not supported on Windows systems.")
-    else:
+    if os.name != 'nt':
         def test_onExecuteButtonClicked_with_no_input_file(self):
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
             self.main.writeErrorToLogs.assert_called_with(
@@ -46,13 +38,23 @@ class TestMain(unittest.TestCase):
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
             self.main.writeToLogs.assert_called()
 
+        def test_onTransExecuteButtonClicked(self):
+            pass
+
+        def test_onExecuteCurrButtonClicked(self):
+            pass
+
+        def test_onExecuteCurrGraphButtonClicked(self):
+            pass
+
     def test_onGenerateInputFileButtonClicked_and_file_exists(self):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
         QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
-        self.assertEqual(self.main.inputFilename, "benzene_")
+        self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
         with open("test_files/correct.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
-        self.main.writeToLogs.assert_called_with("Input file benzene_.in generated successfully.", "green")
+        self.main.writeToLogs.assert_called_with(
+            "Input file " + file_in_cur_dir("benzene") + ".in generated successfully.", "green")
 
     def test_onGenerateInputFileButtonClicked_with_nonexistent_file(self):
         self.main.openFileLineEdit.setText("test_files/nonexistent.xyz")
@@ -69,14 +71,44 @@ class TestMain(unittest.TestCase):
         unittest.TestCase.assertRaises(self, expected_exception=FileNotFoundError)
         copy_file_from_main_config("config/default.in")
 
+    def test_onGenerateTransInputFileButtonClicked(self):
+        pass
+
+    def test_onGenerateCurrInputFileButtonClicked(self):
+        pass
+
     def test_onOpenFileButtonClicked(self):
         pass
-        #QTest.mouseClick(self.main.openFileButton, Qt.LeftButton)
-        #self.assertEqual(self.main.openFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/benzene.xyz")
+        # QTest.mouseClick(self.main.openFileButton, Qt.LeftButton)
+        # self.assertEqual(self.main.openFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/benzene.xyz")
+
+    def test_onOpenOutFileButtonClicked(self):
+        pass
+
+    def test_onOpenWfFileButtonClicked(self):
+        pass
+
+    def test_onOpenCsvFileButtonClicked(self):
+        pass
+
+    def test_onOpenDirButtonClicked(self):
+        pass
+
+    def test_onExecuteLoadedButtonClicked(self):
+        pass
+
+    def test_onTransExecuteLoadedButtonClicked(self):
+        pass
+
+    def test_onCurrExecuteLoadedButtonClicked(self):
+        pass
 
     def test_onSwitchToInputFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToInputFileTabButton, Qt.LeftButton)
         self.assertEqual(self.main.mainWindow.currentIndex(), self.main.mainWindow.indexOf(self.main.inputFileTab))
+
+    def test_setGraphComboBox(self):
+        pass
 
     def test_setAtomColSliderLabel(self):
         self.main.atomColSlider.setValue(40)
@@ -107,6 +139,18 @@ class TestMain(unittest.TestCase):
         self.assertEqual(self.main.backgroundColor, (100, 100, 100))
         self.assertEqual(self.main.brightnessSliderLabel.text(), "Brightness: 100")
         self.main.openGLWidget.setBackgroundColor.assert_called_with(self.main.backgroundColor)
+
+    def test_setCheckBoxIndex(self):
+        pass
+
+    def test_setCheckBoxSymbol(self):
+        pass
+
+    def test_setCheckBoxPosition(self):
+        pass
+
+    def test_setCheckBoxRadius(self):
+        pass
 
     def test_setBondRadiusSliderLabel(self):
         self.main.bondRadiusSlider.setValue(20)
@@ -181,7 +225,7 @@ class TestMain(unittest.TestCase):
     def test_setHorizontalSliderOrbitalLabel(self):
         self.main.horizontalSlider.setValue(5)
         self.assertIs(self.main.mode, 5)
-        self.assertEqual(self.main.horizontalSliderLabel.text(), "MO: 6")
+        self.assertEqual(self.main.horizontalSliderLabel.text(), "Molecular Orbital: 6")
         self.main.draw.assert_called_once()
 
     def test_setHorizontalSliderEnergyLabel(self):
@@ -189,6 +233,15 @@ class TestMain(unittest.TestCase):
         self.assertIs(self.main.mode, 6)
         self.assertEqual(self.main.horizontalSliderEnergyLabel.text(), "Energy (eV): -11.7604")
         self.main.draw.assert_called_once()
+
+    def test_onTransSelection(self):
+        pass
+
+    def test_onCurrentSelectionA(self):
+        pass
+
+    def test_onCurrentSelectionB(self):
+        pass
 
     def test_onResetViewButtonClicked(self):
         QTest.mouseClick(self.main.resetViewButton, Qt.LeftButton)
@@ -198,9 +251,9 @@ class TestMain(unittest.TestCase):
 
     def test_onSaveImageButtonClicked(self):
         pass
-        #QTest.mouseClick(self.main.saveImageButton, Qt.LeftButton)
-        #self.assertTrue(filecmp.cmp("correct.png", "test_files/correct.png"))
-        #os.remove("correct.png")
+        # QTest.mouseClick(self.main.saveImageButton, Qt.LeftButton)
+        # self.assertTrue(filecmp.cmp("correct.png", "test_files/correct.png"))
+        # os.remove("correct.png")
 
     def test_onToggleAtomsButtonClicked_on(self):
         QTest.mouseClick(self.main.toggleAtomsButton, Qt.LeftButton)
@@ -236,6 +289,24 @@ class TestMain(unittest.TestCase):
     def test_writeErrorToLogs(self):
         pass
 
+    def test_onGammaLineEditChanged(self):
+        pass
+
+    def test_onGammaLineEditChanged2(self):
+        pass
+
+    def test_onReferenceLineEditChanged(self):
+        pass
+
+    def test_onBiasLineEditChanged(self):
+        pass
+
+    def test_onStepsLineEditChanged(self):
+        pass
+
+    def test_default_input(self):
+        pass
+
 
 def copy_file_from_main_config(filename):
     with open("../" + filename, 'r') as source:
@@ -244,8 +315,15 @@ def copy_file_from_main_config(filename):
                 f.write(line)
 
 
+def file_in_cur_dir(starts_with):
+    for file in os.listdir("."):
+        if file.startswith(starts_with):
+            return os.path.splitext(file)[0]
+
+
 def cleanUp():
-    os.remove("benzene.in")
-    os.remove("benzene_.in")
     os.remove("attributes.txt")
+    for file in os.listdir("."):
+        if file.startswith("benzene"):
+            os.remove(os.path.join(".", file))
     copy_file_from_main_config("config/attributes.txt")

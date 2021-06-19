@@ -48,6 +48,9 @@ class TestInput(unittest.TestCase):
              'C       2.29562      1.32538      0.00000',
              'H       4.07550      2.35299      0.00000'])
 
+    def test_get_line_number(self):
+        self.assertEqual(get_line_number("test_files/test_output.txt", "Tabulated tight binding"), 13)
+
     def test_correct_quantum(self):
         self.assertEqual(correct_quantum(['2 0 0', '2 1 0', '2 1 1', '2 1 2']),
                          [[2, 0, 0], [2, 1, -1], [2, 1, 0], [2, 1, 1]])
@@ -263,8 +266,26 @@ class TestInput(unittest.TestCase):
         np.testing.assert_array_almost_equal(atoms[11].get_eigenvector(0), [0.09816])
         np.testing.assert_array_almost_equal(atoms[11].get_eigenvector(11), [0.169801])
 
-    def test_xyz_to_plato_input(self):
-        xyz_to_plato_input("test_files/benzene.xyz", input_file="test_files/default.in")
-        with open("benzene_.in") as generated:
-            with open("test_files/correct.in") as correct:
-                self.assertListEqual(list(generated.readlines()), list(correct.readlines()))
+    def test_trans_plato_input(self):
+        pass
+
+    def test_curr_plato_input(self):
+        pass
+
+    def test_find_current_in_file(self):
+        pass
+
+    def test_isfloat(self):
+        pass
+
+    def test_isposfloat(self):
+        pass
+
+    def test_isdigit(self):
+        pass
+
+    def test_process_current_csv(self):
+        pass
+
+    def test_transmission_headers(self):
+        pass

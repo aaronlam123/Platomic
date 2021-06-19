@@ -4,6 +4,7 @@ from datetime import datetime
 import pyqtgraph
 from PyQt5 import QtGui
 import shlex
+import pandas as pd
 from atom import Atom
 import os
 
@@ -354,9 +355,15 @@ def process_current_csv(directory_name):
     return bias_v, bias, currents
 
 
-def filename_no_ext(filepath):
-    basename = ntpath.basename(filepath)
-    return os.path.splitext(basename)[0]
+def transmission_headers(input_file, transSelected):
+    headers = ['All']
+    df = pd.read_csv(input_file, sep=",", quoting=3)
+    headers.extend(list(df)[1:])
+    if len(transSelected) == 0:
+        return headers, headers
+    for i, index in enumerate(transSelected):
+        headers_mapped = [ind.replace(str(i + 1), str(index)) for ind in headers]
+    return headers_mapped, headers
 
 
 if __name__ == '__main__':

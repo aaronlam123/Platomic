@@ -45,7 +45,7 @@ class GLView(GLViewWidget):
                                 self.atoms[i].set_isSelectedCurrA(False)
                             else:
                                 self.atoms[i].set_isSelectedCurrA(True)
-                            self.middle_clicked.emit()
+                            self.right_clicked.emit()
                             break
 
                         if ev.button() == 4:
@@ -53,7 +53,7 @@ class GLView(GLViewWidget):
                                 self.atoms[i].set_isSelectedCurrB(False)
                             else:
                                 self.atoms[i].set_isSelectedCurrB(True)
-                            self.right_clicked.emit()
+                            self.middle_clicked.emit()
                             break
 
     def itemsAt(self, region=None):

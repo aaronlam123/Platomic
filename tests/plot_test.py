@@ -9,7 +9,7 @@ default_input = input_file_setup("config/benzene.out", "config/attributes.txt", 
 
 class TestPlot(unittest.TestCase):
     def setUp(self):
-        self.main = MainWindow(default_input, resolution.width)
+        self.main = MainWindow(resolution.width, default_input)
         self.main.openGLWidget.clear()
 
     def test_draw_atoms(self):
@@ -54,3 +54,12 @@ class TestPlot(unittest.TestCase):
                          self.main.orbScaler, self.main.theta, self.main.phi, self.main.R, self.main.G, self.main.B,
                          self.main.A)
         self.assertIs(30, len(self.main.openGLWidget.itemsAt(region=(-121, -398, 1133, 771))))
+
+    def test_draw_selection(self):
+        pass
+
+    def test_transmission_graph(self):
+        pass
+
+    def test_current_graph(self):
+        pass
