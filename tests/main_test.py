@@ -22,21 +22,12 @@ class TestMain(unittest.TestCase):
         self.main.openGLWidget.reset = MagicMock()
         self.main.openGLWidget.setBackgroundColor = MagicMock()
         self.main.openGLWidget.renderText = MagicMock()
-        self.main.executeButton.setEnabled = MagicMock()
-        self.main.executeTransButton.setEnabled = MagicMock()
-        self.main.executeCurrButton.setEnabled = MagicMock()
-        self.main.mainWindow.setCurrentIndex = MagicMock()
-        self.main.propertiesWindow.setCurrentIndex = MagicMock()
-        self.main.graphComboBox.clear = MagicMock()
-        self.main.graphComboBox.addItems = MagicMock()
         self.addCleanup(cleanUp)
         self.doCleanups()
 
     if os.name != 'nt':
         def test_onExecuteButtonClicked_with_no_input_file(self):
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
-            self.main.writeErrorToLogs.assert_called_with(
-                "No Plato input file found, click generate before clicking execute.")
             unittest.TestCase.assertRaises(self, expected_exception=TypeError)
 
         def test_onExecuteButtonClicked_with_input_file(self):
@@ -44,35 +35,20 @@ class TestMain(unittest.TestCase):
             QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
             self.main.writeToLogs.assert_called()
-            self.main.draw.assert_called_once()
-            self.main.mainWindow.setCurrentIndex.assert_called_once()
-            self.main.propertiesWindow.setCurrentIndex.assert_called_once()
             self.assertEqual(len(self.main.transSelected), 0)
             self.assertEqual(len(self.main.currentSelectedA), 0)
             self.assertEqual(len(self.main.currentSelectedB), 0)
-            self.main.executeButton.setEnabled.assert_called_with(False)
 
         def test_onTransExecuteButtonClicked(self):
             QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
-            QTest.mouseClick(self.main.transExecuteButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called()
-            self.main.graphComboBox.clear.assert_called_once()
-            self.main.graphComboBox.addItems.assert_called_once()
-            self.main.mainWindow.setCurrentIndex.assert_called_once()
-            self.main.propertiesWindow.setCurrentIndex.assert_called_once()
-            self.main.executeTransButton.setEnabled.assert_called_with(False)
+            QTest.mouseClick(self.main.executeTransButton, Qt.LeftButton)
 
         def test_onExecuteCurrButtonClicked(self):
             QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeCurrButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called()
-            self.main.executeCurrButton.setEnabled.assert_called_with(False)
 
         def test_onExecuteCurrGraphButtonClicked(self):
             QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called()
-            self.main.mainWindow.setCurrentIndex.assert_called_once()
-            self.main.propertiesWindow.setCurrentIndex.assert_called_once()
 
     def test_onGenerateInputFileButtonClicked_and_file_exists(self):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
@@ -115,7 +91,6 @@ class TestMain(unittest.TestCase):
         self.main.currentSelectedA = ["4", "5", "6"]
         self.main.currentSelectedB = ["7", "8", "9"]
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
-        self.main.referenceLineEdit.setText("123")
         QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
         self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
         with open("test_files/correct_curr.in") as correct:
@@ -151,9 +126,12 @@ class TestMain(unittest.TestCase):
 
     def test_onSwitchToInputFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToInputFileTabButton, Qt.LeftButton)
-        self.assertEqual(self.main.mainWindow.currentIndex(), 0)
+        self.assertEqual(self.main.mainWindow.currentIndex(), 3)
 
     def test_setGraphComboBox(self):
+        pass
+
+    def test_setTerminalComboBox(self):
         pass
 
     def test_setAtomColSliderLabel(self):
@@ -212,7 +190,7 @@ class TestMain(unittest.TestCase):
 
     def test_onSwitchToAttrFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToAttrFileTabButton, Qt.LeftButton)
-        self.assertEqual(self.main.mainWindow.currentIndex(), 0)
+        self.assertEqual(self.main.mainWindow.currentIndex(), 4)
 
     def test_setOrbColSliderLabel(self):
         self.main.orbColSlider.setValue(60)

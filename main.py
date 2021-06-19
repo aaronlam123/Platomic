@@ -16,7 +16,7 @@ os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
 
 
-# default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
 
 class MainWindow(QtWidgets.QMainWindow):
@@ -36,7 +36,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.inputFilename = None
         self.transInputFilename = None
         self.currInputFilename = None
-        self.transSelected = []
+        self.transSelected = {"1": [], "2": [], "3": [], "4": [], "5": []}
         self.currentSelectedA = []
         self.currentSelectedB = []
         self.mode = 0
@@ -108,8 +108,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.offset = 0
         self.openGLWidget.colour = "Orange"
 
-        ### graphSettingsTab
+        ### graphSettingsTab and terminalComboBox
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
+        self.terminalComboBox.currentIndexChanged.connect(self.setTerminalComboBox)
+        self.terminalComboBox.addItems(["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4", "Terminal 5"])
         self.graphKeys = None
 
         ### atomSettingsTab
@@ -290,7 +292,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.displaySettingsTab))
         self.writeToLogs("Execution carried out successfully.", "green")
-        self.transSelected = []
+        self.transSelected = {"1": [], "2": [], "3": [], "4": [], "5": []}
         self.currentSelectedA = []
         self.currentSelectedB = []
         self.executeButton.setEnabled(False)
@@ -300,7 +302,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         self.writeToLogs("Execution carried out successfully.", "green")
         self.csvFilename = self.inputFilename + "_trans.csv"
-        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected) #FIX
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
@@ -319,9 +321,9 @@ class MainWindow(QtWidgets.QMainWindow):
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
-        if not len(self.transSelected) == 2:
+        if not len(self.transSelected) == 2: #FIX
             self.writeErrorToLogs(
-                "Error: at two terminals should be selected. Select terminals by left clicking atoms.")
+                "Error: only two terminals should be selected. Select terminals by left clicking atoms.")
             return
         if len(self.currentSelectedA) <= 0:
             self.writeErrorToLogs(
@@ -367,7 +369,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGenerateTransInputFileButtonClicked(self):
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected) #FIX
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except FileNotFoundError:
@@ -388,7 +390,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
-                                        current_calc)
+                                        current_calc) # FIX
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except AssertionError:
@@ -462,7 +464,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onTransExecuteLoadedButtonClicked(self):
         self.csvFilename = self.openCsvFileLineEdit.text()
-        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected) #FIX
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
@@ -489,6 +491,9 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def setGraphComboBox(self):
         transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()])
+
+    def setTerminalComboBox(self):
+        self.openGLWidget.terminal = self.terminalComboBox.currentIndex() + 1
 
         ### atomSettingsTab
         # atomColSlider
@@ -697,19 +702,16 @@ class MainWindow(QtWidgets.QMainWindow):
 
     # openGLWidget
     def onTransSelection(self):
-        self.transSelected = []
+        self.transSelected = {"1": [], "2": [], "3": [], "4": [], "5": []}
         self.draw()
         for i in range(len(self.atoms)):
-            if self.atoms[i].get_isSelectedTrans():
-                self.transSelected.append(i + 1)
-        if len(self.transSelected) == 0:
-            self.writeToLogs("No terminals selected.", "orange")
-            return
-        selection = "Selected terminals by atom index: "
-        for j in range(len(self.transSelected)):
-            selection = selection + str(self.transSelected[j]) + ", "
-        self.writeToLogs(selection[:-2], "orange")
-        self.openGLWidget.update()
+            terminal = self.atoms[i].get_isSelectedTrans()
+            if terminal:
+                self.transSelected[str(terminal)].append(str(i + 1))
+        self.writeToLogs("Selected atom indices for terminals 1-5:", "black")
+        for key in self.transSelected:
+            self.writeToLogs("Terminal " + key + ": " + ", ".join(self.transSelected[key]), colours(key))
+        #self.openGLWidget.update()
 
     def onCurrentSelectionA(self):
         self.currentSelectedA = []
@@ -835,7 +837,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    main = MainWindow(resolution.width)
-    # main = MainWindow(resolution.width, default_input)
+    # main = MainWindow(resolution.width)
+    main = MainWindow(resolution.width, default_input)
     main.show()
     sys.exit(app.exec_())

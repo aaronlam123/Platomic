@@ -23,6 +23,7 @@ class GLView(GLViewWidget):
         self.size = None
         self.offset = None
         self.colour = None
+        self.terminal = None
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
@@ -34,9 +35,9 @@ class GLView(GLViewWidget):
                     if self.atoms[i].get_mi() in items:
                         if ev.button() == 1:
                             if self.atoms[i].get_isSelectedTrans():
-                                self.atoms[i].set_isSelectedTrans(False)
+                                self.atoms[i].set_isSelectedTrans(0)
                             else:
-                                self.atoms[i].set_isSelectedTrans(True)
+                                self.atoms[i].set_isSelectedTrans(self.terminal)
                             self.left_clicked.emit()
                             break
 

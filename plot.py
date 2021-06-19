@@ -7,6 +7,15 @@ import orbital
 import pandas as pd
 
 
+def colours(terminal):
+    array = ['red', 'cyan', 'orange', 'blue', 'gray']
+    colour = [(1, 0, 0, 0.5), (0, 1, 1, 0.5), (1, 0.5, 0, 0.5), (0, 0, 1, 0.5), (0.5, 0.5, 0.5, 0.5)]
+    if isinstance(terminal, str):
+        return array[int(terminal) - 1]
+    else:
+        return colour[terminal - 1]
+
+
 def draw_atoms(atoms, widget, rows, cols):
     for i in range(len(atoms)):
         md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius())
@@ -20,7 +29,7 @@ def draw_selection(atoms, widget, rows, cols):
     for i in range(len(atoms)):
         md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius() + 0.02)
         if atoms[i].get_isSelectedTrans():
-            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(1, 1, 0, 0.5), drawEdges=False, drawFaces=True)
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=colours(atoms[i].get_isSelectedTrans()), drawEdges=False, drawFaces=True)
             mi.translate(*atoms[i].get_xyz())
             mi.setGLOptions('translucent')
             widget.addItem(mi)

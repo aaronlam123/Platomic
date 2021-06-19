@@ -15,7 +15,7 @@ class Atom:
         self.__total_orbitals = None
         self.__quantum_dict = None
         self.__eigenenergies = None
-        self.__isSelectedTrans = False
+        self.__isSelectedTrans = 0
         self.__isSelectedCurrA = False
         self.__isSelectedCurrB = False
         self.__mi = None
@@ -93,8 +93,8 @@ class Atom:
     def set_eigenenergies(self, eigenenergies):
         self.__eigenenergies = eigenenergies
 
-    def set_isSelectedTrans(self, state):
-        self.__isSelectedTrans = state
+    def set_isSelectedTrans(self, terminal):
+        self.__isSelectedTrans = terminal
 
     def set_isSelectedCurrA(self, state):
         self.__isSelectedCurrA = state
