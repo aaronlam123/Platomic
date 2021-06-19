@@ -321,9 +321,10 @@ class MainWindow(QtWidgets.QMainWindow):
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
-        if not len(self.transSelected) == 2: #FIX
+        occupied_keys = return_occupied_keys(self.transSelected)
+        if not occupied_keys == 2:
             self.writeErrorToLogs(
-                "Error: only two terminals should be selected. Select terminals by left clicking atoms.")
+                "Error: Incorrect number of terminals selected, may only calculate current between two terminals.")
             return
         if len(self.currentSelectedA) <= 0:
             self.writeErrorToLogs(
@@ -369,7 +370,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGenerateTransInputFileButtonClicked(self):
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected) #FIX
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except FileNotFoundError:
@@ -390,12 +391,16 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
-                                        current_calc) # FIX
+                                        current_calc)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except AssertionError:
             self.writeErrorToLogs(
-                "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
+                "Error: Insufficient terminals selected (two required). Select terminals by left clicking atoms.")
+            return
+        except NotImplementedError:
+            self.writeErrorToLogs(
+                "Error: Incorrect number of terminals selected, may only calculate current between two terminals.")
             return
         except ValueError:
             self.writeErrorToLogs(

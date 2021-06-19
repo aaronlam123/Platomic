@@ -202,12 +202,20 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
 
     return name + "_" + date
 
+def return_occupied_keys(selected):
+    occupied_keys = 0
+    for key in selected:
+        if len(selected[key]) != 0:
+            occupied_keys += 1
+    return occupied_keys
 
 def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
-    if len(selected) <= 1:
+    occupied_keys = return_occupied_keys(selected)
+
+    if occupied_keys <= 1:
         raise AssertionError
 
     try:
@@ -225,10 +233,6 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
         raise IOError
 
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
-    occupied_keys = 0
-    for key in selected:
-        if len(selected[key]) != 0:
-            occupied_keys += 1
     contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 -0.4281406\n")
     for i, key in enumerate(selected):
         if len(selected[key]) == 0:
@@ -255,8 +259,13 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
-    if len(selected) <= 1:
+    occupied_keys = return_occupied_keys(selected)
+
+    if occupied_keys <= 1:
         raise AssertionError
+
+    if occupied_keys != 2:
+        raise NotImplementedError
 
     if len(regionA) <= 0:
         raise ValueError
@@ -277,8 +286,16 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
             xyz_contents = xyz.readlines()
     except IOError:
         raise IOError
+
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
-    contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 " + str(reference_pot) + "\n")
+    contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 " + str(reference_pot) + "\n")
+    for i, key in enumerate(selected):
+        if len(selected[key]) == 0:
+            continue
+        contents.insert(terminal_line_count + i + 1, "0.0 0.10 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+    i = occupied_keys - 1
+
+
     for i in range(len(selected)):
         if current_calc:
             if i == 0:
@@ -365,10 +382,10 @@ def transmission_headers(input_file, transSelected):
     headers = ['All']
     df = pd.read_csv(input_file, sep=",", quoting=3)
     headers.extend(list(df)[1:])
-    if len(transSelected) == 0:
+    if return_occupied_keys(transSelected) == 0:
         return headers, headers
-    for i, index in enumerate(transSelected):
-        headers_mapped = [ind.replace(str(i + 1), str(index)) for ind in headers]
+    for i, key in enumerate(transSelected):
+        headers_mapped = [ind.replace(str(i + 1), transSelected[key]) for ind in headers]
     return headers_mapped, headers
 
 
