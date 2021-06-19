@@ -225,11 +225,16 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
         raise IOError
 
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
-    contents.insert(terminal_line_count, str(len(selected.keys())) + " 1 -100.0 -0.4281406\n")
+    occupied_keys = 0
+    for key in selected:
+        if len(selected[key]) != 0:
+            occupied_keys += 1
+    contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 -0.4281406\n")
     for i, key in enumerate(selected):
         if len(selected[key]) == 0:
             continue
         contents.insert(terminal_line_count + i + 1, "0.0 0.10 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+    i = occupied_keys - 1
 
     contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
     line_number = get_line_number(input_file, "Atoms") + i + 3
@@ -369,7 +374,7 @@ def transmission_headers(input_file, transSelected):
 
 if __name__ == '__main__':
     pass
-    trans_plato_input("benzene.xyz", {"1":["1", "2", "3"], "2":["4", "5"]}, input_file="config/default_trans.in")
+    trans_plato_input("benzene.xyz", {"1":["1", "2", "3"], "2":["4", "5"], "3":["6"], "4":[], "5":["9"]}, input_file="config/default_trans.in")
     #curr_plato_input("benzene.xyz", ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], 0, 0, 0.1, False, input_file="config/default_curr.in")
 
     # atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
