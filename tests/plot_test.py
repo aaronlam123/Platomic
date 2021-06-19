@@ -1,4 +1,5 @@
 import unittest
+from unittest.mock import MagicMock
 from main import *
 
 resolution = pyautogui.size()
@@ -11,6 +12,8 @@ class TestPlot(unittest.TestCase):
     def setUp(self):
         self.main = MainWindow(resolution.width, default_input)
         self.main.openGLWidget.clear()
+        self.main.graphWidget2.plot = MagicMock()
+        self.main.graphWidget2.clear = MagicMock()
 
     def test_draw_atoms(self):
         draw_atoms(self.main.atoms, self.main.openGLWidget, self.main.atomRow, self.main.atomCol)
@@ -56,10 +59,23 @@ class TestPlot(unittest.TestCase):
         self.assertIs(30, len(self.main.openGLWidget.itemsAt(region=(-121, -398, 1133, 771))))
 
     def test_draw_selection(self):
-        pass
+        self.main.atoms[0].set_isSelectedTrans(True)
+        self.main.atoms[0].set_isSelectedCurrA(True)
+        self.main.atoms[0].set_isSelectedCurrB(True)
+        draw_selection(self.main.atoms, self.main.openGLWidget, 20, 20)
+        self.assertIs(3, len(self.main.openGLWidget.itemsAt(region=(-121, -398, 1133, 771))))
 
-    def test_transmission_graph(self):
-        pass
+    def test_transmission_graph_all(self):
+        transmission_graph(self.main.graphWidget2, "test_files/test_trans_output.csv", "All")
+        self.assertEqual(self.main.graphWidget2.plot.call_count, 6)
+        self.main.graphWidget2.clear.assert_called_once()
+
+    def test_transmission_graph_singular(self):
+        transmission_graph(self.main.graphWidget2, "test_files/test_trans_output.csv", " 1 - 2")
+        self.main.graphWidget2.plot.assert_called_once()
+        self.main.graphWidget2.clear.assert_called_once()
 
     def test_current_graph(self):
-        pass
+        current_graph(self.main.graphWidget2, [1, 2, 3], [2, 3, 4])
+        self.main.graphWidget2.plot.assert_called_once()
+        self.main.graphWidget2.clear.assert_called_once()

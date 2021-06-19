@@ -270,7 +270,6 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
             xyz_contents = xyz.readlines()
     except IOError:
         raise IOError
-
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
     contents.insert(terminal_line_count, str(len(selected)) + " 1 -100.0 " + str(reference_pot) + "\n")
     for i in range(len(selected)):
@@ -308,7 +307,7 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
 def find_current_in_file(file):
     with open(file, "r") as f:
         string = lines_that_contain("Current[0]", f)[0]
-    return string[13:-4]
+    return string[13:-4].strip()
 
 
 def isfloat(string):
@@ -333,7 +332,7 @@ def isposfloat(string):
     return True
 
 
-def isdigit(string):
+def isnatnumber(string):
     if not string.isdigit():
         return False
     if string.strip() == "0":
@@ -368,6 +367,8 @@ def transmission_headers(input_file, transSelected):
 
 if __name__ == '__main__':
     pass
+    #trans_plato_input("benzene.xyz", ["1", "2", "3"], input_file="config/default_trans.in")
+    #curr_plato_input("benzene.xyz", ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], 0, 0, 0.1, False, input_file="config/default_curr.in")
 
     # atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
     # xyz_to_plato_input("benzene.xyz")

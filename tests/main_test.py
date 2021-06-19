@@ -2,7 +2,6 @@ import filecmp
 import unittest
 from unittest.mock import MagicMock
 from PyQt5.QtCore import Qt
-
 from main import *
 from PyQt5.QtTest import QTest
 
@@ -22,6 +21,14 @@ class TestMain(unittest.TestCase):
         self.main.draw = MagicMock()
         self.main.openGLWidget.reset = MagicMock()
         self.main.openGLWidget.setBackgroundColor = MagicMock()
+        self.main.openGLWidget.renderText = MagicMock()
+        self.main.executeButton.setEnabled = MagicMock()
+        self.main.executeTransButton.setEnabled = MagicMock()
+        self.main.executeCurrButton.setEnabled = MagicMock()
+        self.main.mainWindow.setCurrentIndex = MagicMock()
+        self.main.propertiesWindow.setCurrentIndex = MagicMock()
+        self.main.graphComboBox.clear = MagicMock()
+        self.main.graphComboBox.addItems = MagicMock()
         self.addCleanup(cleanUp)
         self.doCleanups()
 
@@ -37,15 +44,35 @@ class TestMain(unittest.TestCase):
             QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
             self.main.writeToLogs.assert_called()
+            self.main.draw.assert_called_once()
+            self.main.mainWindow.setCurrentIndex.assert_called_once()
+            self.main.propertiesWindow.setCurrentIndex.assert_called_once()
+            self.assertEqual(len(self.main.transSelected), 0)
+            self.assertEqual(len(self.main.currentSelectedA), 0)
+            self.assertEqual(len(self.main.currentSelectedB), 0)
+            self.main.executeButton.setEnabled.assert_called_with(False)
 
         def test_onTransExecuteButtonClicked(self):
-            pass
+            QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
+            QTest.mouseClick(self.main.transExecuteButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called()
+            self.main.graphComboBox.clear.assert_called_once()
+            self.main.graphComboBox.addItems.assert_called_once()
+            self.main.mainWindow.setCurrentIndex.assert_called_once()
+            self.main.propertiesWindow.setCurrentIndex.assert_called_once()
+            self.main.executeTransButton.setEnabled.assert_called_with(False)
 
         def test_onExecuteCurrButtonClicked(self):
-            pass
+            QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
+            QTest.mouseClick(self.main.executeCurrButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called()
+            self.main.executeCurrButton.setEnabled.assert_called_with(False)
 
         def test_onExecuteCurrGraphButtonClicked(self):
-            pass
+            QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called()
+            self.main.mainWindow.setCurrentIndex.assert_called_once()
+            self.main.propertiesWindow.setCurrentIndex.assert_called_once()
 
     def test_onGenerateInputFileButtonClicked_and_file_exists(self):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
@@ -71,11 +98,30 @@ class TestMain(unittest.TestCase):
         unittest.TestCase.assertRaises(self, expected_exception=FileNotFoundError)
         copy_file_from_main_config("config/default.in")
 
-    def test_onGenerateTransInputFileButtonClicked(self):
-        pass
+    def test_onGenerateTransInputFileButtonClicked_and_file_exists(self):
+        self.main.transSelected = ["1", "2", "3"]
+        self.main.currentSelectedA = ["4", "5", "6"]
+        self.main.currentSelectedB = ["7", "8", "9"]
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
+        self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
+        with open("test_files/correct_trans.in") as correct:
+            self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
+        self.main.writeToLogs.assert_called_with(
+            "Transmission input file " + file_in_cur_dir("benzene") + ".in generated successfully.", "green")
 
-    def test_onGenerateCurrInputFileButtonClicked(self):
-        pass
+    def test_onGenerateCurrInputFileButtonClicked_and_file_exists(self):
+        self.main.transSelected = ["1", "2", "3"]
+        self.main.currentSelectedA = ["4", "5", "6"]
+        self.main.currentSelectedB = ["7", "8", "9"]
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        self.main.referenceLineEdit.setText("123")
+        QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
+        self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
+        with open("test_files/correct_curr.in") as correct:
+            self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
+        self.main.writeToLogs.assert_called_with(
+            "Current input file " + file_in_cur_dir("benzene") + ".in generated successfully.", "green")
 
     def test_onOpenFileButtonClicked(self):
         pass
@@ -105,7 +151,7 @@ class TestMain(unittest.TestCase):
 
     def test_onSwitchToInputFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToInputFileTabButton, Qt.LeftButton)
-        self.assertEqual(self.main.mainWindow.currentIndex(), self.main.mainWindow.indexOf(self.main.inputFileTab))
+        self.assertEqual(self.main.mainWindow.currentIndex(), 0)
 
     def test_setGraphComboBox(self):
         pass
@@ -166,7 +212,7 @@ class TestMain(unittest.TestCase):
 
     def test_onSwitchToAttrFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToAttrFileTabButton, Qt.LeftButton)
-        self.assertEqual(self.main.mainWindow.currentIndex(), self.main.mainWindow.indexOf(self.main.attributeFileTab))
+        self.assertEqual(self.main.mainWindow.currentIndex(), 0)
 
     def test_setOrbColSliderLabel(self):
         self.main.orbColSlider.setValue(60)
@@ -304,10 +350,6 @@ class TestMain(unittest.TestCase):
     def test_onStepsLineEditChanged(self):
         pass
 
-    def test_default_input(self):
-        pass
-
-
 def copy_file_from_main_config(filename):
     with open("../" + filename, 'r') as source:
         with open(filename, 'w') as f:
@@ -323,7 +365,8 @@ def file_in_cur_dir(starts_with):
 
 def cleanUp():
     os.remove("attributes.txt")
+    copy_file_from_main_config("config/attributes.txt")
     for file in os.listdir("."):
         if file.startswith("benzene"):
             os.remove(os.path.join(".", file))
-    copy_file_from_main_config("config/attributes.txt")
+

@@ -384,7 +384,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeTransButton.setEnabled(True)
 
-    def onGenerateCurrInputFileButtonClicked(self, reference_pot=0, bias=0, current_calc=False):
+    def onGenerateCurrInputFileButtonClicked(self, boolean, reference_pot=0, bias=0, current_calc=False):
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
@@ -805,7 +805,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onStepsLineEditChanged(self):
         string = self.stepsLineEdit.text()
-        if not isdigit(string):
+        if not isnatnumber(string):
             self.writeErrorToLogs("Error: non-natural number '" + string + "' entered for steps.")
             self.stepsLineEdit.setText("")
 

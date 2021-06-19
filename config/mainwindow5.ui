@@ -226,7 +226,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -272,7 +272,7 @@ p, li { white-space: pre-wrap; }
            <property name="geometry">
             <rect>
              <x>0</x>
-             <y>-5</y>
+             <y>0</y>
              <width>357</width>
              <height>818</height>
             </rect>
@@ -380,16 +380,6 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="9" column="0" colspan="2">
-             <widget class="QLabel" name="label_34">
-              <property name="text">
-               <string>Calculate transmission across two terminals:</string>
-              </property>
-              <property name="alignment">
-               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
-              </property>
-             </widget>
-            </item>
             <item row="10" column="0">
              <widget class="QLabel" name="label_47">
               <property name="text">
@@ -450,13 +440,6 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="15" column="0" colspan="2">
-             <widget class="QLabel" name="label_35">
-              <property name="text">
-               <string>Calculate current across two terminals:</string>
               </property>
              </widget>
             </item>
@@ -619,6 +602,23 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="text">
                <string>Calculate current </string>
+              </property>
+             </widget>
+            </item>
+            <item row="9" column="0" colspan="3">
+             <widget class="QLabel" name="label_34">
+              <property name="text">
+               <string>Calculate transmission across two terminals:</string>
+              </property>
+              <property name="alignment">
+               <set>Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter</set>
+              </property>
+             </widget>
+            </item>
+            <item row="15" column="0" colspan="3">
+             <widget class="QLabel" name="label_35">
+              <property name="text">
+               <string>Calculate current across two terminals:</string>
               </property>
              </widget>
             </item>
