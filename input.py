@@ -402,6 +402,7 @@ def transmission_headers(input_file, transSelected):
         if key in return_occupied_keys_list(transSelected):
             headers_mapped = [ind.replace(" " + str(index), ",".join(transSelected[key])) for ind in headers_mapped]
             index += 1
+    headers_mapped = [ind.replace(" -", " - ") for ind in headers_mapped]
     return headers_mapped, headers
 
 
