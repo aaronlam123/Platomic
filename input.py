@@ -396,16 +396,19 @@ def transmission_headers(input_file, transSelected):
     headers.extend(list(df)[1:])
     if return_occupied_keys(transSelected) == 0:
         return headers, headers
+    headers_mapped = headers
     for i, key in enumerate(transSelected):
-        headers_mapped = [ind.replace(str(i + 1), ", ".join(transSelected[key])) for ind in headers]
+        headers_mapped = [ind.replace(" " + str(i + 1), ",".join(transSelected[key])) for ind in headers_mapped]
     return headers_mapped, headers
 
 
 if __name__ == '__main__':
-    pass
+    headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})
+    print(headers_mapped)
+    print(headers)
     # trans_plato_input("benzene.xyz", {"1":["1", "2", "3"], "2":["4", "5"], "3":["6"], "4":[], "5":["9"]}, input_file="config/default_trans.in")
-    curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
-                     0.1, False, input_file="config/default_curr.in")
+    #curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
+                     #0.1, False, input_file="config/default_curr.in")
     # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
     # 0.1, True, input_file="config/default_curr.in")
 
