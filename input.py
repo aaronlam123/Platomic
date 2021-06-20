@@ -397,8 +397,11 @@ def transmission_headers(input_file, transSelected):
     if return_occupied_keys(transSelected) == 0:
         return headers, headers
     headers_mapped = headers
+    index = 1
     for i, key in enumerate(transSelected):
-        headers_mapped = [ind.replace(" " + str(i + 1), ",".join(transSelected[key])) for ind in headers_mapped]
+        if key in return_occupied_keys_list(transSelected):
+            headers_mapped = [ind.replace(" " + str(index), ",".join(transSelected[key])) for ind in headers_mapped]
+            index += 1
     return headers_mapped, headers
 
 

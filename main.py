@@ -282,8 +282,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs(result.stdout, "black")
 
     def onExecuteButtonClicked(self):
-        if not self.execute():
-            return
+        self.execute()
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
@@ -298,8 +297,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeButton.setEnabled(False)
 
     def onTransExecuteButtonClicked(self):
-        if not self.execute():
-            return
+        self.execute()
         self.writeToLogs("Execution carried out successfully.", "green")
         self.csvFilename = self.inputFilename + "_trans.csv"
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected) #FIX
@@ -312,8 +310,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeTransButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self):
-        if not self.execute():
-            return
+        self.execute()
         self.writeToLogs("Execution carried out successfully.", "green")
         current = find_current_in_file(self.inputFilename + ".out")
         self.writeToLogs("Current: " + current + " mA.", "green")
