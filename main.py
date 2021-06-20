@@ -335,7 +335,7 @@ class MainWindow(QtWidgets.QMainWindow):
         biases = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
         for i in biases:
             bias = round(i, 4)
-            self.onGenerateCurrInputFileButtonClicked(bias=bias, current_calc=True)
+            self.onGenerateCurrInputFileButtonClicked(False, bias=bias, current_calc=True)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
