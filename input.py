@@ -262,7 +262,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_t_" + date + ".in", "w") as f:
+    with open(name + "_t_" + date + "_G_" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
