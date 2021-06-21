@@ -359,11 +359,14 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onExecute3DGraphButtonClicked(self):
         i = 1
-        interval = (self.gammaEnd - self.gammaStart) / self.gammaSteps
-        for gamma in np.linspace(self.gammaStart, self.gammaEnd, self.gammaSteps):
+        gamma_start = float(self.gammaEndLineEdit.text())
+        gamma_end = float(self.gammaStartLineEdit.text())
+        gamma_steps = int(self.gammaStepsLineEdit.text())
+        interval = (gamma_end - gamma_start) / gamma_steps
+        for gamma in np.linspace( gamma_start, gamma_end, gamma_steps):
             self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=gamma, step_size=interval)
             self.execute()
-            self.writeToLogs(str(i) + "/" + self.gammaSteps + " transmission calculation completed.", "green")
+            self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
         self.writeToLogs("All transmission calculations completed successfully.", "green")
         energy, gamma, transmission = process_energy_gamma_trans_csv(".")
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
