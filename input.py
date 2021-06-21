@@ -431,7 +431,7 @@ def process_energy_gamma_trans_csv(directory_name):
             continue
         gamma_axis.append(i)
         filename = files[0].split("_")
-        filename[-1] = str(round(i, 5))
+        filename[-2] = str(round(i, 5))
         filename = "_".join(filename)
         file = os.path.join(directory_name, filename)
         ds = pd.read_csv(file, sep=',', header=0)
