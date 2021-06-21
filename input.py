@@ -265,11 +265,11 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_t_" + date + "_G_" + str(gamma) + ".in", "w") as f:
+    with open(name + "_t_G-" + str(gamma) + "_" + date + "_.in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_t_" + date + "_G_" + str(gamma)
+    return name + "_t_G-" + str(gamma) + "_" + date + "_.in"
 
 
 def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc, step_size,
@@ -422,18 +422,10 @@ def process_energy_gamma_trans_csv(directory_name):
     transmission = None
     files = [file for file in os.listdir(directory_name) if file.endswith(".csv")]
     files.sort()
-    print(files)
-    gamma_v = files[-1].split("_")[-2]
+    gamma_v = files[-1].split("_")[-3]
     gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
 
-    for i in gamma:
-        if i == 0:
-            continue
-        gamma_axis.append(i)
-        filename = files[0].split("_")
-        filename[-2] = str(round(i, 5))
-        filename = "_".join(filename)
-        file = os.path.join(directory_name, filename)
+    for file in files:
         ds = pd.read_csv(file, sep=',', header=0)
         if energy is None:
             energy = pyqtgraph.np.array(ds["E(Ry)"])
@@ -442,7 +434,7 @@ def process_energy_gamma_trans_csv(directory_name):
         column = pyqtgraph.np.resize(pyqtgraph.np.array(ds[" 1 - 2"]), (len(energy), 1))
         transmission = pyqtgraph.np.append(transmission, column, axis=1)
 
-    return energy, pyqtgraph.np.array(gamma), transmission
+    return energy, gamma, transmission
 
 
 if __name__ == '__main__':
