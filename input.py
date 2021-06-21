@@ -343,11 +343,11 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_c_" + date + "_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
+    with open(name + "_c_" + date + "_" + str(bias) + "V_G_" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_c_" + date + "_" + str(bias) + "V_G-" + str(gamma)
+    return name + "_c_" + date + "_" + str(bias) + "V_G_" + str(gamma)
 
 
 def find_current_in_file(file):
