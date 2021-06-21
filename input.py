@@ -265,11 +265,11 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
 
     now = datetime.now()
     date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_t_G_" + str(gamma) + "_" + date + "_.in", "w") as f:
+    with open(name + "_t_G_" + str(gamma) + "_" + date + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_t_G_" + str(gamma) + "_" + date + "_.in"
+    return name + "_t_G_" + str(gamma) + "_" + date + ".in"
 
 
 def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc, step_size,
