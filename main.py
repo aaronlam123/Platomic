@@ -57,6 +57,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeLoadedButton.clicked.connect(self.onExecuteLoadedButtonClicked)
         self.transExecuteLoadedButton.clicked.connect(self.onTransExecuteLoadedButtonClicked)
         self.currExecuteLoadedButton.clicked.connect(self.onCurrExecuteLoadedButtonClicked)
+        self.gammaExecuteLoadedButton.clicked.connect(self.onGammaExecuteLoadedButtonClicked)
 
         # generateInputFileButton
         self.generateInputFileButton.clicked.connect(self.onGenerateInputFileButtonClicked)
@@ -74,6 +75,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openWfFileButton.clicked.connect(self.onOpenWfFileButtonClicked)
         self.openCsvFileButton.clicked.connect(self.onOpenCsvFileButtonClicked)
         self.openDirButton.clicked.connect(self.onOpenDirButtonClicked)
+        self.openDirGammaButton.clicked.connect(self.onOpenDirGammaButtonClicked)
         self.gammaLineEdit.editingFinished.connect(self.onGammaLineEditChanged)
         self.gammaLineEdit2.editingFinished.connect(self.onGammaLineEditChanged2)
         self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
@@ -95,10 +97,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.checkBoxSymbol.stateChanged.connect(self.setCheckBoxSymbol)
         self.checkBoxPosition.stateChanged.connect(self.setCheckBoxPosition)
         self.checkBoxRadius.stateChanged.connect(self.setCheckBoxRadius)
+
         self.fontComboBox.currentIndexChanged.connect(self.setFontComboBox)
         self.sizeComboBox.currentIndexChanged.connect(self.setSizeComboBox)
         self.offsetComboBox.currentIndexChanged.connect(self.setOffsetComboBox)
         self.colourComboBox.currentIndexChanged.connect(self.setColourComboBox)
+
         self.fontComboBox.addItems(["Arial", "Cambria", "Helvetica", "Times New Roman"])
         self.sizeComboBox.addItems(["14", "16", "18", "20", "24", "30", "42"])
         self.offsetComboBox.addItems(["X", "Y", "Z"])
@@ -107,6 +111,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.size = 14
         self.openGLWidget.offset = 0
         self.openGLWidget.colour = "Orange"
+
+        self.gammaGLWidget.font = "Arial"
+        self.gammaGLWidget.size = 18
+        self.gammaGLWidget.offset = 0
+        self.gammaGLWidget.colour = "White"
+        self.gammaGLWidget.mouseClicks = False
 
         ### graphSettingsTab and terminalComboBox
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
@@ -213,8 +223,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # horizontalSliderLabel
         self.horizontalSlider.valueChanged.connect(self.setHorizontalSliderLabel)
 
-        # openGLWidget
+        # openGLWidget and gammaGLWidget
         self.openGLWidget.opts['distance'] = 15
+        self.gammaGLWidget.opts['distance'] = 5
         self.openGLWidget.multiplier = self.multiplier
         if self.atoms == None:
             self.openGLWidget.atoms = [
@@ -454,6 +465,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if dirname:
             self.openDirLineEdit.setText(dirname)
 
+    def onOpenDirGammaButtonClicked(self):
+        dirname = QtWidgets.QFileDialog.getExistingDirectory(parent=self, caption='Select directory')
+
+        if dirname:
+            self.gammaOpenDirLineEdit.setText(dirname)
+
     def onExecuteLoadedButtonClicked(self):
         self.atoms = input_file_setup(self.openOutFileLineEdit.text(), "config/attributes.txt",
                                       self.openWfFileLineEdit.text())
@@ -483,6 +500,11 @@ class MainWindow(QtWidgets.QMainWindow):
         current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
+
+    def onGammaExecuteLoadedButtonClicked(self):
+        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text())
+        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
 
     # SwitchToInputFileTabButton
 

@@ -5,6 +5,8 @@ import numpy as np
 import scipy.special as sp
 import orbital
 import pandas as pd
+import matplotlib.pyplot as plt
+from glaxis import GLAxis
 
 
 def colours(terminal):
@@ -181,6 +183,24 @@ def current_graph(widget, x, y):
     widget.setLabel("bottom", text="Bias", units="V")
     widget.plot(x, y)
     # pen=pg.mkPen(width=3)
+
+def energy_gamma_trans_graph(widget, x, y, z):
+    widget.clear()
+    min_z = np.min(z)
+    max_z = np.max(z)
+    cmap = plt.get_cmap('jet')
+    colour_map = cmap((z - min_z)/(max_z - min_z))
+    surf = gl.GLSurfacePlotItem(x, y, z, colors=colour_map)
+    surf.translate((np.max(x) - np.min(x)) / 2, 0, 0)
+    widget.addItem(surf)
+
+    axis = GLAxis(widget)
+    axis.setSize(x=(np.max(x) - np.min(x)), y=(np.max(y) - np.min(y)), z=1)
+    axis.add_labels()
+    axis.add_tick_values()
+    widget.addItem(axis)
+
+
 
 
 if __name__ == '__main__':

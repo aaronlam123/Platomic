@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1331</width>
+    <width>1326</width>
     <height>901</height>
    </rect>
   </property>
@@ -78,7 +78,7 @@ p, li { white-space: pre-wrap; }
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="iconSize">
        <size>
@@ -132,6 +132,23 @@ p, li { white-space: pre-wrap; }
        <layout class="QGridLayout" name="gridLayout_5">
         <item row="0" column="0">
          <widget class="PlotWidget" name="graphWidget2" native="true"/>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="gammaGraphTab">
+       <attribute name="title">
+        <string>Trans. vs. Gamma vs.. Energy</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_18">
+        <item row="0" column="0">
+         <widget class="GLView" name="gammaGLWidget">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>0</height>
+           </size>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -226,7 +243,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <property name="iconSize">
        <size>
@@ -271,7 +288,7 @@ p, li { white-space: pre-wrap; }
           <widget class="QWidget" name="scrollAreaWidgetContents">
            <property name="geometry">
             <rect>
-             <x>-1</x>
+             <x>0</x>
              <y>0</y>
              <width>357</width>
              <height>818</height>
@@ -712,11 +729,24 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>358</width>
-             <height>832</height>
+             <width>341</width>
+             <height>884</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_17">
+            <item row="7" column="0" colspan="3">
+             <widget class="Line" name="line_7">
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
             <item row="0" column="0" colspan="2">
              <widget class="QLabel" name="label_41">
               <property name="text">
@@ -724,27 +754,6 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="wordWrap">
                <bool>true</bool>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QLabel" name="label_6">
-              <property name="text">
-               <string>Select or enter path of .out file:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="3" column="0" colspan="2">
-             <widget class="QLabel" name="label_43">
-              <property name="text">
-               <string>Select or enter path of .wf file:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="4" column="0">
-             <widget class="QLineEdit" name="openWfFileLineEdit">
-              <property name="readOnly">
-               <bool>false</bool>
               </property>
              </widget>
             </item>
@@ -771,37 +780,24 @@ p, li { white-space: pre-wrap; }
               </property>
              </spacer>
             </item>
-            <item row="7" column="0" colspan="3">
-             <widget class="Line" name="line_7">
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <property name="lineWidth">
-               <number>5</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="1" column="0" colspan="2">
+             <widget class="QLabel" name="label_6">
+              <property name="text">
+               <string>Select or enter path of .out file:</string>
               </property>
              </widget>
             </item>
-            <item row="8" column="0" colspan="2">
-             <widget class="QLabel" name="label_42">
-              <property name="text">
-               <string>To view transmission graphs, load a Plato .csv file:</string>
+            <item row="4" column="0">
+             <widget class="QLineEdit" name="openWfFileLineEdit">
+              <property name="readOnly">
+               <bool>false</bool>
               </property>
              </widget>
             </item>
-            <item row="9" column="0" colspan="2">
-             <widget class="QLabel" name="label_5">
+            <item row="3" column="0" colspan="2">
+             <widget class="QLabel" name="label_43">
               <property name="text">
-               <string>Select or enter path of .csv file:</string>
-              </property>
-             </widget>
-            </item>
-            <item row="11" column="0">
-             <widget class="QPushButton" name="transExecuteLoadedButton">
-              <property name="text">
-               <string>Execute</string>
+               <string>Select or enter path of .wf file:</string>
               </property>
              </widget>
             </item>
@@ -834,6 +830,13 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
+            <item row="11" column="0">
+             <widget class="QPushButton" name="transExecuteLoadedButton">
+              <property name="text">
+               <string>Execute</string>
+              </property>
+             </widget>
+            </item>
             <item row="14" column="0" colspan="2">
              <widget class="QLabel" name="label_46">
               <property name="text">
@@ -841,34 +844,19 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="15" column="0">
-             <widget class="QLineEdit" name="openDirLineEdit"/>
-            </item>
-            <item row="16" column="0">
-             <widget class="QPushButton" name="currExecuteLoadedButton">
+            <item row="8" column="0" colspan="2">
+             <widget class="QLabel" name="label_42">
               <property name="text">
-               <string>Execute</string>
+               <string>To view transmission graphs, load a Plato .csv file:</string>
               </property>
              </widget>
             </item>
-            <item row="17" column="1">
-             <spacer name="verticalSpacer">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
+            <item row="9" column="0" colspan="2">
+             <widget class="QLabel" name="label_5">
+              <property name="text">
+               <string>Select or enter path of .csv file:</string>
               </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>250</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="10" column="0">
-             <widget class="QLineEdit" name="openCsvFileLineEdit"/>
+             </widget>
             </item>
             <item row="10" column="1">
              <widget class="QPushButton" name="openCsvFileButton">
@@ -884,13 +872,16 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="2" column="0">
-             <widget class="QLineEdit" name="openOutFileLineEdit"/>
+            <item row="15" column="0">
+             <widget class="QLineEdit" name="openDirLineEdit"/>
             </item>
-            <item row="2" column="1">
-             <widget class="QPushButton" name="openOutFileButton">
+            <item row="10" column="0">
+             <widget class="QLineEdit" name="openCsvFileLineEdit"/>
+            </item>
+            <item row="16" column="0">
+             <widget class="QPushButton" name="currExecuteLoadedButton">
               <property name="text">
-               <string>Open</string>
+               <string>Execute</string>
               </property>
              </widget>
             </item>
@@ -901,6 +892,92 @@ p, li { white-space: pre-wrap; }
               </property>
               <property name="text">
                <string>Open</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="1">
+             <widget class="QPushButton" name="openOutFileButton">
+              <property name="text">
+               <string>Open</string>
+              </property>
+             </widget>
+            </item>
+            <item row="2" column="0">
+             <widget class="QLineEdit" name="openOutFileLineEdit"/>
+            </item>
+            <item row="18" column="0" colspan="3">
+             <widget class="Line" name="line_23">
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="17" column="0">
+             <spacer name="verticalSpacer_30">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Fixed</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>50</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="23" column="0">
+             <spacer name="verticalSpacer">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>250</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="19" column="0">
+             <widget class="QLabel" name="label_49">
+              <property name="text">
+               <string>To plot gamma vs. energy vs. transmission:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="1">
+             <widget class="QPushButton" name="openDirGammaButton">
+              <property name="text">
+               <string>Open</string>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="0">
+             <widget class="QLineEdit" name="gammaOpenDirLineEdit"/>
+            </item>
+            <item row="20" column="0">
+             <widget class="QLabel" name="label_50">
+              <property name="text">
+               <string>Load .csv directory</string>
+              </property>
+             </widget>
+            </item>
+            <item row="22" column="0">
+             <widget class="QPushButton" name="gammaExecuteLoadedButton">
+              <property name="text">
+               <string>Execute</string>
               </property>
              </widget>
             </item>

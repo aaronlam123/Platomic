@@ -405,6 +405,33 @@ def transmission_headers(input_file, transSelected):
     headers_mapped = [ind.replace(" -", " - ") for ind in headers_mapped]
     return headers_mapped, headers
 
+def process_energy_gamma_trans_csv(directory_name):
+    gamma_axis = []
+    energy = None
+    transmission = None
+    files = os.listdir(directory_name)
+    files.sort()
+    gamma_v = files[-1].split("_")[-2]
+    gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
+
+    for i in gamma:
+        if i == 0:
+            continue
+        gamma_axis.append(i)
+        filename = files[0].split("_")
+        filename[-2] = str(round(i, 4))
+        filename = "_".join(filename)
+        file = os.path.join(directory_name, filename)
+        ds = pd.read_csv(file, sep=',', header=0)
+        if energy is None:
+            energy = pyqtgraph.np.array(ds["E(Ry)"])
+        if transmission is None:
+            transmission = pyqtgraph.np.zeros((len(energy), 1))
+        column = pyqtgraph.np.resize(pyqtgraph.np.array(ds[" 1 - 2"]), (len(energy), 1))
+        transmission = pyqtgraph.np.append(transmission, column, axis=1)
+
+    return energy, pyqtgraph.np.array(gamma), transmission
+
 
 if __name__ == '__main__':
     headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})

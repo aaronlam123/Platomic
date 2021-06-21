@@ -2,6 +2,7 @@ from PyQt5 import QtGui
 from pyqtgraph.opengl import GLViewWidget
 from PyQt5.QtGui import QColor
 from OpenGL.GL import *
+import OpenGL.GL as ogl
 import pyqtgraph as pg
 import numpy as np
 
@@ -15,20 +16,26 @@ class GLView(GLViewWidget):
         super().__init__(parent)
         self.multiplier = None
         self.atoms = None
+
         self.index = True
         self.symbol = None
         self.position = None
         self.radius = None
+
         self.font = None
         self.size = None
         self.offset = None
         self.colour = None
+
         self.terminal = None
+        self.mouseClicks = True
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
-        items = self.itemsAt((ev.x(), ev.y(), 1, 1))
+        if not self.mouseClicks:
+            return
 
+        items = self.itemsAt((ev.x(), ev.y(), 1, 1))
         if self.atoms is not None:
             if ev.button() == 1 or ev.button() == 2 or ev.button() == 4:
                 for i in range(len(self.atoms) - 1, -1, -1):

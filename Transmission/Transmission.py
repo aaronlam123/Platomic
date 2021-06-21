@@ -66,6 +66,34 @@ def get_energy_gamma_transmission(start, end, points, input_file="H300_ref.in"):
     return energy, np.array(gamma), transmission
 
 
+def process_energy_gamma_trans_csv(directory_name):
+    gamma_axis = []
+    energy = None
+    transmission = None
+    files = os.listdir(directory_name)
+    files.sort()
+    gamma_v = files[-1].split("_")[-2]
+    gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
+
+    for i in gamma:
+        if i == 0:
+            continue
+        gamma_axis.append(i)
+        filename = files[0].split("_")
+        filename[-2] = str(round(i, 4))
+        filename = "_".join(filename)
+        file = os.path.join(directory_name, filename)
+        ds = pd.read_csv(file, sep=',', header=0)
+        if energy is None:
+            energy = np.array(ds["E(Ry)"])
+        if transmission is None:
+            transmission = np.zeros((len(energy), 1))
+        column = np.resize(np.array(ds[" 1 - 2"]), (len(energy), 1))
+        transmission = np.append(transmission, column, axis=1)
+
+    return energy, np.array(gamma), transmission
+
+
 def get_energy_gamma_transmission_XYZ(start, end, points, input_file="H300_ref.in"):
     X = []
     Y = []
@@ -100,6 +128,12 @@ def get_energy_gamma_transmission_tuple(start, end, points, divide, input_file="
 
 
 if __name__ == '__main__':
+    energy, gamma, trans = process_energy_gamma_trans_csv("../csv4")
+    print(energy.shape)
+    print(gamma.shape)
+    print(trans[0].shape)
+
+"""
     x_ticks = [0, 0.5, 1, 1.5, 2]
     y_ticks = [-1, -0.5, 0, 0.5, 1]
 
@@ -120,4 +154,4 @@ if __name__ == '__main__':
     ax.yaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     ax.zaxis.set_pane_color((1.0, 1.0, 1.0, 0.0))
     plt.show()
-
+"""
