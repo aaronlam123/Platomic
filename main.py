@@ -365,12 +365,12 @@ class MainWindow(QtWidgets.QMainWindow):
         interval = (gamma_end - gamma_start) / gamma_steps
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
-            self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=gamma, step_size=interval)
+            self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
             self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
-        energy, gamma, transmission = process_energy_gamma_trans_csv(".")
+        energy, gamma, transmission = process_energy_gamma_trans_csv(os.getcwd())
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")

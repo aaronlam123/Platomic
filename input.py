@@ -266,7 +266,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_t_" + date + "_G-" + str(gamma)
+    return name + "_t_" + date + "_G_" + str(gamma)
 
 
 def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc, step_size,
@@ -419,7 +419,7 @@ def process_energy_gamma_trans_csv(directory_name):
     transmission = None
     files = [file for file in os.listdir(directory_name) if file.endswith(".csv")]
     files.sort()
-    gamma_v = files[-1].split("_")[-2]
+    gamma_v = files[-1].split("_")[-1]
     gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
 
     for i in gamma:
@@ -427,7 +427,7 @@ def process_energy_gamma_trans_csv(directory_name):
             continue
         gamma_axis.append(i)
         filename = files[0].split("_")
-        filename[-2] = str(round(i, 4))
+        filename[-1] = str(round(i, 5))
         filename = "_".join(filename)
         file = os.path.join(directory_name, filename)
         ds = pd.read_csv(file, sep=',', header=0)
