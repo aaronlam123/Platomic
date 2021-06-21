@@ -365,7 +365,6 @@ class MainWindow(QtWidgets.QMainWindow):
         interval = (gamma_end - gamma_start) / gamma_steps
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
-            print(gamma)
             self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
             self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")

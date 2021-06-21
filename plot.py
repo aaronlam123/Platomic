@@ -185,6 +185,9 @@ def current_graph(widget, x, y):
     # pen=pg.mkPen(width=3)
 
 def energy_gamma_trans_graph(widget, x, y, z):
+    print(x)
+    print(y)
+    print(z)
     widget.clear()
     min_z = np.min(z)
     max_z = np.max(z)
