@@ -243,13 +243,16 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
     except IOError:
         raise IOError
 
+    actual_gamma = str(gamma)
+    if gamma == 0:
+        actual_gamma = str(0.000001)
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
     contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 -0.4281406\n")
     for i, key in enumerate(selected):
         if len(selected[key]) == 0:
             continue
         contents.insert(terminal_line_count + i + 1,
-                        "0.0 " + str(gamma) + " 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+                        "0.0 " + actual_gamma + " 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
     i = occupied_keys - 1
 
     trans_line_count = get_line_number(input_file, "OpenBoundaryTransmission") + 1
