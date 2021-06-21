@@ -365,6 +365,7 @@ class MainWindow(QtWidgets.QMainWindow):
         interval = (gamma_end - gamma_start) / gamma_steps
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
+            print(gamma)
             self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
             self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
@@ -399,7 +400,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeButton.setEnabled(True)
 
-    def onGenerateTransInputFileButtonClicked(self, verbose=True, gamma=0.10, step_size=0.003):
+    def onGenerateTransInputFileButtonClicked(self, boolean, verbose=True, gamma=0.10, step_size=0.003):
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
             self.inputFilename = filename
