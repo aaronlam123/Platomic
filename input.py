@@ -425,9 +425,7 @@ def process_energy_gamma_trans_csv(directory_name):
     gamma_v = files[-1].split("_")[-4]
     gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
 
-    for i, file in enumerate(files):
-        if i == 0:
-            continue
+    for file in files:
         ds = pd.read_csv(file, sep=',', header=0)
         if energy is None:
             energy = pyqtgraph.np.array(ds["E(Ry)"])
