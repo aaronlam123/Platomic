@@ -363,7 +363,7 @@ class MainWindow(QtWidgets.QMainWindow):
         gamma_end = float(self.gammaStartLineEdit.text())
         gamma_steps = int(self.gammaStepsLineEdit.text())
         interval = (gamma_end - gamma_start) / gamma_steps
-        self.writeToLogs("Starting 1/" + str(gamma_steps) + " transmission calculations.", "green")
+        self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
             self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=gamma, step_size=interval)
             self.execute()
