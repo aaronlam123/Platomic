@@ -359,8 +359,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onExecute3DGraphButtonClicked(self):
         i = 1
-        gamma_start = float(self.gammaEndLineEdit.text())
-        gamma_end = float(self.gammaStartLineEdit.text())
+        gamma_start = float(self.gammaStartLineEdit.text())
+        gamma_end = float(self.gammaEndLineEdit.text())
         gamma_steps = int(self.gammaStepsLineEdit.text())
         interval = (gamma_end - gamma_start) / gamma_steps
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
