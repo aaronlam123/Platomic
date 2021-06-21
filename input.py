@@ -7,6 +7,7 @@ import shlex
 import pandas as pd
 from atom import Atom
 import os
+from subprocess import PIPE, run
 
 RYDBERG = 13.605685
 
@@ -219,7 +220,7 @@ def return_occupied_keys_list(selected):
     return occupied_keys
 
 
-def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
+def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/default_trans.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -248,11 +249,14 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
         if len(selected[key]) == 0:
             continue
         contents.insert(terminal_line_count + i + 1,
-                        "0.0 0.10 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+                        "0.0 " + str(gamma) + " 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
     i = occupied_keys - 1
 
-    contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
-    line_number = get_line_number(input_file, "Atoms") + i + 3
+    trans_line_count = get_line_number(input_file, "OpenBoundaryTransmission") + 1
+    contents.insert(trans_line_count + i + 2, "-1.0 1.0 " + str(step_size) + "\n")
+
+    contents.insert(get_line_number(input_file, "NAtom") + i + 3, natoms)
+    line_number = get_line_number(input_file, "Atoms") + i + 4
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
@@ -265,7 +269,7 @@ def trans_plato_input(xyz_file, selected, input_file="config/default_trans.in"):
     return name + "_t_" + date
 
 
-def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc,
+def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc, step_size,
                      input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
@@ -320,8 +324,11 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
                             "0.0 0.10 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
     i = occupied_keys - 1
 
-    contents.insert(get_line_number(input_file, "NAtom") + i + 2, natoms)
-    line_number = get_line_number(input_file, "Atoms") + i + 3
+    trans_line_count = get_line_number(input_file, "OpenBoundaryTransmission") + 1
+    contents.insert(trans_line_count + i + 2, "-1.0 1.0 " + str(step_size) + "\n")
+
+    contents.insert(get_line_number(input_file, "NAtom") + i + 3, natoms)
+    line_number = get_line_number(input_file, "Atoms") + i + 4
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
@@ -405,11 +412,12 @@ def transmission_headers(input_file, transSelected):
     headers_mapped = [ind.replace(" -", " - ") for ind in headers_mapped]
     return headers_mapped, headers
 
+
 def process_energy_gamma_trans_csv(directory_name):
     gamma_axis = []
     energy = None
     transmission = None
-    files = os.listdir(directory_name)
+    files = [file for file in os.listdir(directory_name) if file.endswith(".csv")]
     files.sort()
     gamma_v = files[-1].split("_")[-2]
     gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
@@ -434,10 +442,10 @@ def process_energy_gamma_trans_csv(directory_name):
 
 
 if __name__ == '__main__':
-    headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})
-    print(headers_mapped)
-    print(headers)
-    # trans_plato_input("benzene.xyz", {"1":["1", "2", "3"], "2":["4", "5"], "3":["6"], "4":[], "5":["9"]}, input_file="config/default_trans.in")
+    #headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})
+    #print(headers_mapped)
+    #print(headers)
+    trans_plato_input("benzene.xyz", {"1":["1", "2", "3"], "2":["4", "5"], "3":["6"], "4":[], "5":["9"]}, 0.1, 0.001, input_file="config/default_trans.in")
     #curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
                      #0.1, False, input_file="config/default_curr.in")
     # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,

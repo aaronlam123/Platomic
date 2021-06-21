@@ -52,6 +52,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # executeCurrButton and executeCurrGraphButton
         self.executeCurrButton.clicked.connect(self.onExecuteCurrButtonClicked)
         self.executeCurrGraphButton.clicked.connect(self.onExecuteCurrGraphButtonClicked)
+        self.execute3DGraphButton.clicked.connect(self.onExecute3DGraphButtonClicked)
 
         # executeLoadedButton and transExecuteLoadedButton
         self.executeLoadedButton.clicked.connect(self.onExecuteLoadedButtonClicked)
@@ -78,6 +79,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openDirGammaButton.clicked.connect(self.onOpenDirGammaButtonClicked)
         self.gammaLineEdit.editingFinished.connect(self.onGammaLineEditChanged)
         self.gammaLineEdit2.editingFinished.connect(self.onGammaLineEditChanged2)
+        self.gammaStartLineEdit.editingFinished.connect(self.onGammaStartLineEditChanged)
+        self.gammaEndLineEdit.editingFinished.connect(self.onGammaEndLineEditChanged)
+        self.gammaStepsLineEdit.editingFinished.connect(self.onGammaStepsLineEditChanged)
         self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
         self.biasLineEdit.editingFinished.connect(self.onBiasLineEditChanged)
         self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
@@ -274,7 +278,7 @@ class MainWindow(QtWidgets.QMainWindow):
     ### setupSettingsTab
     # executeButton
 
-    def execute(self):
+    def execute(self, verbose=True):
         if os.name == 'nt':
             self.writeErrorToLogs("Plato back-end execution is not supported on Windows systems.")
             return False
@@ -284,12 +288,12 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
             return False
         result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
-        if result.returncode:
+        if result.returncode and verbose:
             self.writeToLogs(result.stderr, "red")
-            if result.stdout:
+            if result.stdout and verbose:
                 self.writeToLogs(result.stdout, "red")
             return False
-        if result.stdout:
+        if result.stdout and verbose:
             self.writeToLogs(result.stdout, "black")
 
     def onExecuteButtonClicked(self):
@@ -311,7 +315,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.execute()
         self.writeToLogs("Execution carried out successfully.", "green")
         self.csvFilename = self.inputFilename + "_trans.csv"
-        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected) #FIX
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
@@ -353,6 +357,20 @@ class MainWindow(QtWidgets.QMainWindow):
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
+    def onExecute3DGraphButtonClicked(self):
+        i = 1
+        interval = (self.gammaEnd - self.gammaStart) / self.gammaSteps
+        for gamma in np.linspace(self.gammaStart, self.gammaEnd, self.gammaSteps):
+            self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=gamma, step_size=interval)
+            self.execute()
+            self.writeToLogs(str(i) + "/" + self.gammaSteps + " transmission calculation completed.", "green")
+        self.writeToLogs("All transmission calculations completed successfully.", "green")
+        energy, gamma, transmission = process_energy_gamma_trans_csv(".")
+        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
+        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
+        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+
+
     # generateInputFileButton
 
     def replaceTextEdit(self, filename):
@@ -376,11 +394,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeButton.setEnabled(True)
 
-    def onGenerateTransInputFileButtonClicked(self):
+    def onGenerateTransInputFileButtonClicked(self, verbose=True, gamma=0.10, step_size=0.003):
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected)
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
             self.inputFilename = filename
-            self.replaceTextEdit(filename)
+            if verbose:
+                self.replaceTextEdit(filename)
         except FileNotFoundError:
             self.writeErrorToLogs(
                 "Error: No default input file found, check that config/default_trans.in exists.")
@@ -392,14 +411,15 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
             return
-        self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
-        self.executeTransButton.setEnabled(True)
+        if verbose:
+            self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
+            self.executeTransButton.setEnabled(True)
 
-    def onGenerateCurrInputFileButtonClicked(self, boolean, reference_pot=0, bias=0, current_calc=False):
+    def onGenerateCurrInputFileButtonClicked(self, boolean, reference_pot=0, bias=0, current_calc=False, step_size=0.003):
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
-                                        current_calc)
+                                        current_calc, step_size)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except AssertionError:
@@ -505,6 +525,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text())
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
+        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
     # SwitchToInputFileTabButton
 
@@ -834,6 +855,24 @@ class MainWindow(QtWidgets.QMainWindow):
         if not isnatnumber(string):
             self.writeErrorToLogs("Error: non-natural number '" + string + "' entered for steps.")
             self.stepsLineEdit.setText("")
+
+    def onGammaStartLineEditChanged(self):
+        string = self.gammaStartLineEdit.text()
+        if not isposfloat(string):
+            self.writeErrorToLogs("Error: non-pos float '" + string + "' entered for gamma start value.")
+            self.gammaStartLineEdit.setText("")
+
+    def onGammaEndLineEditChanged(self):
+        string = self.gammaEndLineEdit.text()
+        if not isposfloat(string):
+            self.writeErrorToLogs("Error: non-pos float '" + string + "' entered for gamma end value.")
+            self.gammaEndLineEdit.setText("")
+
+    def onGammaStepsLineEditChanged(self):
+        string = self.gammaStepsLineEdit.text()
+        if not isposfloat(string):
+            self.writeErrorToLogs("Error: non-pos float '" + string + "' entered for gamma steps value.")
+            self.gammaStepsLineEdit.setText("")
 
     ### AttributeFileTab
     # attributeTextEdit
