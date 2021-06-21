@@ -423,7 +423,7 @@ def process_energy_gamma_trans_csv(directory_name):
     files = [file for file in os.listdir(directory_name) if file.endswith(".csv")]
     files.sort()
     gamma_v = files[-1].split("_")[-4]
-    gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files))
+    gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files) + 1)
 
     for file in files:
         ds = pd.read_csv(file, sep=',', header=0)
