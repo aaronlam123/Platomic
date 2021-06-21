@@ -400,7 +400,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeButton.setEnabled(True)
 
-    def onGenerateTransInputFileButtonClicked(self, boolean, verbose=True, gamma=0.10, step_size=0.003):
+    def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, gamma=0.10, step_size=0.003):
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
             self.inputFilename = filename
