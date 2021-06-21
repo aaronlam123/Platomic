@@ -1,6 +1,6 @@
 from PyQt5.QtGui import QColor
 import pyqtgraph.opengl as gl
-import OpenGL.GL as ogl
+import OpenGL.GL as opengl
 import numpy as np
 
 
@@ -41,12 +41,13 @@ class GLAxis(gl.GLAxisItem):
 
     def add_tick_values(self):
         x, y, z = self.size()
-        x_ticks = np.linspace(0, x, 5)
-        y_ticks = np.linspace(0, y, 5)
-        z_ticks = np.linspace(0, z, 5)
+        x_ticks = np.linspace(0, round(x), 5)
+        x_val = np.linspace(-1, round(x)/2, 5)
+        y_ticks = np.linspace(0, round(y), 5)
+        z_ticks = np.linspace(0, round(z), 5)
         # X label
         for i, tick in enumerate(x_ticks):
-            val = Label(x=x_ticks[i], y=-y / 20, z=-z / 20, text=str(tick))
+            val = Label(x=x_ticks[i], y=-y / 20, z=-z / 20, text=str(x_val[i]))
             val.setGLViewWidget(self.parent)
             self.parent.addItem(val)
         # Y label
@@ -63,9 +64,9 @@ class GLAxis(gl.GLAxisItem):
     def paint(self):
         self.setupGLState()
         if self.antialias:
-            ogl.glEnable(ogl.GL_LINE_SMOOTH)
-            ogl.glHint(ogl.GL_LINE_SMOOTH_HINT, ogl.GL_NICEST)
-        ogl.glBegin(ogl.GL_LINES)
+            opengl.glEnable(opengl.GL_LINE_SMOOTH)
+            opengl.glHint(opengl.GL_LINE_SMOOTH_HINT, opengl.GL_NICEST)
+        opengl.glBegin(opengl.GL_LINES)
 
         x, y, z = self.size()
         x_ticks = np.linspace(0, x, 5)
@@ -73,29 +74,29 @@ class GLAxis(gl.GLAxisItem):
         z_ticks = np.linspace(0, z, 5)
 
         # x-axis
-        ogl.glColor4f(1, 1, 1, 1)
-        ogl.glVertex3f(0, 0, 0)
-        ogl.glVertex3f(x, 0, 0)
+        opengl.glColor4f(1, 1, 1, 1)
+        opengl.glVertex3f(0, 0, 0)
+        opengl.glVertex3f(x, 0, 0)
         for tick in x_ticks:
-            ogl.glVertex3f(tick, 0, 0)
-            ogl.glVertex3f(tick, -0.05, 0)
+            opengl.glVertex3f(tick, 0, 0)
+            opengl.glVertex3f(tick, -0.05, 0)
 
         # y-axis
-        ogl.glColor4f(1, 1, 1, 1)
-        ogl.glVertex3f(0, 0, 0)
-        ogl.glVertex3f(0, y, 0)
+        opengl.glColor4f(1, 1, 1, 1)
+        opengl.glVertex3f(0, 0, 0)
+        opengl.glVertex3f(0, y, 0)
         for tick in y_ticks:
-            ogl.glVertex3f(0, tick, 0)
-            ogl.glVertex3f(-0.05, tick, 0)
+            opengl.glVertex3f(0, tick, 0)
+            opengl.glVertex3f(-0.05, tick, 0)
 
         # z-axis
-        ogl.glColor4f(1, 1, 1, 1)
-        ogl.glVertex3f(0, 0, 0)
-        ogl.glVertex3f(0, 0, z)
+        opengl.glColor4f(1, 1, 1, 1)
+        opengl.glVertex3f(0, 0, 0)
+        opengl.glVertex3f(0, 0, z)
         for tick in z_ticks:
-            ogl.glVertex3f(0, 0, tick)
-            ogl.glVertex3f(0.05, 0, tick)
-            ogl.glVertex3f(0, 0, tick)
-            ogl.glVertex3f(0, 0.05, tick)
-        ogl.glEnd()
+            opengl.glVertex3f(0, 0, tick)
+            opengl.glVertex3f(0.05, 0, tick)
+            opengl.glVertex3f(0, 0, tick)
+            opengl.glVertex3f(0, 0.05, tick)
+        opengl.glEnd()
 
