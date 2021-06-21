@@ -269,7 +269,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_t_G_" + str(gamma) + "_" + date + ".in"
+    return name + "_t_G_" + str(gamma) + "_" + date
 
 
 def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc, step_size,
