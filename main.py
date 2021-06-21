@@ -371,10 +371,10 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
-        energy, gamma, transmission = process_energy_gamma_trans_csv(os.getcwd())
-        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
-        self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
-        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+        #energy, gamma, transmission = process_energy_gamma_trans_csv(os.getcwd())
+        #energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
+        #self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
+        #self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
 
     # generateInputFileButton
