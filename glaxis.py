@@ -43,6 +43,7 @@ class GLAxis(gl.GLAxisItem):
         x_ticks = np.linspace(0, (np.max(x)-np.min(x)), 5)
         x_val = np.linspace(np.min(x), np.max(x), 5)
         y_ticks = np.linspace(np.min(y), np.max(y), 5)
+        y_val = np.linspace(np.min(x), np.max(x), 5)
         z_ticks = np.linspace(0, 1, 5)
         # X label
         for i, tick in enumerate(x_ticks):
@@ -51,7 +52,7 @@ class GLAxis(gl.GLAxisItem):
             self.parent.addItem(val)
         # Y label
         for i, tick in enumerate(y_ticks):
-            val = Label(x=-0.2, y=y_ticks[i], z=-0.2, text=str(tick))
+            val = Label(x=-0.2, y=y_ticks[i], z=-0.2, text=str(round(y_val[i], 1)))
             val.setGLViewWidget(self.parent)
             self.parent.addItem(val)
         # Z label
