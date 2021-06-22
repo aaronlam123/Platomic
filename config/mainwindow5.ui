@@ -78,7 +78,7 @@ p, li { white-space: pre-wrap; }
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="iconSize">
        <size>
@@ -145,7 +145,7 @@ p, li { white-space: pre-wrap; }
        </attribute>
        <layout class="QGridLayout" name="gridLayout_18">
         <item row="0" column="0">
-         <widget class="GLView" name="gammaGLWidget">
+         <widget class="GLViewWidget" name="gammaGLWidget">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -2705,6 +2705,11 @@ p, li { white-space: pre-wrap; }
    <extends>QWidget</extends>
    <header>pyqtgraph</header>
    <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>GLViewWidget</class>
+   <extends>QOpenGLWidget</extends>
+   <header>pyqtgraph</header>
   </customwidget>
  </customwidgets>
  <resources/>

@@ -28,12 +28,9 @@ class GLView(GLViewWidget):
         self.colour = None
 
         self.terminal = None
-        self.mouseClicks = True
 
     def mousePressEvent(self, ev):
         self.mousePos = ev.pos()
-        if not self.mouseClicks:
-            return
 
         items = self.itemsAt((ev.x(), ev.y(), 1, 1))
         if self.atoms is not None:

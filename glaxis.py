@@ -46,7 +46,7 @@ class GLAxis(gl.GLAxisItem):
         z_ticks = np.linspace(0, 1, 5)
         # X label
         for i, tick in enumerate(x_ticks):
-            val = Label(x=x_ticks[i], y=-0.2, z=-0.2, text=str(x_val[i]))
+            val = Label(x=x_ticks[i], y=-0.2, z=-0.2, text=str(round(x_val[i], 1)))
             val.setGLViewWidget(self.parent)
             self.parent.addItem(val)
         # Y label
