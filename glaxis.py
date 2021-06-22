@@ -39,25 +39,24 @@ class GLAxis(gl.GLAxisItem):
         self.zLabel.setGLViewWidget(self.parent)
         self.parent.addItem(self.zLabel)
 
-    def add_tick_values(self):
-        x, y, z = self.size()
-        x_ticks = np.linspace(0, round(x), 5)
-        x_val = np.linspace(-1, round(x)/2, 5)
-        y_ticks = np.linspace(0, round(y), 5)
-        z_ticks = np.linspace(0, round(z), 5)
+    def add_tick_values(self, x, y, z):
+        x_ticks = np.linspace(0, (np.max(x)-np.min(x)), 5)
+        x_val = np.linspace(np.min(x), np.max(x), 5)
+        y_ticks = np.linspace(np.min(y), np.max(y), 5)
+        z_ticks = np.linspace(0, 1, 5)
         # X label
         for i, tick in enumerate(x_ticks):
-            val = Label(x=x_ticks[i], y=-y / 20, z=-z / 20, text=str(x_val[i]))
+            val = Label(x=x_ticks[i], y=-0.2, z=-0.2, text=str(x_val[i]))
             val.setGLViewWidget(self.parent)
             self.parent.addItem(val)
         # Y label
         for i, tick in enumerate(y_ticks):
-            val = Label(x=-x / 20, y=y_ticks[i], z=-z / 20, text=str(tick))
+            val = Label(x=-0.2, y=y_ticks[i], z=-0.2, text=str(tick))
             val.setGLViewWidget(self.parent)
             self.parent.addItem(val)
         # Z label
         for i, tick in enumerate(z_ticks):
-            val = Label(x=-x / 20, y=-y / 20, z=z_ticks[i], text=str(tick))
+            val = Label(x=-0.2, y=-0.2, z=z_ticks[i], text=str(tick))
             val.setGLViewWidget(self.parent)
             self.parent.addItem(val)
 

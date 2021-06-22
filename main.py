@@ -333,6 +333,17 @@ class MainWindow(QtWidgets.QMainWindow):
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
+        try:
+            steps = int(self.stepsLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for steps.")
+        try:
+            bias = float(self.biasLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for maximum bias.")
+
         occupied_keys = return_occupied_keys(self.transSelected)
         if not occupied_keys == 2:
             self.writeErrorToLogs(
@@ -347,7 +358,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return
         currents = []
-        biases = np.linspace(0, float(self.biasLineEdit.text()), int(self.stepsLineEdit.text()))
+        biases = np.linspace(0, bias, steps)
         for i in biases:
             bias = round(i, 4)
             self.onGenerateCurrInputFileButtonClicked(False, bias=bias, current_calc=True)
@@ -358,15 +369,33 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     def onExecute3DGraphButtonClicked(self):
-        i = 1
-        gamma_start = float(self.gammaStartLineEdit.text())
-        gamma_end = float(self.gammaEndLineEdit.text())
-        gamma_steps = int(self.gammaStepsLineEdit.text())
+        try:
+            gamma_start = float(self.gammaStartLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for gamma minimum.")
+        try:
+            gamma_end = float(self.gammaEndLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for gamma maximum.")
+        try:
+            gamma_steps = int(self.gammaStepsLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for gamma steps.")
+            return
         interval = (gamma_end - gamma_start) / gamma_steps
+        if interval <= 0:
+            self.writeErrorToLogs(
+                "Error: Difference between Gamma minimum and maximum must be positive and greater than 0.")
+            return
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
+        i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
             self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
-            self.execute(verbose=False)
+            if not self.execute(verbose=False):
+                return
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
@@ -399,7 +428,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeButton.setEnabled(True)
 
-    def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, gamma=0.10, step_size=0.003):
+    def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, step_size=0.003):
+        try:
+            gamma = float(self.gammaLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for gamma.")
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
             self.inputFilename = filename
@@ -420,7 +454,18 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeTransButton.setEnabled(True)
 
-    def onGenerateCurrInputFileButtonClicked(self, boolean, reference_pot=0, bias=0, current_calc=False, step_size=0.003):
+    def onGenerateCurrInputFileButtonClicked(self, boolean, current_calc=False, step_size=0.003):
+        try:
+            reference_pot = float(self.referenceLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for reference potential.")
+        try:
+            bias = float(self.biasLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs(
+                "Error: Missing input for bias.")
+            return
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
