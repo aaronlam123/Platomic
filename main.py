@@ -119,12 +119,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.offset = 0
         self.openGLWidget.colour = "Orange"
 
-        self.gammaGLWidget.font = "Arial"
-        self.gammaGLWidget.size = 18
-        self.gammaGLWidget.offset = 0
-        self.gammaGLWidget.colour = "White"
-        self.gammaGLWidget.mouseClicks = False
-
         ### graphSettingsTab and terminalComboBox
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
         self.terminalComboBox.currentIndexChanged.connect(self.setTerminalComboBox)
@@ -583,7 +577,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaExecuteLoadedButtonClicked(self):
         energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), self.id)
-        sleep(1)
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
