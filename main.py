@@ -296,9 +296,11 @@ class MainWindow(QtWidgets.QMainWindow):
             return False
         if result.stdout and verbose:
             self.writeToLogs(result.stdout, "black")
+        return True
 
     def onExecuteButtonClicked(self):
-        self.execute()
+        if not self.execute():
+            return
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
@@ -313,7 +315,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeButton.setEnabled(False)
 
     def onTransExecuteButtonClicked(self):
-        self.execute()
+        if not self.execute():
+            return
         self.writeToLogs("Execution carried out successfully.", "green")
         self.csvFilename = self.inputFilename + "_trans.csv"
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
@@ -326,7 +329,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeTransButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self):
-        self.execute()
+        if not self.execute():
+            return
         self.writeToLogs("Execution carried out successfully.", "green")
         current = find_current_in_file(self.inputFilename + ".out")
         self.writeToLogs("Current: " + current + " mA.", "green")
@@ -396,13 +400,13 @@ class MainWindow(QtWidgets.QMainWindow):
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
             if not self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval):
-                return False
+                return
             self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
         energy, gamma, transmission = process_energy_gamma_trans_csv(".", self.id)
-        energy_gamma_trans_graph(self.openGLWidget, energy, gamma, transmission)
+        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
@@ -577,7 +581,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaExecuteLoadedButtonClicked(self):
         energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), self.id)
-        energy_gamma_trans_graph(self.openGLWidget, energy, gamma, transmission)
+        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
