@@ -409,6 +409,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+        self.gammaGLWidget.update()
 
     # generateInputFileButton
 
@@ -584,6 +585,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+        self.gammaGLWidget.update()
 
     # SwitchToInputFileTabButton
 
