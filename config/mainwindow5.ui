@@ -2709,7 +2709,7 @@ p, li { white-space: pre-wrap; }
   <customwidget>
    <class>GLViewWidget</class>
    <extends>QOpenGLWidget</extends>
-   <header>pyqtgraph</header>
+   <header>pyqtgraph.opengl</header>
   </customwidget>
  </customwidgets>
  <resources/>
