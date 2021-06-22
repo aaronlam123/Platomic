@@ -43,7 +43,7 @@ class GLAxis(gl.GLAxisItem):
         x_ticks = np.linspace(0, (np.max(x)-np.min(x)), 5)
         x_val = np.linspace(np.min(x), np.max(x), 5)
         y_ticks = np.linspace(np.min(y), np.max(y), 5)
-        y_val = np.linspace(np.min(x), np.max(x), 5)
+        y_val = np.linspace(np.min(y), np.max(y), 5)
         z_ticks = np.linspace(0, 1, 5)
         # X label
         for i, tick in enumerate(x_ticks):
