@@ -572,6 +572,7 @@ class MainWindow(QtWidgets.QMainWindow):
         files = os.listdir(self.openDirLineEdit.text())
         if len(files) < 2:
             self.writeErrorToLogs("Error: Must have at least two .out files in directory.")
+            return
         bias_v, bias, currents = process_current_csv(self.openDirLineEdit.text())
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
         current_graph(self.graphWidget2, bias, currents)
@@ -580,6 +581,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaExecuteLoadedButtonClicked(self):
         energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), None)
+        if energy.shape[0] != transmission.shape[0] or gamma.shape[0] != transmission.shape[1]:
+            self.writeToLogs(
+                "Error: dimension mismatch, energy with shape " + str(energy.shape) + " and gamma with shape "
+                + str(gamma.shape) + " does not match transmission with shape: "
+                + str(transmission.shape) + ". Check that the directory contains only .csv files.", "green")
+            return
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
