@@ -392,8 +392,7 @@ class MainWindow(QtWidgets.QMainWindow):
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
             self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
-            if not self.execute(verbose=False):
-                return
+            self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
