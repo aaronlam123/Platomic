@@ -1,6 +1,4 @@
 import secrets
-from time import sleep
-
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon, QColor
 from plot import *
@@ -44,8 +42,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mode = 0
         self.id = secrets.token_hex(4)
 
-        ###### Initialise propertiesWindow ######
-        ### setupSettingsTab
+        # Initialise propertiesWindow
+        # setupSettingsTab
         # executeButton
         self.executeButton.clicked.connect(self.onExecuteButtonClicked)
 
@@ -119,13 +117,13 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.offset = 0
         self.openGLWidget.colour = "Orange"
 
-        ### graphSettingsTab and terminalComboBox
+        # graphSettingsTab and terminalComboBox
         self.graphComboBox.currentIndexChanged.connect(self.setGraphComboBox)
         self.terminalComboBox.currentIndexChanged.connect(self.setTerminalComboBox)
         self.terminalComboBox.addItems(["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4", "Terminal 5"])
         self.graphKeys = None
 
-        ### atomSettingsTab
+        # atomSettingsTab
         # atomColSlider
         self.atomCol = self.atomColSlider.value()
         # atomColSliderLabel
@@ -163,7 +161,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # switchToAttrFileTabButton
         self.switchToAttrFileTabButton.clicked.connect(self.onSwitchToAttrFileTabButtonClicked)
 
-        ### orbitalSettingsTab
+        # orbitalSettingsTab
         # advOrbWfCheckBox
         self.advOrbWfCheckBox.stateChanged.connect(self.draw)
 
@@ -217,9 +215,9 @@ class MainWindow(QtWidgets.QMainWindow):
         self.colourBSlider.valueChanged.connect(self.setColourBSliderLabel)
         self.colourASlider.valueChanged.connect(self.setColourASliderLabel)
 
-        ###### Initialise mainWindow ######
+        # Initialise mainWindow
 
-        ### mainDisplayTab
+        # mainDisplayTab
         # horizontalSlider
         # horizontalSliderLabel
         self.horizontalSlider.valueChanged.connect(self.setHorizontalSliderLabel)
@@ -228,7 +226,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.opts['distance'] = 15
         self.gammaGLWidget.opts['distance'] = 5
         self.openGLWidget.multiplier = self.multiplier
-        if self.atoms == None:
+        if self.atoms is None:
             self.openGLWidget.atoms = [
                 Atom("0", 0, -9, 0,
                      "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
@@ -252,12 +250,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # toggleAtomsButton
         self.toggleAtomsButton.clicked.connect(self.onToggleAtomsButtonClicked)
 
-        ### inputFileTab
+        # inputFileTab
         # inputTextEdit
         # saveInputFileButton
         self.saveInputFileButton.clicked.connect(self.onSaveInputFileButtonClicked)
 
-        ### AttributeFileTab
+        # AttributeFileTab
         # attributeTextEdit
         with open("config/attributes.txt", "r") as f:
             contents = f.readlines()
@@ -267,12 +265,12 @@ class MainWindow(QtWidgets.QMainWindow):
         # saveAttributeFileButton
         self.saveAttributeFileButton.clicked.connect(self.onSaveAttributeFileButtonClicked)
 
-        ### fullConsoleTab
+        # fullConsoleTab
         # fullConsoleTextEdit
 
-    ###### Initialise functions ######
-    ###### Initialise propertiesWindow ######
-    ### setupSettingsTab
+    # Initialise functions
+    # Initialise propertiesWindow
+    # setupSettingsTab
     # executeButton
 
     def execute(self, verbose=True):
@@ -367,11 +365,15 @@ class MainWindow(QtWidgets.QMainWindow):
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
-        #self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
+        # self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     def onExecute3DGraphButtonClicked(self):
-        self.id = secrets.token_hex(4)
+        occupied_keys = return_occupied_keys(self.transSelected)
+        if not occupied_keys == 2:
+            self.writeErrorToLogs(
+                "Error: Incorrect number of terminals selected, may only plot 3D graph between two terminals.")
+            return
         try:
             gamma_start = float(self.gammaStartLineEdit.text())
         except ValueError:
@@ -393,6 +395,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Difference between Gamma minimum and maximum must be positive and greater than 0.")
             return
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
+        self.id = secrets.token_hex(4)
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
             if not self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval):
@@ -586,7 +589,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def onSwitchToInputFileTabButtonClicked(self):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.inputFileTab))
 
-        ### graphSettingsTab
+        # graphSettingsTab
 
     def setGraphComboBox(self):
         transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()])
@@ -594,7 +597,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def setTerminalComboBox(self):
         self.openGLWidget.terminal = self.terminalComboBox.currentIndex() + 1
 
-        ### atomSettingsTab
+        # atomSettingsTab
         # atomColSlider
         # atomColSliderLabel
 
@@ -697,7 +700,7 @@ class MainWindow(QtWidgets.QMainWindow):
     def onSwitchToAttrFileTabButtonClicked(self):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.attributeFileTab))
 
-        ### orbitalSettingsTab
+        # orbitalSettingsTab
         # advOrbWfCheckBox
         # advOrbHorzCheckBox
         # advOrbVertCheckBox
@@ -790,7 +793,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw()
         self.colourASliderLabel.setText("A: " + str(value / 100))
 
-    ### mainDisplayTab
+    # mainDisplayTab
     # horizontalSlider
     # horizontalSliderLabel
     def setHorizontalSliderLabel(self, value):
@@ -864,7 +867,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw()
         self.writeToLogs("Atoms toggled on.", "grey")
 
-    ### inputFileTab
+    # inputFileTab
     # inputTextEdit
     # saveInputFileButton
     def onSaveInputFileButtonClicked(self):
@@ -928,7 +931,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("Error: non-pos float '" + string + "' entered for gamma steps value.")
             self.gammaStepsLineEdit.setText("")
 
-    ### AttributeFileTab
+    # AttributeFileTab
     # attributeTextEdit
     # saveAttributeFileButton
     def onSaveAttributeFileButtonClicked(self):
@@ -937,7 +940,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Attribute file attributes.txt modified successfully. Settings will be applied on next "
                          "execution", "green")
 
-    ### fullConsoleTab
+    # fullConsoleTab
     # fullConsoleTextEdit
     def writeToLogs(self, text, color):
         self.consoleLog.setTextColor(QColor(color))

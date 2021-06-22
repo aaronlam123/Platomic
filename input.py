@@ -1,13 +1,11 @@
 import math
 import ntpath
-from datetime import datetime
 import pyqtgraph
 from PyQt5 import QtGui
 import shlex
 import pandas as pd
 from atom import Atom
 import os
-from subprocess import PIPE, run
 
 RYDBERG = 13.605685
 
@@ -250,7 +248,8 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_fi
         if len(selected[key]) == 0:
             continue
         contents.insert(terminal_line_count + i + 1,
-                        "0.0 " + actual_gamma + " 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+                        "0.0 " + actual_gamma + " 0.001 0 " + str(len(selected[key])) + " " + ' '.join(
+                            selected[key]) + "\n")
     i = occupied_keys - 1
 
     trans_line_count = get_line_number(input_file, "OpenBoundaryTransmission") + 1
@@ -268,7 +267,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_fi
     return session_id + "_" + name + "_t_G_" + str(gamma)
 
 
-def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, step_size, session_id,
+def curr_plato_input(xyz_file, selected, reg_a, reg_b, reference_pot, bias, gamma, step_size, session_id,
                      input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
@@ -281,10 +280,10 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     if occupied_keys != 2:
         raise NotImplementedError
 
-    if len(regionA) <= 0:
+    if len(reg_a) <= 0:
         raise ValueError
 
-    if len(regionB) <= 0:
+    if len(reg_b) <= 0:
         raise ZeroDivisionError
 
     try:
@@ -301,18 +300,18 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     except IOError:
         raise IOError
 
-    region_A = True
+    region_a = True
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
     contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 " + str(reference_pot) + "\n")
     for i, key in enumerate(selected):
         if len(selected[key]) == 0:
             continue
         if key in return_occupied_keys_list(selected):
-            if region_A:
+            if region_a:
                 contents.insert(terminal_line_count + i + 1,
                                 str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
                                     len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
-                region_A = False
+                region_a = False
             else:
                 contents.insert(terminal_line_count + i + 1,
                                 str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
@@ -331,10 +330,10 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
         contents.insert(line + line_number, content)
 
     current_line_count = get_line_number(input_file, "OpenBoundaryCurrent") + 1
-    region_A = str(len(regionA)) + " " + " ".join(map(str, regionA)) + "\n"
-    region_B = str(len(regionB)) + " " + " ".join(map(str, regionB)) + "\n"
-    contents.insert(current_line_count + i + 2, region_A)
-    contents.insert(current_line_count + i + 3, region_B)
+    reg_a_str = str(len(reg_a)) + " " + " ".join(map(str, reg_a)) + "\n"
+    reg_b_str = str(len(reg_b)) + " " + " ".join(map(str, reg_b)) + "\n"
+    contents.insert(current_line_count + i + 2, reg_a_str)
+    contents.insert(current_line_count + i + 3, reg_b_str)
 
     with open(session_id + "_" + name + "_c_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
@@ -393,17 +392,17 @@ def process_current_csv(directory_name):
     return bias_v, bias, currents
 
 
-def transmission_headers(input_file, transSelected):
+def transmission_headers(input_file, selected):
     headers = ['All']
     df = pd.read_csv(input_file, sep=",", quoting=3)
     headers.extend(list(df)[1:])
-    if return_occupied_keys(transSelected) == 0:
+    if return_occupied_keys(selected) == 0:
         return headers, headers
     headers_mapped = headers
     index = 1
-    for i, key in enumerate(transSelected):
-        if key in return_occupied_keys_list(transSelected):
-            headers_mapped = [ind.replace(" " + str(index), ",".join(transSelected[key])) for ind in headers_mapped]
+    for i, key in enumerate(selected):
+        if key in return_occupied_keys_list(selected):
+            headers_mapped = [ind.replace(" " + str(index), ",".join(selected[key])) for ind in headers_mapped]
             index += 1
     headers_mapped = [ind.replace(" -", " - ") for ind in headers_mapped]
     return headers_mapped, headers
@@ -434,12 +433,13 @@ def process_energy_gamma_trans_csv(directory_name, session_id):
 
 
 if __name__ == '__main__':
-    #headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})
-    #print(headers_mapped)
-    #print(headers)
-    trans_plato_input("benzene.xyz", {"1":["1", "2", "3"], "2":["4", "5"], "3":["6"], "4":[], "5":["9"]}, 0.1, 0.001, input_file="config/default_trans.in")
-    #curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
-                     #0.1, False, input_file="config/default_curr.in")
+    # headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})
+    # print(headers_mapped)
+    # print(headers)
+    trans_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                      0.001, "aoeu", input_file="config/default_trans.in")
+    # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
+    # 0.1, False, input_file="config/default_curr.in")
     # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
     # 0.1, True, input_file="config/default_curr.in")
 

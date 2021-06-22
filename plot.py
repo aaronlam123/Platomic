@@ -31,7 +31,8 @@ def draw_selection(atoms, widget, rows, cols):
     for i in range(len(atoms)):
         md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius() + 0.02)
         if atoms[i].get_isSelectedTrans():
-            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=colours(atoms[i].get_isSelectedTrans()), drawEdges=False, drawFaces=True)
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=colours(atoms[i].get_isSelectedTrans()), drawEdges=False,
+                               drawFaces=True)
             mi.translate(*atoms[i].get_xyz())
             mi.setGLOptions('translucent')
             widget.addItem(mi)
@@ -184,12 +185,13 @@ def current_graph(widget, x, y):
     widget.plot(x, y)
     # pen=pg.mkPen(width=3)
 
+
 def energy_gamma_trans_graph(widget, x, y, z):
     widget.clear()
     min_z = np.min(z)
     max_z = np.max(z)
     cmap = plt.get_cmap('jet')
-    colour_map = cmap((z - min_z)/(max_z - min_z))
+    colour_map = cmap((z - min_z) / (max_z - min_z))
     surf = gl.GLSurfacePlotItem(x, y, z, colors=colour_map)
     surf.translate((np.max(x) - np.min(x)) / 2, 0, 0)
     widget.addItem(surf)
@@ -199,8 +201,6 @@ def energy_gamma_trans_graph(widget, x, y, z):
     axis.add_labels()
     axis.add_tick_values(x, y, z)
     widget.addItem(axis)
-
-
 
 
 if __name__ == '__main__':

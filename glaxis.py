@@ -40,7 +40,7 @@ class GLAxis(gl.GLAxisItem):
         self.parent.addItem(self.zLabel)
 
     def add_tick_values(self, x, y, z):
-        x_ticks = np.linspace(0, (np.max(x)-np.min(x)), 5)
+        x_ticks = np.linspace(0, (np.max(x) - np.min(x)), 5)
         x_val = np.linspace(np.min(x), np.max(x), 5)
         y_ticks = np.linspace(np.min(y), np.max(y), 5)
         y_val = np.linspace(np.min(y), np.max(y), 5)
@@ -99,4 +99,3 @@ class GLAxis(gl.GLAxisItem):
             opengl.glVertex3f(0, 0, tick)
             opengl.glVertex3f(0, 0.05, tick)
         opengl.glEnd()
-

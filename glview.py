@@ -2,7 +2,6 @@ from PyQt5 import QtGui
 from pyqtgraph.opengl import GLViewWidget
 from PyQt5.QtGui import QColor
 from OpenGL.GL import *
-import OpenGL.GL as ogl
 import pyqtgraph as pg
 import numpy as np
 
@@ -109,7 +108,6 @@ class GLView(GLViewWidget):
                     xyz[self.offset] = xyz[self.offset] - offset
                 if self.radius:
                     self.renderText(xyz[0], xyz[1], xyz[2], str(self.atoms[i].get_radius()), font)
-
 
     def readQImage(self):
         w = self.width() * self.multiplier
