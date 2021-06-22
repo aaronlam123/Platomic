@@ -272,7 +272,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
     return name + "_t_G_" + str(gamma) + "_" + date
 
 
-def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, current_calc, step_size,
+def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, step_size,
                      input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
@@ -311,17 +311,16 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     for i, key in enumerate(selected):
         if len(selected[key]) == 0:
             continue
-        if current_calc:
-            if key in return_occupied_keys_list(selected):
-                if region_A:
-                    contents.insert(terminal_line_count + i + 1,
-                                    str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
-                                        len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
-                    region_A = False
-                else:
-                    contents.insert(terminal_line_count + i + 1,
-                                    str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
-                                        len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+        if key in return_occupied_keys_list(selected):
+            if region_A:
+                contents.insert(terminal_line_count + i + 1,
+                                str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
+                                    len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
+                region_A = False
+            else:
+                contents.insert(terminal_line_count + i + 1,
+                                str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
+                                    len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
         else:
             contents.insert(terminal_line_count + i + 1,
                             "0.0 0.10 0.001 0 " + str(len(selected[key])) + " " + ' '.join(selected[key]) + "\n")

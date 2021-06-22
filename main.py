@@ -15,7 +15,6 @@ resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
 
-
 default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
 
 
@@ -361,7 +360,7 @@ class MainWindow(QtWidgets.QMainWindow):
         biases = np.linspace(0, bias, steps)
         for i in biases:
             bias = round(i, 4)
-            self.onGenerateCurrInputFileButtonClicked(False, current_calc=True)
+            self.onGenerateCurrInputFileButtonClicked(False, False)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -404,7 +403,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
-
     # generateInputFileButton
 
     def replaceTextEdit(self, filename):
@@ -428,12 +426,12 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
         self.executeButton.setEnabled(True)
 
-    def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, step_size=0.003):
-        try:
-            gamma = float(self.gammaLineEdit.text())
-        except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for gamma.")
+    def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, gamma=None, step_size=0.003):
+        if gamma is None:
+            try:
+                gamma = float(self.gammaLineEdit.text())
+            except ValueError:
+                self.writeErrorToLogs("Error: Missing input for gamma.")
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
             self.inputFilename = filename
@@ -454,7 +452,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeTransButton.setEnabled(True)
 
-    def onGenerateCurrInputFileButtonClicked(self, boolean, current_calc=False, step_size=0.003):
+    def onGenerateCurrInputFileButtonClicked(self, boolean, verbose=True, step_size=0.003):
         try:
             reference_pot = float(self.referenceLineEdit.text())
         except ValueError:
@@ -469,7 +467,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
-                                        current_calc, step_size)
+                                        step_size)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except AssertionError:
@@ -495,9 +493,9 @@ class MainWindow(QtWidgets.QMainWindow):
         except IOError:
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
             return
-
-        self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
-        self.executeCurrButton.setEnabled(True)
+        if verbose:
+            self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
+            self.executeCurrButton.setEnabled(True)
 
         # openFileButton
         # openFileLineEdit
@@ -553,7 +551,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onTransExecuteLoadedButtonClicked(self):
         self.csvFilename = self.openCsvFileLineEdit.text()
-        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected) #FIX
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)  # FIX
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
@@ -806,7 +804,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Selected atom indices for terminals 1-5:", "black")
         for key in self.transSelected:
             self.writeToLogs("Terminal " + key + ": " + ", ".join(self.transSelected[key]), colours(key))
-        #self.openGLWidget.update()
+        # self.openGLWidget.update()
 
     def onCurrentSelectionA(self):
         self.currentSelectedA = []
