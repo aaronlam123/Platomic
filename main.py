@@ -579,7 +579,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     def onGammaExecuteLoadedButtonClicked(self):
-        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), self.id)
+        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), None)
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")

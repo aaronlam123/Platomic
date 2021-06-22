@@ -411,14 +411,14 @@ def transmission_headers(input_file, selected):
 def process_energy_gamma_trans_csv(directory_name, session_id):
     energy = None
     transmission = None
-    files = [file for file in os.listdir(directory_name) if file.endswith(".csv") and file.startswith(session_id)]
+    if session_id is None:
+        files = [file for file in os.listdir(directory_name) if file.endswith(".csv")]
+    else:
+        files = [file for file in os.listdir(directory_name) if file.endswith(".csv") and file.startswith(session_id)]
     files.sort()
-    print(files)
     gamma_v = files[-1].split("_")[-2]
-    print(gamma_v)
     gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files) + 1)
     files_full = [os.path.join(directory_name, file) for file in files]
-    print(files_full)
 
     for file in files_full:
         ds = pd.read_csv(file, sep=',', header=0)
