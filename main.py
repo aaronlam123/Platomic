@@ -397,7 +397,7 @@ class MainWindow(QtWidgets.QMainWindow):
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
         energy, gamma, transmission = process_energy_gamma_trans_csv(".")
-        energy_gamma_trans_graph(self.openGLWidget, energy, gamma, transmission)
+        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
@@ -570,7 +570,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaExecuteLoadedButtonClicked(self):
         energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text())
-        energy_gamma_trans_graph(self.openGLWidget, energy, gamma, transmission)
+        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
