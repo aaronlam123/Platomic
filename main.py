@@ -335,13 +335,13 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             steps = int(self.stepsLineEdit.text())
         except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for steps.")
+            self.writeErrorToLogs("Error: Missing input for steps.")
+            return
         try:
             bias = float(self.biasLineEdit.text())
         except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for maximum bias.")
+            self.writeErrorToLogs("Error: Missing input for maximum bias.")
+            return
 
         occupied_keys = return_occupied_keys(self.transSelected)
         if not occupied_keys == 2:
@@ -360,8 +360,7 @@ class MainWindow(QtWidgets.QMainWindow):
         biases = np.linspace(0, bias, steps)
         for i in biases:
             bias_i = round(i, 4)
-            if not self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i):
-                return
+            self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -372,18 +371,17 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             gamma_start = float(self.gammaStartLineEdit.text())
         except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for gamma minimum.")
+            self.writeErrorToLogs("Error: Missing input for gamma minimum.")
+            return
         try:
             gamma_end = float(self.gammaEndLineEdit.text())
         except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for gamma maximum.")
+            self.writeErrorToLogs("Error: Missing input for gamma maximum.")
+            return
         try:
             gamma_steps = int(self.gammaStepsLineEdit.text())
         except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for gamma steps.")
+            self.writeErrorToLogs("Error: Missing input for gamma steps.")
             return
         interval = (gamma_end - gamma_start) / gamma_steps
         if interval <= 0:
@@ -393,8 +391,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
-            if not self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval):
-                return
+            self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
             if not self.execute(verbose=False):
                 return
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
@@ -460,15 +457,13 @@ class MainWindow(QtWidgets.QMainWindow):
             try:
                 bias = float(self.biasLineEdit.text())
             except ValueError:
-                self.writeErrorToLogs(
-                    "Error: Missing input for bias.")
+                self.writeErrorToLogs("Error: Missing input for bias.")
                 return False
         try:
             reference_pot = float(self.referenceLineEdit.text())
         except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for reference potential.")
-
+            self.writeErrorToLogs("Error: Missing input for reference potential.")
+            return
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
