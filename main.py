@@ -360,7 +360,8 @@ class MainWindow(QtWidgets.QMainWindow):
         biases = np.linspace(0, bias, steps)
         for i in biases:
             bias_i = round(i, 4)
-            self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i)
+            if not self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i):
+                return
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -433,6 +434,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 gamma = float(self.gammaLineEdit.text())
             except ValueError:
                 self.writeErrorToLogs("Error: Missing input for gamma.")
+                return False
         try:
             filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
             self.inputFilename = filename
@@ -441,14 +443,14 @@ class MainWindow(QtWidgets.QMainWindow):
         except FileNotFoundError:
             self.writeErrorToLogs(
                 "Error: No default input file found, check that config/default_trans.in exists.")
-            return
+            return False
         except IOError:
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
-            return
+            return False
         except AssertionError:
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
-            return
+            return False
         if verbose:
             self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeTransButton.setEnabled(True)
