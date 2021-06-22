@@ -172,7 +172,7 @@ def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms u
     return atoms
 
 
-def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
+def xyz_to_plato_input(xyz_file, session_id, input_file="config/default.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -195,13 +195,11 @@ def xyz_to_plato_input(xyz_file, input_file="config/default.in"):
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
-    now = datetime.now()
-    date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_" + date + ".in", "w") as f:
+    with open(session_id + "_" + name + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_" + date
+    return session_id + "_" + name
 
 
 def return_occupied_keys(selected):
@@ -220,7 +218,7 @@ def return_occupied_keys_list(selected):
     return occupied_keys
 
 
-def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/default_trans.in"):
+def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_file="config/default_trans.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -263,16 +261,14 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, input_file="config/d
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
-    now = datetime.now()
-    date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_t_G_" + str(gamma) + "_" + date + ".in", "w") as f:
+    with open(session_id + "_" + name + "_t_G_" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_t_G_" + str(gamma) + "_" + date
+    return session_id + "_" + name + "_t_G_" + str(gamma)
 
 
-def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, step_size,
+def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, gamma, step_size, session_id,
                      input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
@@ -340,13 +336,11 @@ def curr_plato_input(xyz_file, selected, regionA, regionB, reference_pot, bias, 
     contents.insert(current_line_count + i + 2, region_A)
     contents.insert(current_line_count + i + 3, region_B)
 
-    now = datetime.now()
-    date = now.strftime("%d-%m_%H%M%S")
-    with open(name + "_c_" + date + "_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
+    with open(session_id + "_" + name + "_c_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
 
-    return name + "_c_" + date + "_" + str(bias) + "V_G-" + str(gamma)
+    return session_id + "_" + name + "_c_" + str(bias) + "V_G-" + str(gamma)
 
 
 def find_current_in_file(file):
@@ -415,13 +409,13 @@ def transmission_headers(input_file, transSelected):
     return headers_mapped, headers
 
 
-def process_energy_gamma_trans_csv(directory_name):
+def process_energy_gamma_trans_csv(directory_name, session_id):
     energy = None
     transmission = None
-    files = [file for file in os.listdir(directory_name) if file.endswith(".csv")]
+    files = [file for file in os.listdir(directory_name) if file.endswith(".csv") and file.startswith(session_id)]
     files.sort()
     print(files)
-    gamma_v = files[-1].split("_")[-4]
+    gamma_v = files[-1].split("_")[-3]
     gamma = pyqtgraph.np.linspace(0, float(gamma_v), len(files) + 1)
     files_full = [os.path.join(directory_name, file) for file in files]
 

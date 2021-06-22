@@ -1,3 +1,4 @@
+import secrets
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon, QColor
 from plot import *
@@ -39,6 +40,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currentSelectedA = []
         self.currentSelectedB = []
         self.mode = 0
+        self.id = secrets.token_hex(4)
 
         ###### Initialise propertiesWindow ######
         ### setupSettingsTab
@@ -364,10 +366,11 @@ class MainWindow(QtWidgets.QMainWindow):
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
-        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
+        #self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     def onExecute3DGraphButtonClicked(self):
+        self.id = secrets.token_hex(4)
         try:
             gamma_start = float(self.gammaStartLineEdit.text())
         except ValueError:
@@ -396,8 +399,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
-        energy, gamma, transmission = process_energy_gamma_trans_csv(".")
-        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
+        energy, gamma, transmission = process_energy_gamma_trans_csv(".", self.id)
+        energy_gamma_trans_graph(self.openGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
@@ -412,7 +415,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGenerateInputFileButtonClicked(self):
         try:
-            filename = xyz_to_plato_input(self.openFileLineEdit.text())
+            filename = xyz_to_plato_input(self.openFileLineEdit.text(), self.id)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except FileNotFoundError:
@@ -432,7 +435,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.writeErrorToLogs("Error: Missing input for gamma.")
                 return False
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size)
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size, self.id)
             self.inputFilename = filename
             if verbose:
                 self.replaceTextEdit(filename)
@@ -466,7 +469,7 @@ class MainWindow(QtWidgets.QMainWindow):
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
-                                        step_size)
+                                        step_size, self.id)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except AssertionError:
@@ -569,8 +572,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     def onGammaExecuteLoadedButtonClicked(self):
-        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text())
-        energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
+        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), self.id)
+        energy_gamma_trans_graph(self.openGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
