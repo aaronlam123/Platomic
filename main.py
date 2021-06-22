@@ -359,8 +359,8 @@ class MainWindow(QtWidgets.QMainWindow):
         currents = []
         biases = np.linspace(0, bias, steps)
         for i in biases:
-            bias = round(i, 4)
-            self.onGenerateCurrInputFileButtonClicked(False, False)
+            bias_i = round(i, 4)
+            self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i)
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -392,7 +392,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
-            self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
+            if not self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval):
+                return
             if not self.execute(verbose=False):
                 return
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
@@ -452,18 +453,20 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeTransButton.setEnabled(True)
 
-    def onGenerateCurrInputFileButtonClicked(self, boolean, verbose=True, step_size=0.003):
+    def onGenerateCurrInputFileButtonClicked(self, boolean, verbose=True, bias=None, step_size=0.003):
+        if bias is None:
+            try:
+                bias = float(self.biasLineEdit.text())
+            except ValueError:
+                self.writeErrorToLogs(
+                    "Error: Missing input for bias.")
+                return False
         try:
             reference_pot = float(self.referenceLineEdit.text())
         except ValueError:
             self.writeErrorToLogs(
                 "Error: Missing input for reference potential.")
-        try:
-            bias = float(self.biasLineEdit.text())
-        except ValueError:
-            self.writeErrorToLogs(
-                "Error: Missing input for bias.")
-            return
+
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
                                         self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
@@ -473,26 +476,26 @@ class MainWindow(QtWidgets.QMainWindow):
         except AssertionError:
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (two required). Select terminals by left clicking atoms.")
-            return
+            return False
         except NotImplementedError:
             self.writeErrorToLogs(
                 "Error: Incorrect number of terminals selected, may only calculate current between two terminals.")
-            return
+            return False
         except ValueError:
             self.writeErrorToLogs(
                 "Error: Insufficient atoms for region A (min. one required). Select atoms for A by middle clicking.")
-            return
+            return False
         except ZeroDivisionError:
             self.writeErrorToLogs(
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
-            return
+            return False
         except FileNotFoundError:
             self.writeErrorToLogs(
                 "Error: No default current input file found, check that config/default_curr.in exists.")
-            return
+            return False
         except IOError:
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
-            return
+            return False
         if verbose:
             self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeCurrButton.setEnabled(True)
