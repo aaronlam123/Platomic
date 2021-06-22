@@ -362,7 +362,8 @@ class MainWindow(QtWidgets.QMainWindow):
         biases = np.linspace(0, bias, steps)
         for i in biases:
             bias_i = round(i, 4)
-            self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i)
+            if not self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i):
+                return
             currents.append(self.onExecuteCurrButtonClicked())
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
@@ -394,7 +395,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
-            self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval)
+            if not self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval):
+                return False
             self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
             i += 1
@@ -453,6 +455,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if verbose:
             self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeTransButton.setEnabled(True)
+        return True
 
     def onGenerateCurrInputFileButtonClicked(self, boolean, verbose=True, bias=None, step_size=0.003):
         if bias is None:
@@ -498,6 +501,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if verbose:
             self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
             self.executeCurrButton.setEnabled(True)
+        return True
 
         # openFileButton
         # openFileLineEdit
