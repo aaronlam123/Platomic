@@ -4,13 +4,6 @@ from input import *
 
 
 class TestInput(unittest.TestCase):
-    def setUp(self):
-        with open("benzene_.in", "w") as f:
-            pass
-
-    def tearDown(self):
-        os.remove("benzene_.in")
-
     def test_lines_that_contain(self):
         with open("test_files/test_output.txt", "r") as self.f:
             self.assertEqual(lines_that_contain("symbol", self.f),
@@ -267,27 +260,44 @@ class TestInput(unittest.TestCase):
         np.testing.assert_array_almost_equal(atoms[11].get_eigenvector(11), [0.169801])
 
     def test_trans_plato_input(self):
-        filename = trans_plato_input("test_files/benzene.xyz", ["1", "2", "3"], input_file="config/default_trans.in")
+        filename = trans_plato_input("test_files/benzene.xyz",
+                                     {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                                     0.003, "6CHARS", input_file="config/default_trans.in")
         with open(filename + ".in") as generated:
             with open("test_files/correct_trans.in") as correct:
                 self.assertListEqual(list(generated.readlines()), list(correct.readlines()))
         os.remove(filename + ".in")
 
+    def test_trans_plato_input_gamma_zero(self):
+        filename = trans_plato_input("test_files/benzene.xyz",
+                                     {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.0,
+                                     0.003, "6CHARS", input_file="config/default_trans.in")
+        with open(filename + ".in") as generated:
+            with open("test_files/correct_trans_G-0.in") as correct:
+                self.assertListEqual(list(generated.readlines()), list(correct.readlines()))
+        os.remove(filename + ".in")
+
     def test_trans_plato_input_assert_selection(self):
         with unittest.TestCase.assertRaises(self, AssertionError):
-            trans_plato_input("test_files/benzene.xyz", [], input_file="config/default_trans.in")
+            trans_plato_input("test_files/benzene.xyz",
+                              {}, 0.1,
+                              0.003, "6CHARS", input_file="config/default_trans.in")
 
     def test_trans_plato_input_assert_input_file(self):
         with unittest.TestCase.assertRaises(self, FileNotFoundError):
-            trans_plato_input("test_files/benzene.xyz", ["1", "2", "3"], input_file="config/nonexistent.in")
+            trans_plato_input("test_files/benzene.xyz",
+                              {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                              0.003, "6CHARS", input_file="config/nonexistent.in")
 
     def test_trans_plato_input_assert_xyz(self):
         with unittest.TestCase.assertRaises(self, IOError):
-            trans_plato_input("test_files/nonexistent.xyz", ["1", "2", "3"], input_file="config/default_trans.in")
+            trans_plato_input("test_files/nonexistent.xyz",
+                              {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                              0.003, "6CHARS", input_file="config/default_trans.in")
 
     def test_curr_plato_input(self):
-        filename = curr_plato_input("test_files/benzene.xyz", ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"], 0, 0, 0.1,
-                                    False,
+        filename = curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
+                                    ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
                                     input_file="config/default_curr.in")
         with open(filename + ".in") as generated:
             with open("test_files/correct_curr.in") as correct:
@@ -296,47 +306,39 @@ class TestInput(unittest.TestCase):
 
     def test_curr_plato_input_assert_selection(self):
         with unittest.TestCase.assertRaises(self, AssertionError):
-            curr_plato_input("test_files/benzene.xyz", ["1"], ["4", "5", "6"], ["7", "8", "9"], -0.5,
-                                        0, 0.1,
-                                        False,
-                                        input_file="config/default_curr.in")
+            curr_plato_input("test_files/benzene.xyz", {}, ["4", "5", "6"],
+                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_regionA(self):
         with unittest.TestCase.assertRaises(self, ValueError):
-            curr_plato_input("test_files/benzene.xyz", ["1", "2", "3"], [], ["7", "8", "9"], -0.5,
-                             0, 0.1,
-                             False,
+            curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, [],
+                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_regionB(self):
         with unittest.TestCase.assertRaises(self, ZeroDivisionError):
-            curr_plato_input("test_files/benzene.xyz", ["1", "2", "3"], ["4", "5", "6"], [], -0.5,
-                             0, 0.1,
-                             False,
+            curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
+                             [], 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_input_file(self):
         with unittest.TestCase.assertRaises(self, FileNotFoundError):
-            curr_plato_input("test_files/benzene.xyz", ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"],
-                                        -0.5, 0, 0.1,
-                                        False,
-                                        input_file="config/nonexistent.in")
+            curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
+                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             input_file="config/nonexistent.in")
 
     def test_curr_plato_input_assert_xyz(self):
         with unittest.TestCase.assertRaises(self, IOError):
-            curr_plato_input("test_files/nonexistent.xyz", ["1", "2", "3"], ["4", "5", "6"], ["7", "8", "9"],
-                                        -0.5, 0, 0.1,
-                                        False,
-                                        input_file="config/default_curr.in")
+            curr_plato_input("test_files/nonexistent.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
+                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             input_file="config/default_curr.in")
 
-    def test_curr_plato_input_graph(self):
-        filename = curr_plato_input("test_files/benzene.xyz", ["1", "2"], ["4", "5", "6"], ["7", "8", "9"], -0.5, 0, 0.1,
-                                    True,
+    def test_curr_plato_input_assert_occupied_keys(self):
+        with unittest.TestCase.assertRaises(self, NotImplementedError):
+            curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "2": ["4"], "3": ["6"]}, ["4", "5", "6"],
+                                    ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
                                     input_file="config/default_curr.in")
-        with open(filename + ".in") as generated:
-            with open("test_files/correct_curr_graph.in") as correct:
-                self.assertListEqual(list(generated.readlines()), list(correct.readlines()))
-        os.remove(filename + ".in")
 
     def test_find_current_in_file(self):
         self.assertEqual(find_current_in_file("test_files/test_curr_output.out"), "1.0185631e-08")
@@ -346,14 +348,14 @@ class TestInput(unittest.TestCase):
         self.assertTrue(isfloat("-0.123123"))
         self.assertFalse(isfloat("NaN"))
         self.assertFalse(isfloat("inf"))
-        self.assertFalse(isfloat("abc"))
+        self.assertFalse(isfloat("**&#@"))
 
     def test_isposfloat(self):
         self.assertTrue(isposfloat("2.234234"))
         self.assertFalse(isposfloat("-0.234234"))
         self.assertFalse(isposfloat("NaN"))
         self.assertFalse(isposfloat("inf"))
-        self.assertFalse(isfloat("abc"))
+        self.assertFalse(isposfloat("**&#@"))
 
     def test_isnatnumber(self):
         self.assertTrue(isnatnumber("3"))
@@ -365,14 +367,41 @@ class TestInput(unittest.TestCase):
         bias_v, bias, currents = process_current_csv("test_files/test_out_dir")
         self.assertEqual(bias_v, "1.0V")
         np.testing.assert_array_equal(bias, [0., 0.25, 0.5, 0.75, 1.])
-        np.testing.assert_array_equal(currents, [-1.0805666e-12, 2.9065375e-08, 5.8099881e-08, 8.7071466e-08, 1.1596586e-07])
+        np.testing.assert_array_equal(currents,
+                                      [-1.0805666e-12, 2.9065375e-08, 5.8099881e-08, 8.7071466e-08, 1.1596586e-07])
 
     def test_transmission_headers(self):
-        headers_mapped, headers = transmission_headers("test_files/test_trans_output.csv", [1, 7, 9, 11])
-        self.assertEqual(headers_mapped, ['All', ' 1 - 2', ' 1 - 3', ' 1 - 11', ' 2 - 3', ' 2 - 11', ' 3 - 11'])
+        headers_mapped, headers = transmission_headers("test_files/test_trans_output.csv",
+                                                       {"1": ["1", "7"], "2": ["9", "11"]})
+        self.assertEqual(headers_mapped,
+                         ['All', '1,7 - 9,11', '1,7 -  3', '1,7 -  4', '9,11 -  3', '9,11 -  4', ' 3 -  4'])
         self.assertEqual(headers, ['All', ' 1 - 2', ' 1 - 3', ' 1 - 4', ' 2 - 3', ' 2 - 4', ' 3 - 4'])
 
     def test_transmission_headers_load_csv(self):
-        headers_mapped, headers = transmission_headers("test_files/test_trans_output.csv", [])
+        headers_mapped, headers = transmission_headers("test_files/test_trans_output.csv", {})
         self.assertEqual(headers_mapped, ['All', ' 1 - 2', ' 1 - 3', ' 1 - 4', ' 2 - 3', ' 2 - 4', ' 3 - 4'])
         self.assertEqual(headers, ['All', ' 1 - 2', ' 1 - 3', ' 1 - 4', ' 2 - 3', ' 2 - 4', ' 3 - 4'])
+
+    def test_return_occupied_keys_list(self):
+        self.assertEqual(return_occupied_keys_list({"1": ["1", "2", "3"], "2": ["4"], "4": ["6"]}), ["1", "2", "4"])
+        self.assertEqual(return_occupied_keys_list({"1": ["1", "2", "3"], "2": [], "4": ["6"]}), ["1", "4"])
+
+    def test_return_occupied_keys(self):
+        self.assertIs(return_occupied_keys({"1": ["1", "2", "3"], "2": ["4"], "4": ["6"]}), 3)
+        self.assertIs(return_occupied_keys({"1": ["1", "2", "3"], "2": [], "4": ["6"]}), 2)
+
+    def test_process_energy_gamma_trans_csv(self):
+        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_out_dir", "33a0d4d8")
+        self.assertIs(energy.shape[0], 11)
+        self.assertIs(gamma.shape[0], 21)
+        self.assertIs(transmission.shape[0], 11)
+        self.assertIs(transmission.shape[1], 21)
+
+    def test_process_energy_gamma_trans_csv_no_session_id(self):
+        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_out_dir", None)
+        self.assertIs(energy.shape[0], 11)
+        self.assertIs(gamma.shape[0], 21)
+        self.assertIs(transmission.shape[0], 11)
+        self.assertIs(transmission.shape[1], 21)
+
+

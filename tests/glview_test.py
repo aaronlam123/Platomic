@@ -30,6 +30,7 @@ class TestGlView(unittest.TestCase):
         mi.translate(0, 0, 0)
         self.w.addItem(mi)
         self.w.atoms[0].set_mi(mi)
+        self.w.terminal = 1
 
         self.w.renderText = MagicMock()
         self.left_clicked_signal = MagicMock()
@@ -50,13 +51,13 @@ class TestGlView(unittest.TestCase):
 
     def test_mousePressEvent_left_select(self):
         QTest.mouseClick(self.w, Qt.LeftButton, pos=QPoint(200, 600))
-        self.assertTrue(self.w.atoms[0].get_isSelectedTrans())
+        self.assertIs(self.w.atoms[0].get_isSelectedTrans(), 1)
         self.left_clicked_signal.assert_called_once()
 
     def test_mousePressEvent_left_deselect(self):
         QTest.mouseClick(self.w, Qt.LeftButton, pos=QPoint(200, 600))
         QTest.mouseClick(self.w, Qt.LeftButton, pos=QPoint(200, 600))
-        self.assertFalse(self.w.atoms[0].get_isSelectedTrans())
+        self.assertIs(self.w.atoms[0].get_isSelectedTrans(), 0)
         self.assertEqual(self.left_clicked_signal.call_count, 2)
 
     def test_mousePressEvent_right_select(self):

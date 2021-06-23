@@ -53,11 +53,10 @@ class TestMain(unittest.TestCase):
     def test_onGenerateInputFileButtonClicked_and_file_exists(self):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
         QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
-        self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
         with open("test_files/correct.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
         self.main.writeToLogs.assert_called_with(
-            "Input file " + file_in_cur_dir("benzene") + ".in generated successfully.", "green")
+            "Input file " + file_in_cur_dir("benzene.in") + ".in generated successfully.", "green")
 
     def test_onGenerateInputFileButtonClicked_with_nonexistent_file(self):
         self.main.openFileLineEdit.setText("test_files/nonexistent.xyz")
@@ -75,28 +74,26 @@ class TestMain(unittest.TestCase):
         copy_file_from_main_config("config/default.in")
 
     def test_onGenerateTransInputFileButtonClicked_and_file_exists(self):
-        self.main.transSelected = ["1", "2", "3"]
+        self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
         self.main.currentSelectedA = ["4", "5", "6"]
         self.main.currentSelectedB = ["7", "8", "9"]
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
         QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
-        self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
         with open("test_files/correct_trans.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
         self.main.writeToLogs.assert_called_with(
-            "Transmission input file " + file_in_cur_dir("benzene") + ".in generated successfully.", "green")
+            "Transmission input file " + file_in_cur_dir(".in") + ".in generated successfully.", "green")
 
     def test_onGenerateCurrInputFileButtonClicked_and_file_exists(self):
-        self.main.transSelected = ["1", "2", "3"]
+        self.main.transSelected = {"1": ["1", "2", "3"], "3": ["6"]}
         self.main.currentSelectedA = ["4", "5", "6"]
         self.main.currentSelectedB = ["7", "8", "9"]
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
         QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
-        self.assertEqual(self.main.inputFilename, file_in_cur_dir("benzene"))
         with open("test_files/correct_curr.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
         self.main.writeToLogs.assert_called_with(
-            "Current input file " + file_in_cur_dir("benzene") + ".in generated successfully.", "green")
+            "Current input file " + file_in_cur_dir(".in") + ".in generated successfully.", "green")
 
     def test_onOpenFileButtonClicked(self):
         pass
@@ -126,7 +123,7 @@ class TestMain(unittest.TestCase):
 
     def test_onSwitchToInputFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToInputFileTabButton, Qt.LeftButton)
-        self.assertEqual(self.main.mainWindow.currentIndex(), 3)
+        self.assertEqual(self.main.mainWindow.currentIndex(), 4)
 
     def test_setGraphComboBox(self):
         pass
@@ -190,7 +187,7 @@ class TestMain(unittest.TestCase):
 
     def test_onSwitchToAttrFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToAttrFileTabButton, Qt.LeftButton)
-        self.assertEqual(self.main.mainWindow.currentIndex(), 4)
+        self.assertEqual(self.main.mainWindow.currentIndex(), 5)
 
     def test_setOrbColSliderLabel(self):
         self.main.orbColSlider.setValue(60)
@@ -335,9 +332,9 @@ def copy_file_from_main_config(filename):
                 f.write(line)
 
 
-def file_in_cur_dir(starts_with):
+def file_in_cur_dir(ends_with):
     for file in os.listdir("."):
-        if file.startswith(starts_with):
+        if file.endswith(ends_with):
             return os.path.splitext(file)[0]
 
 
@@ -345,6 +342,6 @@ def cleanUp():
     os.remove("attributes.txt")
     copy_file_from_main_config("config/attributes.txt")
     for file in os.listdir("."):
-        if file.startswith("benzene"):
+        if file.endswith(".in"):
             os.remove(os.path.join(".", file))
 

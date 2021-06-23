@@ -40,7 +40,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currentSelectedA = []
         self.currentSelectedB = []
         self.mode = 0
-        self.id = secrets.token_hex(4)
+        self.id = secrets.token_hex(3)
 
         # Initialise propertiesWindow
         # setupSettingsTab
@@ -560,7 +560,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onTransExecuteLoadedButtonClicked(self):
         self.csvFilename = self.openCsvFileLineEdit.text()
-        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)  # FIX
+        headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)

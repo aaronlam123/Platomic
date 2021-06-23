@@ -14,6 +14,8 @@ class TestPlot(unittest.TestCase):
         self.main.openGLWidget.clear()
         self.main.graphWidget2.plot = MagicMock()
         self.main.graphWidget2.clear = MagicMock()
+        self.main.gammaGLWidget.clear = MagicMock()
+        self.main.gammaGLWidget.addItem = MagicMock()
 
     def test_draw_atoms(self):
         draw_atoms(self.main.atoms, self.main.openGLWidget, self.main.atomRow, self.main.atomCol)
@@ -79,3 +81,12 @@ class TestPlot(unittest.TestCase):
         current_graph(self.main.graphWidget2, [1, 2, 3], [2, 3, 4])
         self.main.graphWidget2.plot.assert_called_once()
         self.main.graphWidget2.clear.assert_called_once()
+
+    def test_colours(self):
+        self.assertEqual(colours(3), (1, 0.5, 0, 0.5))
+        self.assertIs(colours("3"), "orange")
+
+    def test_energy_gamma_trans_graph(self):
+        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_out_dir", None)
+        energy_gamma_trans_graph(self.main.gammaGLWidget, energy, gamma, transmission)
+        self.main.gammaGLWidget.clear.assert_called_once()

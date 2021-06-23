@@ -105,6 +105,8 @@ class Atom:
     def set_mi(self, mi):
         self.__mi = mi
 
+
+"""
     def check(self):
         print(self.__symbol)
         print(self.__x)
@@ -119,3 +121,4 @@ class Atom:
         print(self.__eigenenergies)
         print(self.__isSelectedTrans)
         print(self.__isSelectedCurrA)
+"""
