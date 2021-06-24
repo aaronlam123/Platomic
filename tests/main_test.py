@@ -464,6 +464,18 @@ class TestMain(unittest.TestCase):
         self.main.draw.assert_called_once()
         self.main.writeToLogs.assert_called()
 
+    def test_onCurrentSelectionA_none(self):
+        QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
+        QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
+        self.assertEqual(len(self.main.currentSelectedA), 0)
+        self.main.writeToLogs.assert_called_with("No regions selected.", "purple")
+
+    def test_onCurrentSelectionB_none(self):
+        QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
+        QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
+        self.assertEqual(len(self.main.currentSelectedB), 0)
+        self.main.writeToLogs.assert_called_with("No regions selected.", "lime")
+
     def test_onCurrentSelectionA(self):
         QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
         self.assertTrue(self.main.atoms[10].get_isSelectedCurrA())
