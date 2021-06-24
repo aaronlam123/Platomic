@@ -33,35 +33,144 @@ class TestMain(unittest.TestCase):
         self.doCleanups()
 
     if os.name != 'nt':
-        def test_execute(self):
-            pass
+        def test_execute_with_no_input_file(self):
+            self.main.execute()
+            unittest.TestCase.assertRaises(self, expected_exception=TypeError)
+
+        def test_execute_plato_failure(self):
+            self.main.inputFilename = "nonexistent"
+            QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+            self.main.execute()
+            self.main.writeToLogs.assert_called()
+
+        def test_execute_verbose_is_false(self):
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+            QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+            self.main.execute(False)
+            self.main.writeToLogs.assert_called_once()
+
+        def test_execute_verbose(self):
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+            QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+            self.main.execute()
+            self.main.writeToLogs.assert_called()
 
         def test_onExecuteButtonClicked_with_no_input_file(self):
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
             unittest.TestCase.assertRaises(self, expected_exception=TypeError)
 
-        def test_onExecuteButtonClicked_with_input_file(self):
+        def test_onExecuteButtonClicked(self):
             self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called()
-            self.assertEqual(len(self.main.transSelected), 0)
+            self.main.writeToLogs.assert_called_with("Execution carried out successfully.", "green")
+            self.assertEqual(return_occupied_keys(self.main.transSelected), 0)
             self.assertEqual(len(self.main.currentSelectedA), 0)
             self.assertEqual(len(self.main.currentSelectedB), 0)
 
         def test_onTransExecuteButtonClicked(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
+            QTest.mouseClick(self.main.executeTransButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called_with("Graphs plotted successfully.", "green")
+
+        def test_onTransExecuteButtonClicked_plato_failure(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+            QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
+            self.main.inputFilename = "nonexistent"
             QTest.mouseClick(self.main.executeTransButton, Qt.LeftButton)
 
         def test_onExecuteCurrButtonClicked(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.currentSelectedA = ["4", "5", "6"]
+            self.main.currentSelectedB = ["7", "8", "9"]
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeCurrButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called_with('Current: -6.1465563e-05 mA.', 'green')
 
-        def test_onExecuteCurrGraphButtonClicked(self):
+        def test_onExecuteCurrButtonClicked_plato_failure(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.currentSelectedA = ["4", "5", "6"]
+            self.main.currentSelectedB = ["7", "8", "9"]
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+            QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
+            self.main.inputFilename = "nonexistent"
+            QTest.mouseClick(self.main.executeCurrButton, Qt.LeftButton)
+
+        def test_onExecuteCurrGraphButtonClicked_no_steps(self):
+            self.main.stepsLineEdit.setText("")
             QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
+            unittest.TestCase.assertRaises(self, expected_exception=ValueError)
+            self.main.writeErrorToLogs.assert_called_with("Error: Missing input for steps.")
+
+        def test_onExecuteCurrGraphButtonClicked_no_bias(self):
+            self.main.biasLineEdit.setText("")
+            QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
+            unittest.TestCase.assertRaises(self, expected_exception=ValueError)
+            self.main.writeErrorToLogs.assert_called_with("Error: Missing input for maximum bias.")
+
+        def test_onExecuteCurrGraphButtonClicked_incorrect_terminals(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
+            QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with(
+                "Error: Incorrect number of terminals selected, may only calculate current between two terminals.")
+
+        def test_onExecuteCurrGraphButtonClicked_insufficient_region_A(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.currentSelectedA = []
+            QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with(
+                "Error: Insufficient atoms for region A (min. one required). Select atoms for A by right clicking.")
+
+        def test_onExecuteCurrGraphButtonClicked_insufficient_region_B(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.currentSelectedA = ["1"]
+            self.main.currentSelectedB = []
+            QTest.mouseClick(self.main.executeCurrGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with(
+                "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
 
         def test_onExecute3DGraphButtonClicked(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.currentSelectedA = ["4", "5", "6"]
+            self.main.currentSelectedB = ["7", "8", "9"]
             QTest.mouseClick(self.main.execute3DGraphButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called()
+
+        def test_onExecute3DGraphButtonClicked_incorrect_terminals(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
+            QTest.mouseClick(self.main.execute3DGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with(
+                "Error: Incorrect number of terminals selected, may only plot 3D graph between two terminals.")
+
+        def test_onExecute3DGraphButtonClicked_no_start_gamma(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.gammaStartLineEdit.setText("")
+            QTest.mouseClick(self.main.execute3DGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with("Error: Missing input for gamma minimum.")
+
+        def test_onExecute3DGraphButtonClicked_no_end_gamma(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.gammaEndLineEdit.setText("")
+            QTest.mouseClick(self.main.execute3DGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with("Error: Missing input for gamma maximum.")
+
+        def test_onExecute3DGraphButtonClicked_no_gamma_steps(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.gammaStepsLineEdit.setText("")
+            QTest.mouseClick(self.main.execute3DGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with("Error: Missing input for gamma steps.")
+
+        def test_onExecute3DGraphButtonClicked_gamma_start_greater_than_end(self):
+            self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
+            self.main.gammaStartLineEdit.setText("3")
+            self.main.gammaEndLineEdit.setText("2")
+            QTest.mouseClick(self.main.execute3DGraphButton, Qt.LeftButton)
+            self.main.writeErrorToLogs.assert_called_with(
+                "Error: Difference between Gamma minimum and maximum must be positive and greater than 0.")
 
     def test_onGenerateInputFileButtonClicked_and_file_exists(self):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
@@ -314,7 +423,8 @@ class TestMain(unittest.TestCase):
     def test_onGammaExecuteLoadedButtonClicked(self):
         self.main.gammaOpenDirLineEdit.setText("test_files/test_trans_dir")
         QTest.mouseClick(self.main.gammaExecuteLoadedButton, Qt.LeftButton)
-        self.main.writeToLogs.assert_called_with("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+        self.main.writeToLogs.assert_called_with("Energy vs. gamma vs. transmission graph plotted successfully.",
+                                                 "green")
 
     def test_onGammaExecuteLoadedButtonClicked_with_no_dir(self):
         QTest.mouseClick(self.main.gammaExecuteLoadedButton, Qt.LeftButton)
@@ -464,29 +574,35 @@ class TestMain(unittest.TestCase):
         self.main.draw.assert_called_once()
         self.main.writeToLogs.assert_called()
 
-    def test_onCurrentSelectionA_none(self):
-        QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
-        QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
-        self.assertEqual(len(self.main.currentSelectedA), 0)
-        self.main.writeToLogs.assert_called_with("No regions selected.", "purple")
-
-    def test_onCurrentSelectionB_none(self):
-        QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
-        QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
-        self.assertEqual(len(self.main.currentSelectedB), 0)
-        self.main.writeToLogs.assert_called_with("No regions selected.", "lime")
-
     def test_onCurrentSelectionA(self):
+        self.main.atoms[10].set_isSelectedCurrA(0)
         QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
         self.assertTrue(self.main.atoms[10].get_isSelectedCurrA())
         self.main.draw.assert_called_once()
         self.main.writeToLogs.assert_called()
 
     def test_onCurrentSelectionB(self):
+        self.main.atoms[10].set_isSelectedCurrB(0)
         QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
         self.assertTrue(self.main.atoms[10].get_isSelectedCurrB())
         self.main.draw.assert_called_once()
         self.main.writeToLogs.assert_called()
+
+    def test_onCurrentSelectionA_none(self):
+        self.main.currentSelectedA = []
+        self.main.atoms[10].set_isSelectedCurrA(0)
+        QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
+        QTest.mouseClick(self.main.openGLWidget, Qt.RightButton, pos=QPoint(300, 300))
+        self.assertEqual(len(self.main.currentSelectedA), 0)
+        self.main.writeToLogs.assert_called_with("No regions selected.", "purple")
+
+    def test_onCurrentSelectionB_none(self):
+        self.main.currentSelectedB = []
+        self.main.atoms[10].set_isSelectedCurrB(0)
+        QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
+        QTest.mouseClick(self.main.openGLWidget, Qt.MiddleButton, pos=QPoint(300, 300))
+        self.assertEqual(len(self.main.currentSelectedB), 0)
+        self.main.writeToLogs.assert_called_with("No regions selected.", "lime")
 
     def test_onResetViewButtonClicked(self):
         QTest.mouseClick(self.main.resetViewButton, Qt.LeftButton)
@@ -620,6 +736,7 @@ class TestMain(unittest.TestCase):
         self.main.writeErrorToLogs.assert_called_with("Error: non-natural number '0' entered for gamma steps value.")
         self.assertEqual(self.main.gammaStepsLineEdit.text(), "")
 
+
 def copy_file_from_main_config(filename):
     with open("../" + filename, 'r') as source:
         with open(filename, 'w') as f:
@@ -639,4 +756,15 @@ def cleanUp():
     for file in os.listdir("."):
         if file.endswith(".in"):
             os.remove(os.path.join(".", file))
-
+        if file.endswith(".occ"):
+            os.remove(os.path.join(".", file))
+        if file.endswith(".out"):
+            os.remove(os.path.join(".", file))
+        if file.endswith(".rst"):
+            os.remove(os.path.join(".", file))
+        if file.endswith(".wf"):
+            os.remove(os.path.join(".", file))
+        if file.endswith(".xyz"):
+            os.remove(os.path.join(".", file))
+        if file.endswith(".csv"):
+            os.remove(os.path.join(".", file))
