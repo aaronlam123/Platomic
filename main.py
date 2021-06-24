@@ -478,6 +478,13 @@ class MainWindow(QtWidgets.QMainWindow):
                                         step_size, self.id)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
+        except FileNotFoundError:
+            self.writeErrorToLogs(
+                "Error: No default current input file found, check that config/default_curr.in exists.")
+            return False
+        except IOError:
+            self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
+            return False
         except AssertionError:
             self.writeErrorToLogs(
                 "Error: Insufficient terminals selected (two required). Select terminals by left clicking atoms.")
@@ -493,13 +500,6 @@ class MainWindow(QtWidgets.QMainWindow):
         except ZeroDivisionError:
             self.writeErrorToLogs(
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
-            return False
-        except FileNotFoundError:
-            self.writeErrorToLogs(
-                "Error: No default current input file found, check that config/default_curr.in exists.")
-            return False
-        except IOError:
-            self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
             return False
         if verbose:
             self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
@@ -549,16 +549,29 @@ class MainWindow(QtWidgets.QMainWindow):
             self.gammaOpenDirLineEdit.setText(dirname)
 
     def onExecuteLoadedButtonClicked(self):
+        if self.openOutFileLineEdit.text() == "":
+            self.writeErrorToLogs("Error: no Plato output file (.out) selected.")
+            return
+        if self.openWfFileLineEdit.text() == "":
+            self.writeErrorToLogs("Error: no Plato wavefunction file (.wf) selected.")
+            return
         self.atoms = input_file_setup(self.openOutFileLineEdit.text(), "config/attributes.txt",
                                       self.openWfFileLineEdit.text())
-        self.openGLWidget.atoms = self.atoms
         self.horizontalSlider.setMinimum(0)
         self.horizontalSlider.setMaximum(self.atoms[0].get_total_orbitals() - 1)
+        self.openGLWidget.atoms = self.atoms
         self.draw()
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.displaySettingsTab))
         self.writeToLogs("Execution carried out successfully.", "green")
+        self.transSelected = {"1": [], "2": [], "3": [], "4": [], "5": []}
+        self.currentSelectedA = []
+        self.currentSelectedB = []
 
     def onTransExecuteLoadedButtonClicked(self):
+        if self.openCsvFileLineEdit.text() == "":
+            self.writeErrorToLogs("Error: no Plato generated csv file (.csv) selected.")
+            return
         self.csvFilename = self.openCsvFileLineEdit.text()
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
         self.graphKeys = headers
@@ -569,9 +582,8 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Graphs plotted successfully.", "green")
 
     def onCurrExecuteLoadedButtonClicked(self):
-        files = os.listdir(self.openDirLineEdit.text())
-        if len(files) < 2:
-            self.writeErrorToLogs("Error: Must have at least two .out files in directory.")
+        if self.openDirLineEdit.text() == "":
+            self.writeErrorToLogs("Error: no directory selected.")
             return
         bias_v, bias, currents = process_current_csv(self.openDirLineEdit.text())
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
@@ -580,13 +592,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
 
     def onGammaExecuteLoadedButtonClicked(self):
-        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), None)
-        if energy.shape[0] != transmission.shape[0] or gamma.shape[0] != transmission.shape[1]:
-            self.writeToLogs(
-                "Error: dimension mismatch, energy with shape " + str(energy.shape) + " and gamma with shape "
-                + str(gamma.shape) + " does not match transmission with shape: "
-                + str(transmission.shape) + ". Check that the directory contains only .csv files.", "green")
+        if self.gammaOpenDirLineEdit.text() == "":
+            self.writeErrorToLogs("Error: no directory selected.")
             return
+        energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), None)
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
@@ -934,8 +943,8 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGammaStepsLineEditChanged(self):
         string = self.gammaStepsLineEdit.text()
-        if not isposfloat(string):
-            self.writeErrorToLogs("Error: non-pos float '" + string + "' entered for gamma steps value.")
+        if not isnatnumber(string):
+            self.writeErrorToLogs("Error: non-natural number '" + string + "' entered for gamma steps value.")
             self.gammaStepsLineEdit.setText("")
 
     # AttributeFileTab

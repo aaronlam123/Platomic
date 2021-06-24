@@ -87,6 +87,6 @@ class TestPlot(unittest.TestCase):
         self.assertIs(colours("3"), "orange")
 
     def test_energy_gamma_trans_graph(self):
-        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_out_dir", None)
+        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_dir", None)
         energy_gamma_trans_graph(self.main.gammaGLWidget, energy, gamma, transmission)
         self.main.gammaGLWidget.clear.assert_called_once()

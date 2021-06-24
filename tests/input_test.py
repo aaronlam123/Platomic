@@ -391,14 +391,14 @@ class TestInput(unittest.TestCase):
         self.assertIs(return_occupied_keys({"1": ["1", "2", "3"], "2": [], "4": ["6"]}), 2)
 
     def test_process_energy_gamma_trans_csv(self):
-        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_out_dir", "33a0d4d8")
+        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_dir", "33a0d4d8")
         self.assertIs(energy.shape[0], 11)
         self.assertIs(gamma.shape[0], 21)
         self.assertIs(transmission.shape[0], 11)
         self.assertIs(transmission.shape[1], 21)
 
     def test_process_energy_gamma_trans_csv_no_session_id(self):
-        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_out_dir", None)
+        energy, gamma, transmission = process_energy_gamma_trans_csv("test_files/test_trans_dir", None)
         self.assertIs(energy.shape[0], 11)
         self.assertIs(gamma.shape[0], 21)
         self.assertIs(transmission.shape[0], 11)
