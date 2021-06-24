@@ -1,0 +1,432 @@
+    -----------------
+    | Tight Binding |
+    -----------------
+
+The model is taken from the following papers:
+
+Construction of tight-binding-like potentials on the basis of density functional theory: Application to carbon
+D. Porezag, Th. Frauenheim, Th. Kohler, G. Seifert and R. Kaschner
+Physical Review B 51, 12947 (1995)
+
+Comparison of classical and tight-binding molecular-dynamics for silicon growth
+H. Hensel, P. Klein, H. M. Urbassek and Th. Frauenheim
+Phys. Rev. B 53, 16497 (1996)
+
+Hydrogen bonding and stacking interactions of nucleic acid base pairs: A density-functional theory based treatment
+M. Elstner, P. Hobza, Th. Frauenheim, S. Suhai and E. Kaxiras
+Journal of Chemical Physics 114, 5149 (2001)
+
+Model characteristics
+---------------------
+Tabulated tight binding
+Overlap      : 1
+Crystal field: 0
+Three centre : 0
+N_{ij} Integrals : 0
+SN Integrals: 0
+Self-consistency parameters:
+----------------------------
+Number of loops         = 30
+Energy tolerance        = 0.000000
+Density tolerance       = 0.000001
+Mixing scheme           = 0
+Preconditioning type    = 1
+Thomas-Fermi K          = 1.000000
+Mix factor              = 0.200000
+Number of mixing levels = 0
+
+Other parameters:
+-----------------
+Excess number of electrons = 0.000000
+
+State occupation parameters
+---------------------------
+Number tolerance =      1e-12
+Atomic relaxation parameters:
+-----------------------------
+Relaxation method       = 3
+Force tolerance         = 0.000100Ry/a0
+Maximum number of steps = 1000
+
+K points:
+---------
+
+K points:
+---------
+
+
+No External Field specified.
+
+Atomic data:
+------------
+Atom Type #    1
+----------------
+Chemical symbol           : C 
+Core charge               : 4.000000
+Number of angular momenta : 2
+Number of orbitals        : 4
+Atomic radius             : 3.750000
+Atomic energy correction  : 0.082680
+  n l m     energy     occupancy    radius
+  2 0 0   -0.997600     2.000000     3.500000
+  2 1 0   -0.394800     2.000000     3.500000
+  2 1 1   -0.394800     0.000000     3.500000
+  2 1 2   -0.394800     0.000000     3.500000
+
+Atom Type #    2
+----------------
+Chemical symbol           : H 
+Core charge               : 1.000000
+Number of angular momenta : 1
+Number of orbitals        : 1
+Atomic radius             : 3.500000
+Atomic energy correction  : 0.066060
+  n l m     energy     occupancy    radius
+  1 0 0   -0.466000     1.000000     3.500000
+
+Orbital and electron count:
+---------------------------
+Number of orbitals  = 30
+Number of electrons = 30.000000
+
+Too few bands to accomodate the electrons.
+NBands = 0, NElec = 30.000000
+Setting number of bands to number of orbitals.
+
+Diagonalizer information:
+-------------------------
+Using Unpacked LAPACK routine
+NBands = 30
+
+
+Terminal chemical potentials:
+mu[  0] =     -0.4290498
+mu[  1] =     -0.3555511
+
+scf :  0) E =      -6.186287428 Ry  dRho =     0.0769  Q =  -7.07e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4237761
+mu[  1] =     -0.3502775
+
+scf :  1) E =      -5.977882928 Ry  dRho =     0.0629  Q =  -9.63e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4209184
+mu[  1] =     -0.3474198
+
+scf :  2) E =      -5.847466897 Ry  dRho =     0.0496  Q =    1.3e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4201499
+mu[  1] =     -0.3466512
+
+scf :  3) E =      -5.787194743 Ry  dRho =     0.0378  Q =   8.98e-14  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4172794
+mu[  1] =     -0.3437807
+
+scf :  4) E =      -5.671929256 Ry  dRho =     0.0279  Q =  -6.82e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4134956
+mu[  1] =     -0.3399969
+
+scf :  5) E =      -5.536519315 Ry  dRho =       0.02  Q =   8.83e-14  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4101613
+mu[  1] =     -0.3366626
+
+scf :  6) E =      -5.420104223 Ry  dRho =     0.0141  Q =  -5.32e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =      -0.407705
+mu[  1] =     -0.3342063
+
+scf :  7) E =      -5.334293249 Ry  dRho =    0.00998  Q =   4.49e-14  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4058867
+mu[  1] =      -0.332388
+
+scf :  8) E =      -5.270865384 Ry  dRho =    0.00708  Q =   7.09e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4045346
+mu[  1] =     -0.3310359
+
+scf :  9) E =      -5.223844046 Ry  dRho =    0.00504  Q =   1.37e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4035248
+mu[  1] =     -0.3300261
+
+scf : 10) E =      -5.188877362 Ry  dRho =    0.00359  Q =  -5.06e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4027674
+mu[  1] =     -0.3292687
+
+scf : 11) E =      -5.162790919 Ry  dRho =    0.00256  Q =   1.67e-14  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4021971
+mu[  1] =     -0.3286984
+
+scf : 12) E =       -5.14326458 Ry  dRho =    0.00183  Q =  -7.38e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4017661
+mu[  1] =     -0.3282674
+
+scf : 13) E =       -5.12859883 Ry  dRho =    0.00132  Q =   1.37e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =      -0.401439
+mu[  1] =     -0.3279403
+
+scf : 14) E =      -5.117545705 Ry  dRho =    0.00095  Q =  -5.64e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4011899
+mu[  1] =     -0.3276912
+
+scf : 15) E =      -5.109186399 Ry  dRho =   0.000688  Q =   1.02e-14  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4009996
+mu[  1] =     -0.3275009
+
+scf : 16) E =      -5.102842512 Ry  dRho =     0.0005  Q =   1.72e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4008536
+mu[  1] =     -0.3273549
+
+scf : 17) E =      -5.098011652 Ry  dRho =   0.000366  Q =   8.14e-14  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4007414
+mu[  1] =     -0.3272427
+
+scf : 18) E =      -5.094320595 Ry  dRho =    0.00027  Q =   3.69e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4006547
+mu[  1] =      -0.327156
+
+scf : 19) E =      -5.091491173 Ry  dRho =     0.0002  Q =   4.52e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4005877
+mu[  1] =      -0.327089
+
+scf : 20) E =      -5.089315363 Ry  dRho =   0.000149  Q =   5.56e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4005356
+mu[  1] =      -0.327037
+
+scf : 21) E =      -5.087637067 Ry  dRho =   0.000112  Q =   3.32e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4004952
+mu[  1] =     -0.3269965
+
+scf : 22) E =      -5.086338749 Ry  dRho =   8.52e-05  Q =   3.42e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4004636
+mu[  1] =     -0.3269649
+
+scf : 23) E =       -5.08533159 Ry  dRho =    6.5e-05  Q =  -2.76e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4004389
+mu[  1] =     -0.3269402
+
+scf : 24) E =      -5.084548249 Ry  dRho =   4.99e-05  Q =  -5.24e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4004195
+mu[  1] =     -0.3269209
+
+scf : 25) E =      -5.083937484 Ry  dRho =   3.86e-05  Q =   1.64e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4004044
+mu[  1] =     -0.3269057
+
+scf : 26) E =      -5.083460179 Ry  dRho =      3e-05  Q =   5.03e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4003924
+mu[  1] =     -0.3268937
+
+scf : 27) E =      -5.083086369 Ry  dRho =   2.34e-05  Q =   7.97e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =      -0.400383
+mu[  1] =     -0.3268843
+
+scf : 28) E =       -5.08279303 Ry  dRho =   1.83e-05  Q =   6.24e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4003756
+mu[  1] =     -0.3268769
+
+scf : 29) E =      -5.082562418 Ry  dRho =   1.44e-05  Q =   9.88e-11  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4003697
+mu[  1] =      -0.326871
+
+scf : 30) E =      -5.082380809 Ry  dRho =   1.13e-05  Q =  -1.26e-13  t =       0.0 s
+
+Terminal chemical potentials:
+mu[  0] =     -0.4003697
+mu[  1] =      -0.326871
+
+
+Primitive translation vectors (a0):
+-----------------------------------
+   100.00000      0.00000      0.00000
+     0.00000    100.00000      0.00000
+     0.00000      0.00000    100.00000
+Volume       = 1000000.000000 a0^3
+Cell repeats =    0    0    0
+
+Number of atoms = 12
+Neighbor cutoff =      7.50000 a0
+
+Atomic positions (a0):
+----------------------
+C      -0.79999      2.50310     -0.07062
+C      -1.87695      0.83016      1.65292
+C       1.08821      1.66934     -1.69346
+H      -1.37221      4.41607     -0.23146
+H      -3.38695      1.43292      2.90046
+H       1.92757      2.94345     -3.02338
+C      -1.08821     -1.66934      1.69346
+C       1.87695     -0.83016     -1.65292
+C       0.79999     -2.50310      0.07062
+H      -1.92757     -2.94345      3.02338
+H       3.38695     -1.43292     -2.90046
+H       1.37221     -4.41607      0.23146
+
+Total forces (Ry/a0):
+---------------------
+    0.03505950791    -0.07815703018   -0.006128220859
+    0.02905356612    -0.01384055546    -0.03654205789
+  -0.001607820524     -0.1384716851     0.04311741681
+    -0.0279729004     0.07143653977    0.004350123183
+   -0.02504569942     0.01409115606     0.02325710256
+     0.0226313958     0.03785015687    -0.03646419789
+    0.09977591436     0.01532364843     -0.1005278329
+   -0.08748564306    -0.03987490844      0.1209264665
+  -0.001653193883      0.1613982086    -0.05760702276
+   -0.02184400813    -0.03891014551     0.03591168566
+   -0.02674331233     0.00658609089     0.01997516751
+   0.005832193554    0.002568524111    -0.01026862992
+
+Stress Tensor (MBars):
+----------------------
+  3.413901124e-05  -5.083549207e-07  -3.530726971e-05
+ -5.081688998e-07   4.324016354e-05  -1.384982946e-05
+ -3.530730956e-05  -1.385038884e-05   4.151686161e-05
+
+EFermi =      0.0000000 Ry
+(kT    =      0.0010000 Ry)
+
+E0               =      2.5829567 Ry
+E1               =     -7.6653375 Ry
+Entropy          =      0.0000000 Ry
+------------------------------------
+Total (Free)     =     -5.0823808 Ry
+                 =    -69.1498568 eV
+                 =  -1598.6628835 kCal/mol
+                 =  -6688.4131446 kJ/mol
+------------------------------------
+Total (Internal) =     -5.0823808 Ry
+                 =    -69.1498568 eV
+                 =  -1598.6628835 kCal/mol
+                 =  -6688.4131446 kJ/mol
+------------------------------------
+Total (kT->0)    =     -5.0823808 Ry
+                 =    -69.1498568 eV
+                 =  -1598.6628835 kCal/mol
+                 =  -6688.4131446 kJ/mol
+
+Net atomic charges (Mulliken):
+------------------------------
+C (   1) =     -0.05569
+C (   2) =     -0.03934
+C (   3) =     -0.03020
+H (   4) =      0.05140
+H (   5) =      0.04858
+H (   6) =      0.04838
+C (   7) =     -0.04559
+C (   8) =     -0.07831
+C (   9) =     -0.06311
+H (  10) =      0.04900
+H (  11) =      0.05847
+H (  12) =      0.05641
+
+Orbital populations (Mulliken):
+-------------------------------
+C (   1):  1.18  0.96  0.97  0.95 
+C (   2):  1.18  0.96  0.96  0.94 
+C (   3):  1.18  0.96  0.96  0.93 
+H (   4):  0.95 
+H (   5):  0.95 
+H (   6):  0.95 
+C (   7):  1.18  0.96  0.97  0.94 
+C (   8):  1.19  0.97  0.97  0.94 
+C (   9):  1.18  0.96  0.97  0.96 
+H (  10):  0.95 
+H (  11):  0.94 
+H (  12):  0.94 
+
+Total multipole moments:
+------------------------
+
+N.B. See the manual for the ordering of the moments.
+
+Dipole  [e*a0]:   0.01215240  -0.02314166   0.03851861
+Dipole [Debye]:   0.03088833  -0.05882023   0.09790454
+
+Quadrupole  [e*a0^2]:  -0.48064371  -0.50527325  -1.63039767   0.89453565  -0.68706543  -0.41389194
+Quadrupole [Debye*A]:  -0.64648197  -0.67960952  -2.19293971   1.20318055  -0.92412611  -0.55669858
+
+
+Electrostatic potential:
+------------------------
+C (   1):     0.02738696
+C (   2):     0.02741077
+C (   3):     0.02960006
+H (   4):  -0.0006349438
+H (   5):   -0.001419469
+H (   6):  -0.0002835043
+C (   7):     0.03041216
+C (   8):     0.03548882
+C (   9):     0.03536855
+H (  10):    0.001342527
+H (  11):    0.005617295
+H (  12):    0.005832383
+
+Electric current
+----------------
+Current[0] = 1.1596586e-07 mA
+
+Time distribution (s):
+======================
+BuildFock                   0.00
+DiagFock                    0.00
+BuildForce                  0.00
+Build Rho                   0.00
+
+
+Wall time =       0.0s        0.0m        0.0h
+CPU time  =       0.1s        0.0m        0.0h
