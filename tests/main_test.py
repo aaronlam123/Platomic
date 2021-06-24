@@ -9,7 +9,7 @@ resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
 app = QtWidgets.QApplication(sys.argv)
 default_input = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
-
+input_tests = False
 
 class TestMain(unittest.TestCase):
     def setUp(self):
@@ -67,6 +67,13 @@ class TestMain(unittest.TestCase):
             self.assertEqual(return_occupied_keys(self.main.transSelected), 0)
             self.assertEqual(len(self.main.currentSelectedA), 0)
             self.assertEqual(len(self.main.currentSelectedB), 0)
+
+        def test_onExecuteButtonClicked_plato_failure(self):
+            self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+            QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+            self.main.inputFilename = "nonexistent"
+            QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
+            self.main.writeToLogs.assert_called()
 
         def test_onTransExecuteButtonClicked(self):
             self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
@@ -341,35 +348,53 @@ class TestMain(unittest.TestCase):
             "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
         unittest.TestCase.assertRaises(self, expected_exception=ZeroDivisionError)
 
-    def test_onOpenFileButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.openFileButton, Qt.LeftButton)
-        # self.assertEqual(self.main.openFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/benzene.xyz")
+    if input_tests:
+        def test_onOpenFileButtonClicked(self):
+            QTest.mouseClick(self.main.openFileButton, Qt.LeftButton)
+            if os.name == "nt":
+                self.assertEqual(self.main.openFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/benzene.xyz")
+            else:
+                self.assertEqual(self.main.openFileLineEdit.text(), "/home/aaron/Platomic/tests/test_files/benzene.xyz")
 
-    def test_onOpenOutFileButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.openOutFileButton, Qt.LeftButton)
-        # self.assertEqual(self.main.openOutFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/config/benzene.out")
+        def test_onOpenOutFileButtonClicked(self):
+            QTest.mouseClick(self.main.openOutFileButton, Qt.LeftButton)
+            if os.name == "nt":
+                self.assertEqual(self.main.openOutFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/config/benzene.out")
+            else:
+                self.assertEqual(self.main.openOutFileLineEdit.text(),
+                                 "/home/aaron/Platomic/tests/config/benzene.out")
 
-    def test_onOpenWfFileButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.openWfFileButton, Qt.LeftButton)
-        # self.assertEqual(self.main.openWfFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/config/benzene.wf")
+        def test_onOpenWfFileButtonClicked(self):
+            QTest.mouseClick(self.main.openWfFileButton, Qt.LeftButton)
+            if os.name == "nt":
+                self.assertEqual(self.main.openWfFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/config/benzene.wf")
+            else:
+                self.assertEqual(self.main.openWfFileLineEdit.text(),
+                                 "/home/aaron/Platomic/tests/config/benzene.wf")
 
-    def test_onOpenCsvFileButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.openCsvFileButton, Qt.LeftButton)
-        # self.assertEqual(self.main.openCsvFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/test_csv.csv")
+        def test_onOpenCsvFileButtonClicked(self):
+            QTest.mouseClick(self.main.openCsvFileButton, Qt.LeftButton)
+            if os.name == "nt":
+                self.assertEqual(self.main.openCsvFileLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/test_csv.csv")
+            else:
+                self.assertEqual(self.main.openCsvFileLineEdit.text(),
+                                 "/home/aaron/Platomic/tests/test_files/test_csv.csv")
 
-    def test_onOpenDirButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.openDirButton, Qt.LeftButton)
-        # self.assertEqual(self.main.openDirLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/test_out_dir")
+        def test_onOpenDirButtonClicked(self):
+            QTest.mouseClick(self.main.openDirButton, Qt.LeftButton)
+            if os.name == "nt":
+                self.assertEqual(self.main.openDirLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/test_out_dir")
+            else:
+                self.assertEqual(self.main.openDirLineEdit.text(),
+                                 "/home/aaron/Platomic/tests/test_files/test_out_dir")
 
-    def test_onOpenDirGammaButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.openDirGammaButton, Qt.LeftButton)
-        # self.assertEqual(self.main.gammaOpenDirLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/test_trans_dir")
+        def test_onOpenDirGammaButtonClicked(self):
+            QTest.mouseClick(self.main.openDirGammaButton, Qt.LeftButton)
+            if os.name == "nt":
+                self.assertEqual(self.main.gammaOpenDirLineEdit.text(), "C:/Users/Aaron Lam/Downloads/Platomic/tests/test_files/test_trans_dir")
+            else:
+                self.assertEqual(self.main.gammaOpenDirLineEdit.text(),
+                                 "/home/aaron/Platomic/tests/test_files/test_trans_dir")
 
     def test_onExecuteLoadedButtonClicked(self):
         self.main.openOutFileLineEdit.setText("config/benzene.out")
@@ -609,12 +634,6 @@ class TestMain(unittest.TestCase):
         self.main.openGLWidget.reset.assert_called_once()
         self.main.openGLWidget.setBackgroundColor.assert_called_once()
         self.main.writeToLogs.assert_called_once()
-
-    def test_onSaveImageButtonClicked(self):
-        pass
-        # QTest.mouseClick(self.main.saveImageButton, Qt.LeftButton)
-        # self.assertTrue(filecmp.cmp("correct.png", "test_files/correct.png"))
-        # os.remove("correct.png")
 
     def test_onToggleAtomsButtonClicked_on(self):
         QTest.mouseClick(self.main.toggleAtomsButton, Qt.LeftButton)
