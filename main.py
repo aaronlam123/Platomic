@@ -307,7 +307,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw()
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.displaySettingsTab))
-        self.writeToLogs("Execution carried out successfully.", "green")
+        self.writeToLogs("Execution carried out successfully.\n", "green")
         self.transSelected = {"1": [], "2": [], "3": [], "4": [], "5": []}
         self.currentSelectedA = []
         self.currentSelectedB = []
@@ -324,15 +324,15 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(headers_mapped)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Graphs plotted successfully.", "green")
+        self.writeToLogs("Graphs plotted successfully\n.", "green")
         self.executeTransButton.setEnabled(False)
 
-    def onExecuteCurrButtonClicked(self):
-        if not self.execute():
+    def onExecuteCurrButtonClicked(self, boolean, verbose=True):
+        if not self.execute(verbose):
             return
         self.writeToLogs("Execution carried out successfully.", "green")
         current = find_current_in_file(self.inputFilename + ".out")
-        self.writeToLogs("Current: " + current + " mA.", "green")
+        self.writeToLogs("Current: " + current + " mA.\n", "green")
         self.executeCurrButton.setEnabled(False)
         return float(current)
 
@@ -363,17 +363,25 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         currents = []
         biases = np.linspace(0, bias, steps)
+        self.writeToLogs("Starting " + str(steps) + " current calculations.", "green")
+        self.id = secrets.token_hex(3)
+        ind = 1
         for i in biases:
             bias_i = round(i, 4)
             if not self.onGenerateCurrInputFileButtonClicked(False, False, bias=bias_i):
                 return
-            currents.append(self.onExecuteCurrButtonClicked())
+            currents.append(self.onExecuteCurrButtonClicked(False, False))
+            self.writeToLogs(str(ind) + "/" + str(steps) + " transmission calculation completed.", "green")
+            QApplication.processEvents()
+            ind += 1
+        self.writeToLogs("All current calculations completed successfully.", "green")
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         # self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
+        self.writeToLogs("Current vs. bias graph plotted successfully\n.", "green")
 
     def onExecute3DGraphButtonClicked(self):
+        self.gammaGLWidget.clear()
         occupied_keys = return_occupied_keys(self.transSelected)
         if not occupied_keys == 2:
             self.writeErrorToLogs(
@@ -400,7 +408,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Difference between Gamma minimum and maximum must be positive and greater than 0.")
             return
         self.writeToLogs("Starting " + str(gamma_steps) + " transmission calculations.", "green")
-        self.id = secrets.token_hex(4)
+        self.id = secrets.token_hex(3)
         i = 1
         for gamma in np.linspace(gamma_start, gamma_end, gamma_steps):
             if not self.onGenerateTransInputFileButtonClicked(verbose=False, gamma=round(gamma, 5), step_size=interval):
@@ -414,7 +422,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully\n.", "green")
 
     # generateInputFileButton
 
@@ -436,7 +444,7 @@ class MainWindow(QtWidgets.QMainWindow):
         except IOError:
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
             return
-        self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.", "green")
+        self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully\n.", "green")
         self.executeButton.setEnabled(True)
 
     def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, gamma=None, step_size=0.003):
@@ -463,7 +471,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
             return False
         if verbose:
-            self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.", "green")
+            self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully\n.", "green")
             self.executeTransButton.setEnabled(True)
         return True
 
@@ -509,7 +517,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return False
         if verbose:
-            self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.", "green")
+            self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully\n.", "green")
             self.executeCurrButton.setEnabled(True)
         return True
 
@@ -570,7 +578,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.draw()
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.mainDisplayTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.displaySettingsTab))
-        self.writeToLogs("Execution carried out successfully.", "green")
+        self.writeToLogs("Execution carried out successfully.\n", "green")
         self.transSelected = {"1": [], "2": [], "3": [], "4": [], "5": []}
         self.currentSelectedA = []
         self.currentSelectedB = []
@@ -586,7 +594,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(headers_mapped)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Graphs plotted successfully.", "green")
+        self.writeToLogs("Graphs plotted successfully.\n", "green")
 
     def onCurrExecuteLoadedButtonClicked(self):
         if self.openDirLineEdit.text() == "":
@@ -596,9 +604,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
         current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
-        self.writeToLogs("Current vs. bias graph plotted successfully.", "green")
+        self.writeToLogs("Current vs. bias graph plotted successfully\n.", "green")
 
     def onGammaExecuteLoadedButtonClicked(self):
+        self.gammaGLWidget.clear()
         if self.gammaOpenDirLineEdit.text() == "":
             self.writeErrorToLogs("Error: no directory selected.")
             return
@@ -606,7 +615,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
+        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully\n.", "green")
 
     # SwitchToInputFileTabButton
 
@@ -837,6 +846,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Selected atom indices for terminals 1-5:", "black")
         for key in self.transSelected:
             self.writeToLogs("Terminal " + key + ": " + ", ".join(self.transSelected[key]), colours(key))
+        self.writeToLogs("\n", "black")
 
     def onCurrentSelectionA(self):
         self.currentSelectedA = []
@@ -851,6 +861,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for j in range(len(self.currentSelectedA)):
             selection = selection + str(self.currentSelectedA[j]) + ", "
         self.writeToLogs(selection[:-2], "purple")
+        self.writeToLogs("\n", "black")
 
     def onCurrentSelectionB(self):
         self.currentSelectedB = []
@@ -865,6 +876,7 @@ class MainWindow(QtWidgets.QMainWindow):
         for j in range(len(self.currentSelectedB)):
             selection = selection + str(self.currentSelectedB[j]) + ", "
         self.writeToLogs(selection[:-2], "lime")
+        self.writeToLogs("\n", "black")
 
     # resetViewButton
     def onResetViewButtonClicked(self):
