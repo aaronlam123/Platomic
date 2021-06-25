@@ -422,7 +422,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully\n.", "green")
+        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.\n", "green")
 
     # generateInputFileButton
 
@@ -444,7 +444,7 @@ class MainWindow(QtWidgets.QMainWindow):
         except IOError:
             self.writeErrorToLogs("Error: No .xyz file selected to generate Plato input file.")
             return
-        self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully\n.", "green")
+        self.writeToLogs("Input file " + self.inputFilename + ".in generated successfully.\n", "green")
         self.executeButton.setEnabled(True)
 
     def onGenerateTransInputFileButtonClicked(self, boolean=False, verbose=True, gamma=None, step_size=0.003):
@@ -471,7 +471,7 @@ class MainWindow(QtWidgets.QMainWindow):
                 "Error: Insufficient terminals selected (min. two required). Select terminals by left clicking atoms.")
             return False
         if verbose:
-            self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully\n.", "green")
+            self.writeToLogs("Transmission input file " + self.inputFilename + ".in generated successfully.\n", "green")
             self.executeTransButton.setEnabled(True)
         return True
 
@@ -510,14 +510,14 @@ class MainWindow(QtWidgets.QMainWindow):
             return False
         except ValueError:
             self.writeErrorToLogs(
-                "Error: Insufficient atoms for region A (min. one required). Select atoms for A by middle clicking.")
+                "Error: Insufficient atoms for region A (min. one required). Select atoms for A by right clicking.")
             return False
         except ZeroDivisionError:
             self.writeErrorToLogs(
                 "Error: Insufficient atoms for region B (min. one required). Select atoms for B by middle clicking.")
             return False
         if verbose:
-            self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully\n.", "green")
+            self.writeToLogs("Current input file " + self.inputFilename + ".in generated successfully.\n", "green")
             self.executeCurrButton.setEnabled(True)
         return True
 
@@ -604,7 +604,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
         current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
-        self.writeToLogs("Current vs. bias graph plotted successfully\n.", "green")
+        self.writeToLogs("Current vs. bias graph plotted successfully.\n", "green")
 
     def onGammaExecuteLoadedButtonClicked(self):
         self.gammaGLWidget.clear()
@@ -615,7 +615,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully\n.", "green")
+        self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.\n", "green")
 
     # SwitchToInputFileTabButton
 

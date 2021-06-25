@@ -197,7 +197,7 @@ def energy_gamma_trans_graph(widget, x, y, z):
     widget.addItem(surf)
 
     axis = GLAxis(widget)
-    axis.setSize(x=(np.max(x) - np.min(x)), y=(np.max(y) - np.min(y)), z=1)
+    axis.setSize(x=(np.max(x) - np.min(x)), y=(np.max(y) - np.min(y)), z=(np.max(z) - np.min(z)))
     axis.add_labels()
     axis.add_tick_values(x, y, z)
     widget.addItem(axis)
