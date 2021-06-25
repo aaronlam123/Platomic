@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1316</width>
+    <width>1326</width>
     <height>901</height>
    </rect>
   </property>
@@ -78,7 +78,7 @@ p, li { white-space: pre-wrap; }
        <enum>QTabWidget::Rounded</enum>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>3</number>
       </property>
       <property name="iconSize">
        <size>
@@ -141,11 +141,11 @@ p, li { white-space: pre-wrap; }
          <normaloff>icon5.PNG</normaloff>icon5.PNG</iconset>
        </attribute>
        <attribute name="title">
-        <string>Trans. vs. Gamma vs. Energy</string>
+        <string> Energy vs. Gamma vs. Trans.</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_18">
         <item row="0" column="0">
-         <widget class="GLViewWidget" name="gammaGLWidget">
+         <widget class="GLView3D" name="gammaGLWidget">
           <property name="minimumSize">
            <size>
             <width>0</width>
@@ -247,7 +247,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>5</number>
       </property>
       <property name="iconSize">
        <size>
@@ -1237,7 +1237,7 @@ p, li { white-space: pre-wrap; }
             <item row="13" column="0" colspan="2">
              <widget class="QPushButton" name="saveImageButton">
               <property name="text">
-               <string>Save</string>
+               <string>Save image</string>
               </property>
              </widget>
             </item>
@@ -2638,18 +2638,18 @@ p, li { white-space: pre-wrap; }
             <item row="2" column="0">
              <widget class="QComboBox" name="graphComboBox"/>
             </item>
-            <item row="3" column="0">
-             <spacer name="verticalSpacer_21">
+            <item row="8" column="0">
+             <spacer name="verticalSpacer_8">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Fixed</enum>
+               <enum>QSizePolicy::Expanding</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>20</height>
+                <height>680</height>
                </size>
               </property>
              </spacer>
@@ -2667,21 +2667,42 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="5" column="0">
-             <spacer name="verticalSpacer_8">
+            <item row="3" column="0">
+             <spacer name="verticalSpacer_21">
               <property name="orientation">
                <enum>Qt::Vertical</enum>
               </property>
               <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
+               <enum>QSizePolicy::Fixed</enum>
               </property>
               <property name="sizeHint" stdset="0">
                <size>
                 <width>20</width>
-                <height>680</height>
+                <height>20</height>
                </size>
               </property>
              </spacer>
+            </item>
+            <item row="5" column="0">
+             <widget class="QLabel" name="label_56">
+              <property name="text">
+               <string>Energy vs. Gamma vs. Transmission Graph:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0">
+             <widget class="QLabel" name="label_55">
+              <property name="text">
+               <string>Save 3D Graph to image:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="7" column="0">
+             <widget class="QPushButton" name="save3DImageButton">
+              <property name="text">
+               <string>Save image</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -2707,9 +2728,9 @@ p, li { white-space: pre-wrap; }
    <container>1</container>
   </customwidget>
   <customwidget>
-   <class>GLViewWidget</class>
+   <class>GLView3D</class>
    <extends>QOpenGLWidget</extends>
-   <header>pyqtgraph.opengl</header>
+   <header>glview3D</header>
   </customwidget>
  </customwidgets>
  <resources/>

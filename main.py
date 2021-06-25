@@ -1,6 +1,9 @@
 import secrets
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtWidgets import QApplication
+from glview import *
+from glview3D import *
 from plot import *
 from input import *
 from subprocess import PIPE, run
@@ -226,6 +229,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.openGLWidget.opts['distance'] = 15
         self.gammaGLWidget.opts['distance'] = 5
         self.openGLWidget.multiplier = self.multiplier
+        self.gammaGLWidget.multiplier = self.multiplier
         if self.atoms is None:
             self.openGLWidget.atoms = [
                 Atom("0", 0, -9, 0,
@@ -244,8 +248,9 @@ class MainWindow(QtWidgets.QMainWindow):
         # resetViewButton
         self.resetViewButton.clicked.connect(self.onResetViewButtonClicked)
 
-        # saveImageButton
+        # saveImageButton, save3DImageButton
         self.saveImageButton.clicked.connect(self.onSaveImageButtonClicked)
+        self.save3DImageButton.clicked.connect(self.onSave3DImageButtonClicked)
 
         # toggleAtomsButton
         self.toggleAtomsButton.clicked.connect(self.onToggleAtomsButtonClicked)
@@ -402,11 +407,13 @@ class MainWindow(QtWidgets.QMainWindow):
                 return
             self.execute(verbose=False)
             self.writeToLogs(str(i) + "/" + str(gamma_steps) + " transmission calculation completed.", "green")
+            QApplication.processEvents()
             i += 1
         self.writeToLogs("All transmission calculations completed successfully.", "green")
         energy, gamma, transmission = process_energy_gamma_trans_csv(".", self.id)
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
     # generateInputFileButton
@@ -598,6 +605,7 @@ class MainWindow(QtWidgets.QMainWindow):
         energy, gamma, transmission = process_energy_gamma_trans_csv(self.gammaOpenDirLineEdit.text(), None)
         energy_gamma_trans_graph(self.gammaGLWidget, energy, gamma, transmission)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.gammaGraphTab))
+        self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Energy vs. gamma vs. transmission graph plotted successfully.", "green")
 
     # SwitchToInputFileTabButton
@@ -829,7 +837,6 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Selected atom indices for terminals 1-5:", "black")
         for key in self.transSelected:
             self.writeToLogs("Terminal " + key + ": " + ", ".join(self.transSelected[key]), colours(key))
-        # self.openGLWidget.update()
 
     def onCurrentSelectionA(self):
         self.currentSelectedA = []
@@ -844,7 +851,6 @@ class MainWindow(QtWidgets.QMainWindow):
         for j in range(len(self.currentSelectedA)):
             selection = selection + str(self.currentSelectedA[j]) + ", "
         self.writeToLogs(selection[:-2], "purple")
-        self.openGLWidget.update()
 
     def onCurrentSelectionB(self):
         self.currentSelectedB = []
@@ -859,7 +865,6 @@ class MainWindow(QtWidgets.QMainWindow):
         for j in range(len(self.currentSelectedB)):
             selection = selection + str(self.currentSelectedB[j]) + ", "
         self.writeToLogs(selection[:-2], "lime")
-        self.openGLWidget.update()
 
     # resetViewButton
     def onResetViewButtonClicked(self):
@@ -873,6 +878,12 @@ class MainWindow(QtWidgets.QMainWindow):
                                                             filter="PNG Image (*.png);;JPEG Image (*.jpg);;All Files (*.*)")
 
         self.openGLWidget.readQImage().save(filename)
+
+    def onSave3DImageButtonClicked(self):
+        filename, _ = QtWidgets.QFileDialog.getSaveFileName(parent=self, caption='Save image',
+                                                            filter="PNG Image (*.png);;JPEG Image (*.jpg);;All Files (*.*)")
+
+        self.gammaGLWidget.readQImage().save(filename)
 
     # toggleAtomsButton
     def onToggleAtomsButtonClicked(self):
@@ -973,7 +984,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
 
 if __name__ == '__main__':
-    # main = MainWindow(resolution.width)
-    main = MainWindow(resolution.width, default_input)
+    main = MainWindow(resolution.width)
+    #main = MainWindow(resolution.width, default_input)
     main.show()
     sys.exit(app.exec_())
