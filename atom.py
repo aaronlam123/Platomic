@@ -106,6 +106,9 @@ class Atom:
         self.__mi = mi
 
 
+    def check(self):
+        print(self.__eigenenergies)
+
 """
     def check(self):
         print(self.__symbol)

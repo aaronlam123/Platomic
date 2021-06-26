@@ -444,11 +444,11 @@ if __name__ == '__main__':
     # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
     # 0.1, True, input_file="config/default_curr.in")
 
-    # atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
-    # xyz_to_plato_input("benzene.xyz")
+    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    #xyz_to_plato_input("benzene.xyz")
 
-    # for i in range(12):
-    # atoms_main[i].check()
-    # print('\n')
+    for i in range(12):
+        atoms_main[i].check()
+        print('\n')
 
     # xyz_to_plato_input("benzene.xyz")
