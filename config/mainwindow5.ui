@@ -298,6 +298,16 @@ p, li { white-space: pre-wrap; }
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_6">
+            <item row="1" column="0" colspan="2">
+             <widget class="QLineEdit" name="openFileLineEdit"/>
+            </item>
+            <item row="1" column="2">
+             <widget class="QPushButton" name="openFileButton">
+              <property name="text">
+               <string>Open</string>
+              </property>
+             </widget>
+            </item>
             <item row="2" column="0">
              <spacer name="verticalSpacer_22">
               <property name="orientation">
@@ -321,59 +331,10 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="1" column="2">
-             <widget class="QPushButton" name="openFileButton">
-              <property name="text">
-               <string>Open</string>
-              </property>
-             </widget>
-            </item>
-            <item row="1" column="0" colspan="2">
-             <widget class="QLineEdit" name="openFileLineEdit"/>
-            </item>
-            <item row="3" column="0" colspan="3">
-             <widget class="Line" name="line">
-              <property name="autoFillBackground">
-               <bool>false</bool>
-              </property>
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <property name="lineWidth">
-               <number>5</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
             <item row="5" column="0" colspan="2">
              <widget class="QPushButton" name="generateInputFileButton">
               <property name="text">
                <string>Generate Input File</string>
-              </property>
-             </widget>
-            </item>
-            <item row="6" column="0" colspan="2">
-             <widget class="QPushButton" name="executeButton">
-              <property name="enabled">
-               <bool>false</bool>
-              </property>
-              <property name="text">
-               <string>Display Molecule and MOs</string>
-              </property>
-             </widget>
-            </item>
-            <item row="8" column="0" colspan="3">
-             <widget class="Line" name="line_2">
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <property name="lineWidth">
-               <number>5</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
@@ -393,13 +354,6 @@ p, li { white-space: pre-wrap; }
               </property>
              </spacer>
             </item>
-            <item row="4" column="0" colspan="2">
-             <widget class="QLabel" name="label_3">
-              <property name="text">
-               <string>Generate and execute Plato input file:</string>
-              </property>
-             </widget>
-            </item>
             <item row="17" column="0">
              <spacer name="verticalSpacer_24">
               <property name="orientation">
@@ -416,10 +370,49 @@ p, li { white-space: pre-wrap; }
               </property>
              </spacer>
             </item>
-            <item row="15" column="0" colspan="2">
-             <widget class="QPushButton" name="generateTransInputFileButton">
+            <item row="8" column="0" colspan="3">
+             <widget class="Line" name="line_2">
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="4" column="0" colspan="2">
+             <widget class="QLabel" name="label_3">
               <property name="text">
-               <string>Generate Transmission Input File</string>
+               <string>Generate and execute Plato input file:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="6" column="0" colspan="2">
+             <widget class="QPushButton" name="executeButton">
+              <property name="enabled">
+               <bool>false</bool>
+              </property>
+              <property name="text">
+               <string>Display Molecule and MOs</string>
+              </property>
+             </widget>
+            </item>
+            <item row="3" column="0" colspan="3">
+             <widget class="Line" name="line">
+              <property name="autoFillBackground">
+               <bool>false</bool>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
               </property>
              </widget>
             </item>
@@ -427,6 +420,13 @@ p, li { white-space: pre-wrap; }
              <widget class="QLabel" name="label_47">
               <property name="text">
                <string>Gamma:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="20" column="0">
+             <widget class="QLabel" name="label_48">
+              <property name="text">
+               <string>Gamma</string>
               </property>
              </widget>
             </item>
@@ -450,10 +450,37 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="20" column="0">
-             <widget class="QLabel" name="label_48">
+            <item row="15" column="0" colspan="2">
+             <widget class="QPushButton" name="generateTransInputFileButton">
               <property name="text">
-               <string>Gamma</string>
+               <string>Generate Transmission Input File</string>
+              </property>
+             </widget>
+            </item>
+            <item row="24" column="0" colspan="2">
+             <widget class="QLabel" name="label_33">
+              <property name="text">
+               <string>Generate current vs. bias graph:</string>
+              </property>
+             </widget>
+            </item>
+            <item row="18" column="0" colspan="3">
+             <widget class="Line" name="line_3">
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="21" column="0" colspan="2">
+             <widget class="QPushButton" name="generateCurrInputFileButton">
+              <property name="text">
+               <string>Generate Current Input File</string>
               </property>
              </widget>
             </item>
@@ -473,40 +500,6 @@ p, li { white-space: pre-wrap; }
               </property>
              </spacer>
             </item>
-            <item row="20" column="1">
-             <widget class="QLineEdit" name="gammaLineEdit2">
-              <property name="text">
-               <string>0.1</string>
-              </property>
-             </widget>
-            </item>
-            <item row="21" column="0" colspan="2">
-             <widget class="QPushButton" name="generateCurrInputFileButton">
-              <property name="text">
-               <string>Generate Current Input File</string>
-              </property>
-             </widget>
-            </item>
-            <item row="18" column="0" colspan="3">
-             <widget class="Line" name="line_3">
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <property name="lineWidth">
-               <number>5</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
-              </property>
-             </widget>
-            </item>
-            <item row="24" column="0" colspan="2">
-             <widget class="QLabel" name="label_33">
-              <property name="text">
-               <string>Generate current vs. bias graph:</string>
-              </property>
-             </widget>
-            </item>
             <item row="26" column="0">
              <widget class="QLabel" name="label_44">
               <property name="text">
@@ -514,24 +507,10 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="25" column="1">
-             <widget class="QLineEdit" name="referenceLineEdit">
+            <item row="20" column="1">
+             <widget class="QLineEdit" name="gammaLineEdit2">
               <property name="text">
-               <string>0</string>
-              </property>
-             </widget>
-            </item>
-            <item row="25" column="0">
-             <widget class="QLabel" name="label_37">
-              <property name="text">
-               <string>Ref. Potential (eV)</string>
-              </property>
-             </widget>
-            </item>
-            <item row="26" column="1">
-             <widget class="QLineEdit" name="biasLineEdit">
-              <property name="text">
-               <string>1</string>
+               <string>0.1</string>
               </property>
              </widget>
             </item>
@@ -539,6 +518,13 @@ p, li { white-space: pre-wrap; }
              <widget class="QLineEdit" name="stepsLineEdit">
               <property name="text">
                <string>5</string>
+              </property>
+             </widget>
+            </item>
+            <item row="25" column="1">
+             <widget class="QLineEdit" name="referenceLineEdit">
+              <property name="text">
+               <string>0</string>
               </property>
              </widget>
             </item>
@@ -567,6 +553,36 @@ p, li { white-space: pre-wrap; }
                <size>
                 <width>20</width>
                 <height>20</height>
+               </size>
+              </property>
+             </spacer>
+            </item>
+            <item row="26" column="1">
+             <widget class="QLineEdit" name="biasLineEdit">
+              <property name="text">
+               <string>1</string>
+              </property>
+             </widget>
+            </item>
+            <item row="25" column="0">
+             <widget class="QLabel" name="label_37">
+              <property name="text">
+               <string>Ref. Potential (eV)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="33" column="0">
+             <spacer name="verticalSpacer_27">
+              <property name="orientation">
+               <enum>Qt::Vertical</enum>
+              </property>
+              <property name="sizeType">
+               <enum>QSizePolicy::Expanding</enum>
+              </property>
+              <property name="sizeHint" stdset="0">
+               <size>
+                <width>20</width>
+                <height>10</height>
                </size>
               </property>
              </spacer>
@@ -602,29 +618,6 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="33" column="0">
-             <spacer name="verticalSpacer_27">
-              <property name="orientation">
-               <enum>Qt::Vertical</enum>
-              </property>
-              <property name="sizeType">
-               <enum>QSizePolicy::Expanding</enum>
-              </property>
-              <property name="sizeHint" stdset="0">
-               <size>
-                <width>20</width>
-                <height>10</height>
-               </size>
-              </property>
-             </spacer>
-            </item>
-            <item row="32" column="0" colspan="2">
-             <widget class="QPushButton" name="switchToInputFileTabButton">
-              <property name="text">
-               <string>Switch to Input File tab</string>
-              </property>
-             </widget>
-            </item>
             <item row="19" column="0" colspan="3">
              <widget class="QLabel" name="label_35">
               <property name="text">
@@ -642,16 +635,10 @@ p, li { white-space: pre-wrap; }
               </property>
              </widget>
             </item>
-            <item row="12" column="0" colspan="2">
-             <widget class="Line" name="line_4">
-              <property name="frameShadow">
-               <enum>QFrame::Raised</enum>
-              </property>
-              <property name="lineWidth">
-               <number>5</number>
-              </property>
-              <property name="orientation">
-               <enum>Qt::Horizontal</enum>
+            <item row="32" column="0" colspan="2">
+             <widget class="QPushButton" name="switchToInputFileTabButton">
+              <property name="text">
+               <string>Switch to Input File tab</string>
               </property>
              </widget>
             </item>
@@ -680,6 +667,49 @@ p, li { white-space: pre-wrap; }
             </item>
             <item row="10" column="0" colspan="2">
              <widget class="QComboBox" name="terminalComboBox"/>
+            </item>
+            <item row="4" column="2">
+             <widget class="QLabel" name="label_57">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Generates input file using .xyz with config/default.in.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>(?)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="12" column="0" colspan="3">
+             <widget class="Line" name="line_4">
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
+              <property name="lineWidth">
+               <number>5</number>
+              </property>
+              <property name="orientation">
+               <enum>Qt::Horizontal</enum>
+              </property>
+             </widget>
+            </item>
+            <item row="26" column="2">
+             <widget class="QLabel" name="label_58">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bias values are split among the two terminals, +0.5 for region A and -0.5 for region B.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>(?)</string>
+              </property>
+             </widget>
+            </item>
+            <item row="32" column="2">
+             <widget class="QLabel" name="label_59">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Manually edit the input file in the input file tab, which is updated after any generate button is clicked.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>(?)</string>
+              </property>
+             </widget>
             </item>
            </layout>
           </widget>
@@ -2105,6 +2135,16 @@ p, li { white-space: pre-wrap; }
               </property>
              </spacer>
             </item>
+            <item row="0" column="2">
+             <widget class="QLabel" name="label_60">
+              <property name="toolTip">
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;The first three and last orbital type draws s, p, d, f orbitals. The first draws wireframes, the second and third draw the vertexes in two orientations respectively. The last draws faces, with adjustable alpha values. Spherical orbitals's radius is proportional to the sum of all eigenvectors squared at each site.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+              </property>
+              <property name="text">
+               <string>(?)</string>
+              </property>
+             </widget>
+            </item>
            </layout>
           </widget>
          </widget>
@@ -2147,7 +2187,7 @@ p, li { white-space: pre-wrap; }
             <item row="11" column="2">
              <widget class="QLabel" name="label_22">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the radius of the bond mesh.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the radius of the bond mesh. Default value is 0.15.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>(?)</string>
@@ -2173,7 +2213,7 @@ p, li { white-space: pre-wrap; }
             <item row="15" column="2">
              <widget class="QLabel" name="label_21">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the threshold to allow/disallow bonds of certain lengths to exist.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the threshold to allow/disallow bonds of certain lengths to exist. Default to 3.0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>(?)</string>
@@ -2565,7 +2605,7 @@ p, li { white-space: pre-wrap; }
             <item row="0" column="2">
              <widget class="QLabel" name="label_23">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Update the attribute file to change the default allowed bonds, radii and colour of elements.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Update the attribute file to change the default allowed bonds, radii and colour of elements. Applied on next execution.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>(?)</string>
