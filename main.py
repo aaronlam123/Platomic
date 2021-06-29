@@ -324,15 +324,16 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(headers_mapped)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Graphs plotted successfully\n.", "green")
+        self.writeToLogs("Graphs plotted successfully.\n", "green")
         self.executeTransButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self, boolean, verbose=True):
         if not self.execute(verbose):
             return
-        self.writeToLogs("Execution carried out successfully.", "green")
         current = find_current_in_file(self.inputFilename + ".out")
-        self.writeToLogs("Current: " + current + " mA.\n", "green")
+        if verbose:
+            self.writeToLogs("Execution carried out successfully.", "green")
+            self.writeToLogs("Current: " + current + " mA.\n", "green")
         self.executeCurrButton.setEnabled(False)
         return float(current)
 
@@ -378,7 +379,7 @@ class MainWindow(QtWidgets.QMainWindow):
         current_graph(self.graphWidget2, biases, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         # self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Current vs. bias graph plotted successfully\n.", "green")
+        self.writeToLogs("Current vs. bias graph plotted successfully.\n", "green")
 
     def onExecute3DGraphButtonClicked(self):
         self.gammaGLWidget.clear()
@@ -861,7 +862,6 @@ class MainWindow(QtWidgets.QMainWindow):
         for j in range(len(self.currentSelectedA)):
             selection = selection + str(self.currentSelectedA[j]) + ", "
         self.writeToLogs(selection[:-2], "purple")
-        self.writeToLogs("\n", "black")
 
     def onCurrentSelectionB(self):
         self.currentSelectedB = []
@@ -876,7 +876,6 @@ class MainWindow(QtWidgets.QMainWindow):
         for j in range(len(self.currentSelectedB)):
             selection = selection + str(self.currentSelectedB[j]) + ", "
         self.writeToLogs(selection[:-2], "lime")
-        self.writeToLogs("\n", "black")
 
     # resetViewButton
     def onResetViewButtonClicked(self):
