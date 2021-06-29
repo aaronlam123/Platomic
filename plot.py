@@ -58,7 +58,7 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
             p1 = np.array(atoms[j].get_xyz())
             v = p2 - p1
             length = distance.euclidean(p1, p2)
-            if length > max_bond_length:
+            if (length / atoms[i].get_radius()) > max_bond_length:
                 continue
             theta = np.arctan2(v[1], v[0])
             phi = np.arctan2(np.linalg.norm(v[:2]), v[2])

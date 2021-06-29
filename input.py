@@ -78,7 +78,6 @@ def create_orbital_dict(file):  # returns orbitals for each element
     elements = get_last_two_chars("Chemical symbol           :", file)
     orbitals = get_last_two_chars("Number of orbitals        :", file)
     assert len(elements) == len(orbitals) != 0
-    print(elements)
     for i in range(len(elements)):
         new_entry = {str(elements[i]): orbitals[i]}
         orb_dict.update(new_entry)
@@ -164,8 +163,6 @@ def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies):
 
 def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms using .out, attributes.txt and .wf
     orb_dict, quantum_dict = create_orbital_dict(out_file)
-    print(orb_dict)
-    print(quantum_dict)
     atoms = create_all_atoms(out_file)
     set_attr_from_file(attributes_file, atoms)
     all_modes, energies = eig_arr_from_wf(wf_file, atoms, orb_dict)
