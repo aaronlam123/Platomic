@@ -18,12 +18,12 @@ def lines_that_start_with(string, f):  # returns the line which contains string 
     return [line for line in f if string in line.split()[:1]]
 
 
-# returns last char which contains string in f
-def get_last_char(string, file):
+# returns last two char which contains string in f
+def get_last_two_chars(string, file):
     array = []
     with open(file, "r") as f:
         for line in lines_that_contain(string, f):
-            array.append(line.strip()[-1])
+            array.append(line.strip()[-2:].strip())
     return array
 
 
@@ -75,9 +75,10 @@ def correct_quantum(quantum):
 def create_orbital_dict(file):  # returns orbitals for each element
     orb_dict = {}
     quantum_dict = {}
-    elements = get_last_char("Chemical symbol           :", file)
-    orbitals = get_last_char("Number of orbitals        :", file)
+    elements = get_last_two_chars("Chemical symbol           :", file)
+    orbitals = get_last_two_chars("Number of orbitals        :", file)
     assert len(elements) == len(orbitals) != 0
+    print(elements)
     for i in range(len(elements)):
         new_entry = {str(elements[i]): orbitals[i]}
         orb_dict.update(new_entry)
@@ -163,6 +164,8 @@ def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies):
 
 def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms using .out, attributes.txt and .wf
     orb_dict, quantum_dict = create_orbital_dict(out_file)
+    print(orb_dict)
+    print(quantum_dict)
     atoms = create_all_atoms(out_file)
     set_attr_from_file(attributes_file, atoms)
     all_modes, energies = eig_arr_from_wf(wf_file, atoms, orb_dict)
@@ -444,7 +447,8 @@ if __name__ == '__main__':
     # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
     # 0.1, True, input_file="config/default_curr.in")
 
-    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
+    atoms_main = input_file_setup("16abaf_benzene1,4-diol_Au3-1-1.out", "config/attributes.txt", "16abaf_benzene1,4-diol_Au3-1-1.wf")
     #xyz_to_plato_input("benzene.xyz")
 
     for i in range(12):

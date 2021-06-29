@@ -13,8 +13,8 @@ class TestInput(unittest.TestCase):
         with open("test_files/test_output.txt", "r") as self.f:
             self.assertEqual(lines_that_start_with("Atom", self.f), ['Atom Type #    1\n', 'Atom Type #    2\n'])
 
-    def test_get_last_char(self):
-        self.assertEqual(get_last_char("Chemical symbol           : H", "test_files/test_output.txt"), ["H"])
+    def test_get_last_two_chars(self):
+        self.assertEqual(get_last_two_chars("Chemical symbol           : H", "test_files/test_output.txt"), ["H"])
 
     def test_get_lines_between(self):
         self.assertEqual(get_lines_between("test_files/test_output.txt", "n l m     energy     occupancy    radius",
