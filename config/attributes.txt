@@ -27,3 +27,5 @@ V         "pink"                1.710       All
 Cr        "pink"                1.660       All
 Mn        "pink"                1.610       All
 Fe        "orange"              1.560       All
+
+Au       "gold"                   1.740      All
