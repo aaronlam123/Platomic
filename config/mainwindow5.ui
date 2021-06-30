@@ -762,7 +762,7 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
+             <width>259</width>
              <height>833</height>
             </rect>
            </property>
@@ -2213,7 +2213,7 @@ p, li { white-space: pre-wrap; }
             <item row="15" column="2">
              <widget class="QLabel" name="label_21">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the threshold to allow/disallow bonds of certain lengths to exist. Default to 3.0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Adjust the threshold to allow/disallow bonds of certain lengths to exist. Default to 4.0.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>(?)</string>
@@ -2405,7 +2405,7 @@ p, li { white-space: pre-wrap; }
                <number>5</number>
               </property>
               <property name="value">
-               <number>30</number>
+               <number>40</number>
               </property>
               <property name="orientation">
                <enum>Qt::Horizontal</enum>
@@ -2483,7 +2483,7 @@ p, li { white-space: pre-wrap; }
             <item row="16" column="1" colspan="2">
              <widget class="QLabel" name="bondThresholdSliderLabel">
               <property name="text">
-               <string>Length: 3.0</string>
+               <string>Length: 4.0</string>
               </property>
              </widget>
             </item>
@@ -2655,8 +2655,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>357</width>
-             <height>832</height>
+             <width>230</width>
+             <height>187</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">
