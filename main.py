@@ -298,6 +298,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return True
 
     def onExecuteButtonClicked(self):
+        self.writeToLogs("Starting execution.", "green")
         if not self.execute():
             return
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
@@ -314,6 +315,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeButton.setEnabled(False)
 
     def onTransExecuteButtonClicked(self):
+        self.writeToLogs("Starting transmission execution.", "green")
         if not self.execute():
             return
         self.writeToLogs("Execution carried out successfully.", "green")
@@ -328,6 +330,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.executeTransButton.setEnabled(False)
 
     def onExecuteCurrButtonClicked(self, boolean, verbose=True):
+        self.writeToLogs("Starting current execution.", "green")
         if not self.execute(verbose):
             return
         current = find_current_in_file(self.inputFilename + ".out")
@@ -338,6 +341,7 @@ class MainWindow(QtWidgets.QMainWindow):
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
+        self.writeToLogs("Starting current graph execution.", "green")
         try:
             steps = int(self.stepsLineEdit.text())
         except ValueError:
@@ -382,6 +386,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Current vs. bias graph plotted successfully.\n", "green")
 
     def onExecute3DGraphButtonClicked(self):
+        self.writeToLogs("Starting 3D transmission graph execution.", "green")
         self.gammaGLWidget.clear()
         occupied_keys = return_occupied_keys(self.transSelected)
         if not occupied_keys == 2:
