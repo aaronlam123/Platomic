@@ -106,6 +106,7 @@ def set_attr_from_file(file, atoms):  # sets attributes to atoms from attributes
         with open(file, "r") as f:
             next(f)
             for line in lines_that_start_with(atoms[i].get_symbol(), f):
+                print(line)
                 attributes = shlex.split(line)
                 atoms[i].set_colour(pyqtgraph.glColor(QtGui.QColor(attributes[1])))
                 atoms[i].set_radius(attributes[2])
@@ -444,12 +445,11 @@ if __name__ == '__main__':
     # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
     # 0.1, True, input_file="config/default_curr.in")
 
-    #atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
-    atoms_main = input_file_setup("16abaf_benzene1,4-diol_Au3-1-1.out", "config/attributes.txt", "16abaf_benzene1,4-diol_Au3-1-1.wf")
+    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
     #xyz_to_plato_input("benzene.xyz")
 
-    for i in range(12):
-        atoms_main[i].check()
-        print('\n')
+    #for i in range(12):
+        #atoms_main[i].check()
+        #print('\n')
 
     # xyz_to_plato_input("benzene.xyz")
