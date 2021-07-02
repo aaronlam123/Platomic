@@ -107,7 +107,7 @@ class Atom:
 
 
     def check(self):
-        print(self.__eigenenergies)
+        print(self.__colour)
 
 """
     def check(self):

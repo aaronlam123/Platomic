@@ -2,7 +2,6 @@ import math
 import ntpath
 import pyqtgraph
 from PyQt5 import QtGui
-import shlex
 import pandas as pd
 from atom import Atom
 import os
@@ -106,8 +105,7 @@ def set_attr_from_file(file, atoms):  # sets attributes to atoms from attributes
         with open(file, "r") as f:
             next(f)
             for line in lines_that_start_with(atoms[i].get_symbol(), f):
-                print(line)
-                attributes = shlex.split(line)
+                attributes = line.split()
                 atoms[i].set_colour(pyqtgraph.glColor(QtGui.QColor(attributes[1])))
                 atoms[i].set_radius(attributes[2])
                 elem = 3
@@ -448,8 +446,8 @@ if __name__ == '__main__':
     atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
     #xyz_to_plato_input("benzene.xyz")
 
-    #for i in range(12):
-        #atoms_main[i].check()
-        #print('\n')
+    for i in range(12):
+        atoms_main[i].check()
+        print('\n')
 
     # xyz_to_plato_input("benzene.xyz")

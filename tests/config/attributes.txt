@@ -1,29 +1,31 @@
-Symbol      Colour              Radius      Bonding
-H         "white"               0.530       All
-He        "cyan"                0.310       All
-Li        "violet"              1.670       All
-Be        "green"               1.120       All
-B         "beige"               0.870       All
-C         "black"               0.670       All
-N         "blue"                0.560       All
-O         "red"                 0.480       All
-F         "lime"                0.420       All
-Ne        "cyan"                0.380       All
+Symbol      Colour          Radius      Bonding
+H           white           0.530       All
+He          cyan            0.310       All
+Li          violet          1.670       All
+Be          dark green      1.120       All
+B           beige           0.870       All
+C           black           0.670       All
+N           blue            0.560       All
+O           red             0.480       All
+F           green           0.420       All
+Ne          cyan            0.380       All
 
-Na        "violet"              1.900       All
-Mg        "green"               1.450       All
-Al        "pink"                1.180       All
-Si        "pink"                1.110       All
-P         "orange"              0.980       All
-S         "yellow"              0.880       All
-Cl        "lime"                0.790       All
-Ar        "cyan"                0.710       All
+Na          violet          1.900       All
+Mg          dark green      1.450       All
+Al          pink            1.180       All
+Si          pink            1.110       All
+P           orange          0.980       All
+S           yellow          0.880       All
+Cl          green           0.790       All
+Ar          cyan            0.710       All
 
-K         "violet"              2.430       All
-Ca        "green"               1.940       All
-Sc        "pink"                1.840       All
-Ti        "grey"                1.760       All
-V         "pink"                1.710       All
-Cr        "pink"                1.660       All
-Mn        "pink"                1.610       All
-Fe        "orange"              1.560       All
+K           violet          2.430       All
+Ca          dark green      1.940       All
+Sc          pink            1.840       All
+Ti          grey            1.760       All
+V           pink            1.710       All
+Cr          pink            1.660       All
+Mn          pink            1.610       All
+Fe          dark orange     1.560       All
+
+Au          gold            1.740       All
