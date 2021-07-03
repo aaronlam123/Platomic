@@ -997,3 +997,10 @@ class MainWindow(QtWidgets.QMainWindow):
         self.consoleLog.append(text)
         self.fullConsoleLog.append(text)
         self.fullConsoleLog.append(traceback.format_exc())
+
+
+if __name__ == '__main__':
+    main = MainWindow(resolution.width)
+    #main = MainWindow(resolution.width, default_input)
+    main.show()
+    sys.exit(app.exec_())

@@ -96,7 +96,7 @@ class TestMain(unittest.TestCase):
             self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeCurrButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called_with('Current: -6.1465563e-05 mA.\n', 'green')
+            self.main.writeToLogs.assert_called_with('Current: -1.5847607e-04 mA.\n', 'green')
 
         def test_onExecuteCurrButtonClicked_plato_failure(self):
             self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
