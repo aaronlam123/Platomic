@@ -104,24 +104,3 @@ class Atom:
 
     def set_mi(self, mi):
         self.__mi = mi
-
-
-    def check(self):
-        print(self.__colour)
-
-"""
-    def check(self):
-        print(self.__symbol)
-        print(self.__x)
-        print(self.__y)
-        print(self.__z)
-        print(self.__colour)
-        print(self.__radius)
-        print(self.__bonding)
-        print(self.__eigenvector)
-        print(np.array(self.__eigenvector).astype(float).shape)
-        print(self.__quantum_dict)
-        print(self.__eigenenergies)
-        print(self.__isSelectedTrans)
-        print(self.__isSelectedCurrA)
-"""

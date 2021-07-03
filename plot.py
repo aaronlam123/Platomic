@@ -202,11 +202,3 @@ def energy_gamma_trans_graph(widget, x, y, z):
     axis.add_labels()
     axis.add_tick_values(x, y, z)
     widget.addItem(axis)
-
-
-if __name__ == '__main__':
-    pass
-    # print(transmission_headers("benzene_trans.csv", ["1", "4", "6"]))
-    # [' 1 - 2', ' 1 - 3', '2 - 3']
-    # print(energy)
-    # print(transmission)

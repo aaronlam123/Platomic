@@ -10,6 +10,7 @@ app = QtWidgets.QApplication(sys.argv)
 class TestGlView3D(unittest.TestCase):
     def setUp(self):
         self.w = GLView3D()
+        self.w.multiplier = 2
 
     def test_readQImage(self):
         self.assertEqual(self.w.readQImage().width(), self.w.width() * self.w.multiplier)

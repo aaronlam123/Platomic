@@ -429,25 +429,3 @@ def process_energy_gamma_trans_csv(directory_name, session_id):
         transmission = pyqtgraph.np.append(transmission, column, axis=1)
 
     return energy, gamma, transmission
-
-
-if __name__ == '__main__':
-    pass
-    # headers_mapped, headers = transmission_headers("test_csv.csv", {"1": ["1", "2", "3"], "2": ["6"], "3":["7", "8"]})
-    # print(headers_mapped)
-    # print(headers)
-    #trans_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
-                      #0.003, "6CHARS", input_file="config/default_trans.in")
-    #curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS", input_file="config/default_curr.in")
-    # 0.1, False, input_file="config/default_curr.in")
-    # curr_plato_input("benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"], ["7", "8", "9"], 0.5, 0.25,
-    # 0.1, True, input_file="config/default_curr.in")
-
-    atoms_main = input_file_setup("config/benzene.out", "config/attributes.txt", "config/benzene.wf")
-    #xyz_to_plato_input("benzene.xyz")
-
-    for i in range(12):
-        atoms_main[i].check()
-        print('\n')
-
-    # xyz_to_plato_input("benzene.xyz")

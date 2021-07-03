@@ -185,7 +185,7 @@ class TestMain(unittest.TestCase):
         with open("test_files/correct.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
         self.main.writeToLogs.assert_called_with(
-            "Input file " + file_in_cur_dir("benzene.in") + ".in generated successfully.", "green")
+            "Input file " + file_in_cur_dir("benzene.in") + ".in generated successfully.\n", "green")
 
     def test_onGenerateInputFileButtonClicked_with_nonexistent_xyz(self):
         self.main.openFileLineEdit.setText("test_files/nonexistent.xyz")
@@ -211,7 +211,7 @@ class TestMain(unittest.TestCase):
         with open("test_files/correct_trans.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
         self.main.writeToLogs.assert_called_with(
-            "Transmission input file " + file_in_cur_dir(".in") + ".in generated successfully.", "green")
+            "Transmission input file " + file_in_cur_dir(".in") + ".in generated successfully.\n", "green")
 
     def test_onGenerateTransInputFileButtonClicked_and_gamma_is_none(self):
         self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
@@ -264,7 +264,7 @@ class TestMain(unittest.TestCase):
         with open("test_files/correct_curr.in") as correct:
             self.assertEqual(correct.read(), self.main.inputTextEdit.toPlainText())
         self.main.writeToLogs.assert_called_with(
-            "Current input file " + file_in_cur_dir(".in") + ".in generated successfully.", "green")
+            "Current input file " + file_in_cur_dir(".in") + ".in generated successfully.\n", "green")
 
     def test_onGenerateCurrInputFileButtonClicked_and_bias_is_none(self):
         self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
@@ -335,7 +335,7 @@ class TestMain(unittest.TestCase):
         self.main.openFileLineEdit.setText("test_files/benzene.xyz")
         QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
         self.main.writeErrorToLogs.assert_called_with(
-            "Error: Insufficient atoms for region A (min. one required). Select atoms for A by middle clicking.")
+            "Error: Insufficient atoms for region A (min. one required). Select atoms for A by right clicking.")
         unittest.TestCase.assertRaises(self, expected_exception=ValueError)
 
     def test_onGenerateCurrInputFileButtonClicked_with_insufficient_region_B(self):
@@ -401,7 +401,7 @@ class TestMain(unittest.TestCase):
         self.main.openWfFileLineEdit.setText("config/benzene.wf")
         QTest.mouseClick(self.main.executeLoadedButton, Qt.LeftButton)
         self.main.draw.assert_called_once()
-        self.main.writeToLogs.assert_called_with("Execution carried out successfully.", "green")
+        self.main.writeToLogs.assert_called_with("Execution carried out successfully.\n", "green")
         self.assertEqual(return_occupied_keys(self.main.transSelected), 0)
         self.assertEqual(len(self.main.currentSelectedA), 0)
         self.assertEqual(len(self.main.currentSelectedB), 0)
@@ -423,7 +423,7 @@ class TestMain(unittest.TestCase):
     def test_onTransExecuteLoadedButtonClicked(self):
         self.main.openCsvFileLineEdit.setText("test_files/test_csv.csv")
         QTest.mouseClick(self.main.transExecuteLoadedButton, Qt.LeftButton)
-        self.main.writeToLogs.assert_called_with("Graphs plotted successfully.", "green")
+        self.main.writeToLogs.assert_called_with("Graphs plotted successfully.\n", "green")
         self.assertEqual(self.main.csvFilename, self.main.openCsvFileLineEdit.text())
         self.main.graphComboBox.clear.assert_called_once()
         self.main.graphComboBox.addItems.assert_called_once()
@@ -438,7 +438,7 @@ class TestMain(unittest.TestCase):
     def test_onCurrExecuteLoadedButtonClicked(self):
         self.main.openDirLineEdit.setText("test_files/test_out_dir")
         QTest.mouseClick(self.main.currExecuteLoadedButton, Qt.LeftButton)
-        self.main.writeToLogs.assert_called_with("Current vs. bias graph plotted successfully.", "green")
+        self.main.writeToLogs.assert_called_with("Current vs. bias graph plotted successfully.\n", "green")
 
     def test_onCurrExecuteLoadedButtonClicked_with_no_dir(self):
         QTest.mouseClick(self.main.currExecuteLoadedButton, Qt.LeftButton)
@@ -448,7 +448,7 @@ class TestMain(unittest.TestCase):
     def test_onGammaExecuteLoadedButtonClicked(self):
         self.main.gammaOpenDirLineEdit.setText("test_files/test_trans_dir")
         QTest.mouseClick(self.main.gammaExecuteLoadedButton, Qt.LeftButton)
-        self.main.writeToLogs.assert_called_with("Energy vs. gamma vs. transmission graph plotted successfully.",
+        self.main.writeToLogs.assert_called_with("Energy vs. gamma vs. transmission graph plotted successfully.\n",
                                                  "green")
 
     def test_onGammaExecuteLoadedButtonClicked_with_no_dir(self):
@@ -517,9 +517,9 @@ class TestMain(unittest.TestCase):
         self.main.draw.assert_called_once()
 
     def test_setBondThresholdSliderLabel(self):
-        self.main.bondThresholdSlider.setValue(40)
-        self.assertEqual(self.main.bondThreshold, 4.0)
-        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 4.0")
+        self.main.bondThresholdSlider.setValue(50)
+        self.assertEqual(self.main.bondThreshold, 5.0)
+        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 5.0")
         self.main.draw.assert_called_once()
 
     def test_onSwitchToAttrFileTabButtonClicked(self):
