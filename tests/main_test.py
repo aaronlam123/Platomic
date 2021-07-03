@@ -63,7 +63,7 @@ class TestMain(unittest.TestCase):
             self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called_with("Execution carried out successfully.", "green")
+            self.main.writeToLogs.assert_called_with("Execution carried out successfully.\n", "green")
             self.assertEqual(return_occupied_keys(self.main.transSelected), 0)
             self.assertEqual(len(self.main.currentSelectedA), 0)
             self.assertEqual(len(self.main.currentSelectedB), 0)
@@ -80,7 +80,7 @@ class TestMain(unittest.TestCase):
             self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeTransButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called_with("Graphs plotted successfully.", "green")
+            self.main.writeToLogs.assert_called_with("Graphs plotted successfully.\n", "green")
 
         def test_onTransExecuteButtonClicked_plato_failure(self):
             self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
@@ -96,7 +96,7 @@ class TestMain(unittest.TestCase):
             self.main.openFileLineEdit.setText("test_files/benzene.xyz")
             QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
             QTest.mouseClick(self.main.executeCurrButton, Qt.LeftButton)
-            self.main.writeToLogs.assert_called_with('Current: -6.1465563e-05 mA.', 'green')
+            self.main.writeToLogs.assert_called_with('Current: -6.1465563e-05 mA.\n', 'green')
 
         def test_onExecuteCurrButtonClicked_plato_failure(self):
             self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"]}
