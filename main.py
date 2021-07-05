@@ -3,6 +3,7 @@ from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 from glview import *
+from glview3D import *
 from plot import *
 from input import *
 from subprocess import PIPE, run
