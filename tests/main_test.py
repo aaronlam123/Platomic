@@ -1,4 +1,3 @@
-import filecmp
 import unittest
 from unittest.mock import MagicMock
 from PyQt5.QtCore import Qt, QPoint
@@ -462,33 +461,58 @@ class TestMain(unittest.TestCase):
 
     def test_setAtomColSliderLabel(self):
         self.main.atomColSlider.setValue(40)
+        self.main.setAtomColSliderLabel()
         self.assertIs(self.main.atomCol, 40)
         self.assertEqual(self.main.atomColSliderLabel.text(), "Columns: 40")
         self.main.draw.assert_called_once()
 
+    def test_updateAtomColSliderLabel(self):
+        self.main.atomColSlider.setValue(45)
+        self.assertEqual(self.main.atomColSliderLabel.text(), "Columns: 45")
+
     def test_setAtomRowSliderLabel(self):
         self.main.atomRowSlider.setValue(20)
+        self.main.setAtomRowSliderLabel()
         self.assertIs(self.main.atomRow, 20)
         self.assertEqual(self.main.atomRowSliderLabel.text(), "Rows: 20")
         self.main.draw.assert_called_once()
 
+    def test_updateAtomRowSliderLabel(self):
+        self.main.atomRowSlider.setValue(25)
+        self.assertEqual(self.main.atomRowSliderLabel.text(), "Rows: 25")
+
     def test_setBondColSliderLabel(self):
         self.main.bondColSlider.setValue(30)
+        self.main.setBondColSliderLabel()
         self.assertIs(self.main.bondCol, 30)
         self.assertEqual(self.main.bondColSliderLabel.text(), "Columns: 30")
         self.main.draw.assert_called_once()
 
+    def test_updateBondColSliderLabel(self):
+        self.main.bondColSlider.setValue(35)
+        self.assertEqual(self.main.bondColSliderLabel.text(), "Columns: 35")
+
     def test_setBondRowSliderLabel(self):
         self.main.bondRowSlider.setValue(25)
+        self.main.setBondRowSliderLabel()
         self.assertIs(self.main.bondRow, 25)
         self.assertEqual(self.main.bondRowSliderLabel.text(), "Rows: 25")
         self.main.draw.assert_called_once()
 
+    def test_updateBondRowSliderLabel(self):
+        self.main.bondRowSlider.setValue(30)
+        self.assertEqual(self.main.bondRowSliderLabel.text(), "Rows: 30")
+
     def test_setBrightnessSliderLabel(self):
         self.main.brightnessSlider.setValue(100)
+        self.main.setBrightnessSliderLabel()
         self.assertEqual(self.main.backgroundColor, (100, 100, 100))
         self.assertEqual(self.main.brightnessSliderLabel.text(), "Brightness: 100")
         self.main.openGLWidget.setBackgroundColor.assert_called_with(self.main.backgroundColor)
+
+    def test_updateBrightnessSliderLabel(self):
+        self.main.brightnessSlider.setValue(100)
+        self.assertEqual(self.main.brightnessSliderLabel.text(), "Brightness: 100")
 
     def test_setCheckBoxIndex(self):
         self.main.checkBoxIndex.setChecked(False)
@@ -512,15 +536,25 @@ class TestMain(unittest.TestCase):
 
     def test_setBondRadiusSliderLabel(self):
         self.main.bondRadiusSlider.setValue(20)
+        self.main.setBondRadiusSliderLabel()
         self.assertEqual(self.main.bondRadius, 0.2)
         self.assertEqual(self.main.bondRadiusSliderLabel.text(), "Radius: 0.2")
         self.main.draw.assert_called_once()
 
+    def test_updateBondRadiusSliderLabel(self):
+        self.main.bondRadiusSlider.setValue(30)
+        self.assertEqual(self.main.bondRadiusSliderLabel.text(), "Radius: 0.3")
+
     def test_setBondThresholdSliderLabel(self):
         self.main.bondThresholdSlider.setValue(50)
+        self.main.setBondThresholdSliderLabel()
         self.assertEqual(self.main.bondThreshold, 5.0)
         self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 5.0")
         self.main.draw.assert_called_once()
+
+    def test_updateBondThresholdSliderLabel(self):
+        self.main.bondThresholdSlider.setValue(60)
+        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 6.0")
 
     def test_onSwitchToAttrFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToAttrFileTabButton, Qt.LeftButton)
@@ -528,69 +562,120 @@ class TestMain(unittest.TestCase):
 
     def test_setOrbColSliderLabel(self):
         self.main.orbColSlider.setValue(60)
+        self.main.setOrbColSliderLabel()
         self.assertIs(self.main.orbCol, 60)
         self.assertEqual(self.main.orbColSliderLabel.text(), "Columns: 60")
         self.main.draw.assert_called_once()
 
     def test_setOrbRowSliderLabel(self):
         self.main.orbRowSlider.setValue(40)
+        self.main.setOrbRowSliderLabel()
         self.assertIs(self.main.orbRow, 40)
         self.assertEqual(self.main.orbRowSliderLabel.text(), "Rows: 40")
         self.main.draw.assert_called_once()
 
     def test_setScalerSliderLabel(self):
         self.main.orbScalerSlider.setValue(10)
+        self.main.setScalerSliderLabel()
         self.assertIs(self.main.orbScaler, 10)
         self.assertEqual(self.main.orbScalerSliderLabel.text(), "Scaler: 10")
         self.main.draw.assert_called_once()
 
     def test_setThetaSliderLabel(self):
         self.main.thetaSlider.setValue(270)
+        self.main.setThetaSliderLabel()
         self.assertEqual(self.main.theta, math.radians(270))
         self.assertEqual(self.main.thetaSliderLabel.text(), "Theta: 270")
         self.main.draw.assert_called_once()
 
     def test_setPhiSliderLabel(self):
         self.main.phiSlider.setValue(120)
+        self.main.setPhiSliderLabel()
         self.assertEqual(self.main.phi, math.radians(120))
         self.assertEqual(self.main.phiSliderLabel.text(), "Phi: 120")
         self.main.draw.assert_called_once()
 
     def test_setColourRSliderLabel(self):
         self.main.colourRSlider.setValue(50)
+        self.main.setColourRSliderLabel()
         self.assertEqual(self.main.R, 0.5)
         self.assertEqual(self.main.colourRSliderLabel.text(), "R: 0.5")
         self.main.draw.assert_called_once()
 
     def test_setColourGSliderLabel(self):
         self.main.colourGSlider.setValue(60)
+        self.main.setColourGSliderLabel()
         self.assertEqual(self.main.G, 0.6)
         self.assertEqual(self.main.colourGSliderLabel.text(), "G: 0.6")
         self.main.draw.assert_called_once()
 
     def test_setColourBSliderLabel(self):
         self.main.colourBSlider.setValue(70)
+        self.main.setColourBSliderLabel()
         self.assertEqual(self.main.B, 0.7)
         self.assertEqual(self.main.colourBSliderLabel.text(), "B: 0.7")
         self.main.draw.assert_called_once()
 
     def test_setColourASliderLabel(self):
         self.main.colourASlider.setValue(80)
+        self.main.setColourASliderLabel()
         self.assertEqual(self.main.A, 0.8)
         self.assertEqual(self.main.colourASliderLabel.text(), "A: 0.8")
         self.main.draw.assert_called_once()
 
     def test_setHorizontalSliderOrbitalLabel(self):
         self.main.horizontalSlider.setValue(5)
+        self.main.setHorizontalSliderLabel()
         self.assertIs(self.main.mode, 5)
         self.assertEqual(self.main.horizontalSliderLabel.text(), "Molecular Orbital: 6")
         self.main.draw.assert_called_once()
 
     def test_setHorizontalSliderEnergyLabel(self):
         self.main.horizontalSlider.setValue(6)
+        self.main.setHorizontalSliderLabel()
         self.assertIs(self.main.mode, 6)
         self.assertEqual(self.main.horizontalSliderEnergyLabel.text(), "Energy (eV): -11.7604")
         self.main.draw.assert_called_once()
+
+    def test_updateOrbColSliderLabel(self):
+        self.main.orbColSlider.setValue(55)
+        self.assertEqual(self.main.orbColSliderLabel.text(), "Columns: 55")
+
+    def test_updateOrbRowSliderLabel(self):
+        self.main.orbRowSlider.setValue(45)
+        self.assertEqual(self.main.orbRowSliderLabel.text(), "Rows: 45")
+
+    def test_updateScalerSliderLabel(self):
+        self.main.orbScalerSlider.setValue(12)
+        self.assertEqual(self.main.orbScalerSliderLabel.text(), "Scaler: 12")
+
+    def test_updateThetaSliderLabel(self):
+        self.main.thetaSlider.setValue(280)
+        self.assertEqual(self.main.thetaSliderLabel.text(), "Theta: 280")
+
+    def test_updatePhiSliderLabel(self):
+        self.main.phiSlider.setValue(130)
+        self.assertEqual(self.main.phiSliderLabel.text(), "Phi: 130")
+
+    def test_updateColourRSliderLabel(self):
+        self.main.colourRSlider.setValue(60)
+        self.assertEqual(self.main.colourRSliderLabel.text(), "R: 0.6")
+
+    def test_updateColourGSliderLabel(self):
+        self.main.colourGSlider.setValue(70)
+        self.assertEqual(self.main.colourGSliderLabel.text(), "G: 0.7")
+
+    def test_updateColourBSliderLabel(self):
+        self.main.colourBSlider.setValue(80)
+        self.assertEqual(self.main.colourBSliderLabel.text(), "B: 0.8")
+
+    def test_updateColourASliderLabel(self):
+        self.main.colourASlider.setValue(90)
+        self.assertEqual(self.main.colourASliderLabel.text(), "A: 0.9")
+
+    def test_updateHorizontalSliderOrbitalLabel(self):
+        self.main.horizontalSlider.setValue(10)
+        self.assertEqual(self.main.horizontalSliderLabel.text(), "Molecular Orbital: 11")
 
     def test_onTransSelection(self):
         QTest.mouseClick(self.main.openGLWidget, Qt.LeftButton, pos=QPoint(300, 300))

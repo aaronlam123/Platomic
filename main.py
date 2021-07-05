@@ -1,9 +1,8 @@
 import secrets
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtGui import QIcon, QColor
+from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
 from glview import *
-from glview3D import *
 from plot import *
 from input import *
 from subprocess import PIPE, run
@@ -130,36 +129,43 @@ class MainWindow(QtWidgets.QMainWindow):
         # atomColSlider
         self.atomCol = self.atomColSlider.value()
         # atomColSliderLabel
-        self.atomColSlider.valueChanged.connect(self.setAtomColSliderLabel)
+        self.atomColSlider.sliderReleased.connect(self.setAtomColSliderLabel)
+        self.atomColSlider.valueChanged.connect(self.updateAtomColSliderLabel)
 
         # atomRowSlider
         self.atomRow = self.atomRowSlider.value()
         # atomRowSliderLabel
-        self.atomRowSlider.valueChanged.connect(self.setAtomRowSliderLabel)
+        self.atomRowSlider.sliderReleased.connect(self.setAtomRowSliderLabel)
+        self.atomRowSlider.valueChanged.connect(self.updateAtomRowSliderLabel)
 
         # bondColSlider
         self.bondCol = self.bondColSlider.value()
         # bondColSliderLabel
-        self.bondColSlider.valueChanged.connect(self.setBondColSliderLabel)
+        self.bondColSlider.sliderReleased.connect(self.setBondColSliderLabel)
+        self.bondColSlider.valueChanged.connect(self.updateBondColSliderLabel)
 
         # bondRowSlider
         self.bondRow = self.bondRowSlider.value()
         # bondRowSliderLabel
-        self.bondRowSlider.valueChanged.connect(self.setBondRowSliderLabel)
+        self.bondRowSlider.sliderReleased.connect(self.setBondRowSliderLabel)
+        self.bondRowSlider.valueChanged.connect(self.updateBondRowSliderLabel)
 
         # brightnessSlider
         # brightnessSliderLabel
-        self.brightnessSlider.valueChanged.connect(self.setBrightnessSliderLabel)
+        self.brightnessSlider.sliderReleased.connect(self.setBrightnessSliderLabel)
+        self.brightnessSlider.valueChanged.connect(self.updateBrightnessSliderLabel)
 
         # bondRadiusSlider
         self.bondRadius = 0.15
         # bondRadiusSliderLabel
-        self.bondRadiusSlider.valueChanged.connect(self.setBondRadiusSliderLabel)
+        self.bondRadiusSlider.sliderReleased.connect(self.setBondRadiusSliderLabel)
+        self.bondRadiusSlider.valueChanged.connect(self.updateBondRadiusSliderLabel)
 
         # bondThresholdSlider
         self.bondThreshold = 4.0
         # bondThersholdSliderlabel
-        self.bondThresholdSlider.valueChanged.connect(self.setBondThresholdSliderLabel)
+        self.bondThresholdSlider.sliderReleased.connect(self.setBondThresholdSliderLabel)
+        self.bondThresholdSlider.valueChanged.connect(self.updateBondThresholdSliderLabel)
 
         # switchToAttrFileTabButton
         self.switchToAttrFileTabButton.clicked.connect(self.onSwitchToAttrFileTabButtonClicked)
@@ -186,44 +192,54 @@ class MainWindow(QtWidgets.QMainWindow):
         # orbColSlider
         self.orbCol = self.orbColSlider.value()
         # orbColSliderLabel
-        self.orbColSlider.valueChanged.connect(self.setOrbColSliderLabel)
+        self.orbColSlider.sliderReleased.connect(self.setOrbColSliderLabel)
+        self.orbColSlider.valueChanged.connect(self.updateOrbColSliderLabel)
 
         # orbRowSlider
         self.orbRow = self.orbRowSlider.value()
         # orbRowSliderLabel
-        self.orbRowSlider.valueChanged.connect(self.setOrbRowSliderLabel)
+        self.orbRowSlider.sliderReleased.connect(self.setOrbRowSliderLabel)
+        self.orbRowSlider.valueChanged.connect(self.updateOrbRowSliderLabel)
 
         # orbScalerSlider
         self.orbScaler = self.orbScalerSlider.value()
         # orbScalerSliderLabel
-        self.orbScalerSlider.valueChanged.connect(self.setScalerSliderLabel)
+        self.orbScalerSlider.sliderReleased.connect(self.setScalerSliderLabel)
+        self.orbScalerSlider.valueChanged.connect(self.updateScalerSliderLabel)
 
         # thetaSlider
         self.theta = self.thetaSlider.value()
         # thetaSliderLabel
-        self.thetaSlider.valueChanged.connect(self.setThetaSliderLabel)
+        self.thetaSlider.sliderReleased.connect(self.setThetaSliderLabel)
+        self.thetaSlider.valueChanged.connect(self.updateThetaSliderLabel)
 
         # phiSlider
         self.phi = math.radians(self.phiSlider.value())
         # phiSliderLabel
-        self.phiSlider.valueChanged.connect(self.setPhiSliderLabel)
+        self.phiSlider.sliderReleased.connect(self.setPhiSliderLabel)
+        self.phiSlider.valueChanged.connect(self.updatePhiSliderLabel)
 
         # colourXSlider
         self.R = 1.00
         self.G = 0.00
         self.B = 1.00
         self.A = 0.50
-        self.colourRSlider.valueChanged.connect(self.setColourRSliderLabel)
-        self.colourGSlider.valueChanged.connect(self.setColourGSliderLabel)
-        self.colourBSlider.valueChanged.connect(self.setColourBSliderLabel)
-        self.colourASlider.valueChanged.connect(self.setColourASliderLabel)
+        self.colourRSlider.sliderReleased.connect(self.setColourRSliderLabel)
+        self.colourGSlider.sliderReleased.connect(self.setColourGSliderLabel)
+        self.colourBSlider.sliderReleased.connect(self.setColourBSliderLabel)
+        self.colourASlider.sliderReleased.connect(self.setColourASliderLabel)
+        self.colourRSlider.valueChanged.connect(self.updateColourRSliderLabel)
+        self.colourGSlider.valueChanged.connect(self.updateColourGSliderLabel)
+        self.colourBSlider.valueChanged.connect(self.updateColourBSliderLabel)
+        self.colourASlider.valueChanged.connect(self.updateColourASliderLabel)
 
         # Initialise mainWindow
 
         # mainDisplayTab
         # horizontalSlider
         # horizontalSliderLabel
-        self.horizontalSlider.valueChanged.connect(self.setHorizontalSliderLabel)
+        self.horizontalSlider.sliderReleased.connect(self.setHorizontalSliderLabel)
+        self.horizontalSlider.valueChanged.connect(self.updateHorizontalSliderLabel)
 
         # openGLWidget and gammaGLWidget
         self.openGLWidget.opts['distance'] = 15
@@ -640,41 +656,61 @@ class MainWindow(QtWidgets.QMainWindow):
         # atomColSlider
         # atomColSliderLabel
 
-    def setAtomColSliderLabel(self, value):
+    def setAtomColSliderLabel(self):
+        value = self.atomColSlider.value()
         self.atomCol = value
         self.draw()
+
+    def updateAtomColSliderLabel(self):
+        value = self.atomColSlider.value()
         self.atomColSliderLabel.setText("Columns: " + str(value))
 
         # atomRowSlider
         # atomRowSliderLabel
 
-    def setAtomRowSliderLabel(self, value):
+    def setAtomRowSliderLabel(self):
+        value = self.atomRowSlider.value()
         self.atomRow = value
         self.draw()
+
+    def updateAtomRowSliderLabel(self):
+        value = self.atomRowSlider.value()
         self.atomRowSliderLabel.setText("Rows: " + str(value))
 
         # bondColSlider
         # bondColSliderLabel
 
-    def setBondColSliderLabel(self, value):
+    def setBondColSliderLabel(self):
+        value = self.bondColSlider.value()
         self.bondCol = value
         self.draw()
+
+    def updateBondColSliderLabel(self):
+        value = self.bondColSlider.value()
         self.bondColSliderLabel.setText("Columns: " + str(value))
 
         # bondRowSlider
         # bondRowSliderLabel
 
-    def setBondRowSliderLabel(self, value):
+    def setBondRowSliderLabel(self):
+        value = self.bondRowSlider.value()
         self.bondRow = value
         self.draw()
+
+    def updateBondRowSliderLabel(self):
+        value = self.bondRowSlider.value()
         self.bondRowSliderLabel.setText("Rows: " + str(value))
 
         # brightnessSlider
         # brightnessSliderLabel
 
-    def setBrightnessSliderLabel(self, value):
+    def setBrightnessSliderLabel(self):
+        value = self.brightnessSlider.value()
         self.backgroundColor = (value, value, value)
         self.openGLWidget.setBackgroundColor(self.backgroundColor)
+
+    def updateBrightnessSliderLabel(self):
+        value = self.brightnessSlider.value()
         self.brightnessSliderLabel.setText("Brightness: " + str(value))
 
         # checkBoxIndex
@@ -721,17 +757,25 @@ class MainWindow(QtWidgets.QMainWindow):
         # bondRadiusSlider
         # bondRadiusSliderLabel
 
-    def setBondRadiusSliderLabel(self, value):
+    def setBondRadiusSliderLabel(self):
+        value = self.bondRadiusSlider.value()
         self.bondRadius = value / 100
         self.draw()
+
+    def updateBondRadiusSliderLabel(self):
+        value = self.bondRadiusSlider.value()
         self.bondRadiusSliderLabel.setText("Radius: " + str(value / 100))
 
         # bondThresholdSlider
         # bondThresholdSliderlabel
 
-    def setBondThresholdSliderLabel(self, value):
+    def setBondThresholdSliderLabel(self):
+        value = self.bondThresholdSlider.value()
         self.bondThreshold = value / 10
         self.draw()
+
+    def updateBondThresholdSliderLabel(self):
+        value = self.bondThresholdSlider.value()
         self.bondThresholdSliderLabel.setText("Length: " + str(value / 10))
 
         # switchToAttrFileTabButton
@@ -781,63 +825,103 @@ class MainWindow(QtWidgets.QMainWindow):
         # orbColSlider
         # orbColSliderLabel
 
-    def setOrbColSliderLabel(self, value):
+    def setOrbColSliderLabel(self):
+        value = self.orbColSlider.value()
         self.orbCol = value
         self.draw()
+
+    def updateOrbColSliderLabel(self):
+        value = self.orbColSlider.value()
         self.orbColSliderLabel.setText("Columns: " + str(value))
 
         # orbRowSlider
         # orbRowSliderLabel
 
-    def setOrbRowSliderLabel(self, value):
+    def setOrbRowSliderLabel(self):
+        value = self.orbRowSlider.value()
         self.orbRow = value
         self.draw()
+
+    def updateOrbRowSliderLabel(self):
+        value = self.orbRowSlider.value()
         self.orbRowSliderLabel.setText("Rows: " + str(value))
 
         # orbScalerSlider
         # orbScalerSliderLabel
 
-    def setScalerSliderLabel(self, value):
+    def setScalerSliderLabel(self):
+        value = self.orbScalerSlider.value()
         self.orbScaler = value
         self.draw()
+
+    def updateScalerSliderLabel(self):
+        value = self.orbScalerSlider.value()
         self.orbScalerSliderLabel.setText("Scaler: " + str(value))
 
-    def setThetaSliderLabel(self, value):
+    def setThetaSliderLabel(self):
+        value = self.thetaSlider.value()
         self.theta = math.radians(value)
         self.draw()
+
+    def updateThetaSliderLabel(self):
+        value = self.thetaSlider.value()
         self.thetaSliderLabel.setText("Theta: " + str(value))
 
-    def setPhiSliderLabel(self, value):
+    def setPhiSliderLabel(self):
+        value = self.phiSlider.value()
         self.phi = math.radians(value)
         self.draw()
+
+    def updatePhiSliderLabel(self):
+        value = self.phiSlider.value()
         self.phiSliderLabel.setText("Phi: " + str(value))
 
-    def setColourRSliderLabel(self, value):
+    def setColourRSliderLabel(self):
+        value = self.colourRSlider.value()
         self.R = value / 100
         self.draw()
-        self.colourRSliderLabel.setText("R: " + str(value / 100))
 
-    def setColourGSliderLabel(self, value):
+    def setColourGSliderLabel(self):
+        value = self.colourGSlider.value()
         self.G = value / 100
         self.draw()
-        self.colourGSliderLabel.setText("G: " + str(value / 100))
 
-    def setColourBSliderLabel(self, value):
+    def setColourBSliderLabel(self):
+        value = self.colourBSlider.value()
         self.B = value / 100
         self.draw()
-        self.colourBSliderLabel.setText("B: " + str(value / 100))
 
-    def setColourASliderLabel(self, value):
+    def setColourASliderLabel(self):
+        value = self.colourASlider.value()
         self.A = value / 100
         self.draw()
+
+    def updateColourRSliderLabel(self):
+        value = self.colourRSlider.value()
+        self.colourRSliderLabel.setText("R: " + str(value / 100))
+
+    def updateColourGSliderLabel(self):
+        value = self.colourGSlider.value()
+        self.colourGSliderLabel.setText("G: " + str(value / 100))
+
+    def updateColourBSliderLabel(self):
+        value = self.colourBSlider.value()
+        self.colourBSliderLabel.setText("B: " + str(value / 100))
+
+    def updateColourASliderLabel(self):
+        value = self.colourASlider.value()
         self.colourASliderLabel.setText("A: " + str(value / 100))
 
     # mainDisplayTab
     # horizontalSlider
     # horizontalSliderLabel
-    def setHorizontalSliderLabel(self, value):
+    def setHorizontalSliderLabel(self):
+        value = self.horizontalSlider.value()
         self.mode = value
         self.draw()
+
+    def updateHorizontalSliderLabel(self):
+        value = self.horizontalSlider.value()
         self.horizontalSliderLabel.setText("Molecular Orbital: " + str(value + 1))
         self.horizontalSliderEnergyLabel.setText("Energy (eV): " + self.atoms[0].get_eigenenergy(value))
 
@@ -1001,6 +1085,6 @@ class MainWindow(QtWidgets.QMainWindow):
 
 if __name__ == '__main__':
     main = MainWindow(resolution.width)
-    #main = MainWindow(resolution.width, default_input)
+    # main = MainWindow(resolution.width, default_input)
     main.show()
     sys.exit(app.exec_())
