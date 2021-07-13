@@ -546,15 +546,15 @@ class TestMain(unittest.TestCase):
         self.assertEqual(self.main.bondRadiusSliderLabel.text(), "Radius: 0.3")
 
     def test_setBondThresholdSliderLabel(self):
-        self.main.bondThresholdSlider.setValue(50)
+        self.main.bondThresholdSlider.setValue(60)
         self.main.setBondThresholdSliderLabel()
-        self.assertEqual(self.main.bondThreshold, 5.0)
-        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 5.0")
+        self.assertEqual(self.main.bondThreshold, 6.0)
+        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 6.0")
         self.main.draw.assert_called_once()
 
     def test_updateBondThresholdSliderLabel(self):
-        self.main.bondThresholdSlider.setValue(60)
-        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 6.0")
+        self.main.bondThresholdSlider.setValue(70)
+        self.assertEqual(self.main.bondThresholdSliderLabel.text(), "Length: 7.0")
 
     def test_onSwitchToAttrFileTabButtonClicked(self):
         QTest.mouseClick(self.main.switchToAttrFileTabButton, Qt.LeftButton)

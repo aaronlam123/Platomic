@@ -163,7 +163,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.bondRadiusSlider.valueChanged.connect(self.updateBondRadiusSliderLabel)
 
         # bondThresholdSlider
-        self.bondThreshold = 4.0
+        self.bondThreshold = 5.0
         # bondThersholdSliderlabel
         self.bondThresholdSlider.sliderReleased.connect(self.setBondThresholdSliderLabel)
         self.bondThresholdSlider.valueChanged.connect(self.updateBondThresholdSliderLabel)

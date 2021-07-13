@@ -54,13 +54,13 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
         for j in range(len(atoms)):
             if atoms[i].get_symbol() in atoms[j].get_bonding():
                 continue
-            if atoms[i].get_bondCount() <= 0:
+            if atoms[j].get_bondCount() <= 0:
                 continue
             p2 = np.array(atoms[i].get_xyz())
             p1 = np.array(atoms[j].get_xyz())
             v = p2 - p1
             length = distance.euclidean(p1, p2)
-            if (length / atoms[i].get_radius()) > max_bond_length:
+            if (length / atoms[i].get_radius()) > max_bond_length or (length / atoms[j].get_radius()) > max_bond_length:
                 continue
             theta = np.arctan2(v[1], v[0])
             phi = np.arctan2(np.linalg.norm(v[:2]), v[2])
@@ -72,7 +72,7 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
             mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(0.6, 0.6, 0.6, 1), drawFaces=True)
             mi.setTransform(tr)
             widget.addItem(mi)
-            atoms[i].decrement_bond_count()
+            atoms[j].decrement_bond_count()
     for i in range(len(atoms)):
         atoms[i].reset_bonds()
 
