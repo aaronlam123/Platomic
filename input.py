@@ -108,7 +108,8 @@ def set_attr_from_file(file, atoms):  # sets attributes to atoms from attributes
                 attributes = line.split()
                 atoms[i].set_colour(pyqtgraph.glColor(QtGui.QColor(attributes[1])))
                 atoms[i].set_radius(attributes[2])
-                elem = 3
+                atoms[i].set_maxBonds(attributes[3])
+                elem = 4
                 while elem < (len(attributes)):
                     atoms[i].set_bonding(attributes[elem])
                     elem += 1

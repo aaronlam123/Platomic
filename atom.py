@@ -19,6 +19,8 @@ class Atom:
         self.__isSelectedCurrA = False
         self.__isSelectedCurrB = False
         self.__mi = None
+        self.__maxBonds = None
+        self.__bondCount = None
 
     # Getter functions
     def get_symbol(self):
@@ -66,6 +68,12 @@ class Atom:
     def get_index(self):
         return self.__index
 
+    def get_maxBonds(self):
+        return self.__maxBonds
+
+    def get_bondCount(self):
+        return self.__bondCount
+
     # Setter functions
     def set_colour(self, colour):
         self.__colour = colour
@@ -104,3 +112,14 @@ class Atom:
 
     def set_mi(self, mi):
         self.__mi = mi
+
+    def set_maxBonds(self, count):
+        self.__maxBonds = int(count)
+        self.__bondCount = int(count)
+
+    def reset_bonds(self):
+        self.__bondCount = self.__maxBonds
+
+    def decrement_bond_count(self):
+        self.__bondCount -= 1
+

@@ -54,6 +54,8 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
         for j in range(len(atoms)):
             if atoms[i].get_symbol() in atoms[j].get_bonding():
                 continue
+            if atoms[i].get_bondCount() <= 0:
+                continue
             p2 = np.array(atoms[i].get_xyz())
             p1 = np.array(atoms[j].get_xyz())
             v = p2 - p1
@@ -70,6 +72,9 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
             mi = gl.GLMeshItem(meshdata=md, smooth=True, color=(0.6, 0.6, 0.6, 1), drawFaces=True)
             mi.setTransform(tr)
             widget.addItem(mi)
+            atoms[i].decrement_bond_count()
+    for i in range(len(atoms)):
+        atoms[i].reset_bonds()
 
 
 def draw_advOrbWf(atoms, widget, value, row, cols, scaler, theta, phi, r, g, b, a):

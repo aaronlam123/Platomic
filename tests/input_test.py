@@ -64,9 +64,11 @@ class TestInput(unittest.TestCase):
         self.assertEqual(atoms[0].get_colour(), (0.0, 0.0, 0.0, 1.0))
         self.assertEqual(atoms[0].get_radius(), 0.67)
         self.assertEqual(atoms[0].get_bonding(), ['C', 'H'])
+        self.assertEqual(atoms[0].get_maxBonds(), 4)
         self.assertEqual(atoms[11].get_colour(), (1.0, 1.0, 1.0, 1.0))
         self.assertEqual(atoms[11].get_radius(), 0.53)
         self.assertEqual(atoms[11].get_bonding(), ['All'])
+        self.assertEqual(atoms[11].get_maxBonds(), 1)
 
     def test_eig_arr_from_wf(self):
         orb_dict, quantum_dict = create_orbital_dict("test_files/test_output.txt")
