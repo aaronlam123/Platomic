@@ -54,7 +54,7 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
         for j in range(len(atoms)):
             if atoms[i].get_symbol() in atoms[j].get_bonding():
                 continue
-            if atoms[j].get_bondCount() <= 0:
+            if atoms[i].get_bondCount() <= 0 or atoms[j].get_bondCount() <= 0:
                 continue
             p2 = np.array(atoms[i].get_xyz())
             p1 = np.array(atoms[j].get_xyz())
@@ -79,7 +79,10 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
 
 def draw_advOrbWf(atoms, widget, value, row, cols, scaler, theta, phi, r, g, b, a):
     for i in range(len(atoms)):
+        if atoms[i].get_skipOrbital() == "True":
+            continue
         for j in range(len(atoms[i].get_quantum_dict())):
+
             quantum_dict = atoms[i].get_quantum_dict()
             tr = pg.Transform3D()
             tr.rotate(theta * 180 / np.pi, 0, 0, 1)

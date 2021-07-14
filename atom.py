@@ -21,6 +21,7 @@ class Atom:
         self.__mi = None
         self.__maxBonds = None
         self.__bondCount = None
+        self.__skipOrbital = None
 
     # Getter functions
     def get_symbol(self):
@@ -74,6 +75,9 @@ class Atom:
     def get_bondCount(self):
         return self.__bondCount
 
+    def get_skipOrbital(self):
+        return self.__skipOrbital
+
     # Setter functions
     def set_colour(self, colour):
         self.__colour = colour
@@ -116,6 +120,9 @@ class Atom:
     def set_maxBonds(self, count):
         self.__maxBonds = int(count)
         self.__bondCount = int(count)
+
+    def set_skipOrbital(self, boolean):
+        self.__skipOrbital = boolean
 
     def reset_bonds(self):
         self.__bondCount = self.__maxBonds

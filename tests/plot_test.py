@@ -24,7 +24,7 @@ class TestPlot(unittest.TestCase):
     def test_draw_bonds(self):
         draw_bonds(self.main.atoms, self.main.openGLWidget, self.main.bondRow, self.main.bondCol, self.main.bondRadius,
                    self.main.bondThreshold)
-        self.assertIs(30, len(self.main.openGLWidget.itemsAt(region=(-121, -398, 1133, 771))))
+        self.assertIs(24, len(self.main.openGLWidget.itemsAt(region=(-121, -398, 1133, 771))))
 
     def test_draw_advOrbWf(self):
         draw_advOrbWf(self.main.atoms, self.main.openGLWidget, self.main.mode, self.main.orbRow, self.main.orbCol,
