@@ -54,7 +54,7 @@ def draw_bonds(atoms, widget, rows, cols, bond_radius, max_bond_length):
         for j in range(len(atoms)):
             if atoms[i].get_symbol() in atoms[j].get_bonding():
                 continue
-            if atoms[i].get_bondCount() <= 0 or atoms[j].get_bondCount() <= 0:
+            if atoms[i].get_bondCount() <= 0:
                 continue
             p2 = np.array(atoms[i].get_xyz())
             p1 = np.array(atoms[j].get_xyz())
