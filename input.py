@@ -171,7 +171,7 @@ def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms u
     return atoms
 
 
-def xyz_to_plato_input(xyz_file, session_id, input_file="config/default.in"):
+def xyz_to_plato_input(xyz_file, excess, session_id, input_file="config/default.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -193,6 +193,9 @@ def xyz_to_plato_input(xyz_file, session_id, input_file="config/default.in"):
     line_number = get_line_number(input_file, "Atoms") + 1
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
+
+    excess_line_count = get_line_number(input_file, "ElectronExcess")
+    contents.insert(excess_line_count, str(excess))
 
     with open(session_id + "_" + name + ".in", "w") as f:
         contents = "".join(contents)
@@ -217,7 +220,7 @@ def return_occupied_keys_list(selected):
     return occupied_keys
 
 
-def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_file="config/default_trans.in"):
+def trans_plato_input(xyz_file, selected, excess, gamma, step_size, session_id, input_file="config/default_trans.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
 
@@ -244,7 +247,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_fi
     if gamma == 0:
         actual_gamma = str(0.000001)
     terminal_line_count = get_line_number(input_file, "OpenBoundaryTerminals")
-    contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 -0.4281406\n")
+    contents.insert(terminal_line_count, str(occupied_keys) + " 1 -100.0 0\n")
     for i, key in enumerate(selected):
         if len(selected[key]) == 0:
             continue
@@ -261,6 +264,9 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_fi
     for line, content in enumerate(xyz_contents):
         contents.insert(line + line_number, content)
 
+    excess_line_count = get_line_number(input_file, "ElectronExcess")
+    contents.insert(excess_line_count, str(excess))
+
     with open(session_id + "_" + name + "_t_G_" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)
         f.writelines(contents)
@@ -268,7 +274,7 @@ def trans_plato_input(xyz_file, selected, gamma, step_size, session_id, input_fi
     return session_id + "_" + name + "_t_G_" + str(gamma)
 
 
-def curr_plato_input(xyz_file, selected, reg_a, reg_b, reference_pot, bias, gamma, step_size, session_id,
+def curr_plato_input(xyz_file, selected, reg_a, reg_b, excess, reference_pot, bias, gamma, step_size, session_id,
                      input_file="config/default_curr.in"):
     basename = ntpath.basename(xyz_file)
     name = os.path.splitext(basename)[0]
@@ -335,6 +341,9 @@ def curr_plato_input(xyz_file, selected, reg_a, reg_b, reference_pot, bias, gamm
     reg_b_str = str(len(reg_b)) + " " + " ".join(map(str, reg_b)) + "\n"
     contents.insert(current_line_count + i + 2, reg_a_str)
     contents.insert(current_line_count + i + 3, reg_b_str)
+
+    excess_line_count = get_line_number(input_file, "ElectronExcess")
+    contents.insert(excess_line_count, str(excess))
 
     with open(session_id + "_" + name + "_c_" + str(bias) + "V_G-" + str(gamma) + ".in", "w") as f:
         contents = "".join(contents)

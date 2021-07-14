@@ -201,6 +201,13 @@ class TestMain(unittest.TestCase):
         unittest.TestCase.assertRaises(self, expected_exception=FileNotFoundError)
         copy_file_from_main_config("config/default.in")
 
+    def test_onGenerateInputFileButtonClicked_and_excess_is_none(self):
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        self.main.excessLineEdit.setText("")
+        QTest.mouseClick(self.main.generateInputFileButton, Qt.LeftButton)
+        self.main.writeErrorToLogs.assert_called_with("Error: Missing input for excess electrons.")
+        unittest.TestCase.assertRaises(self, expected_exception=ValueError)
+
     def test_onGenerateTransInputFileButtonClicked_and_file_exists(self):
         self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
         self.main.currentSelectedA = ["4", "5", "6"]
@@ -220,6 +227,16 @@ class TestMain(unittest.TestCase):
         self.main.gammaLineEdit.setText("")
         QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
         self.main.writeErrorToLogs.assert_called_with("Error: Missing input for gamma.")
+        unittest.TestCase.assertRaises(self, expected_exception=ValueError)
+
+    def test_onGenerateTransInputFileButtonClicked_and_excess_is_none(self):
+        self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
+        self.main.currentSelectedA = ["4", "5", "6"]
+        self.main.currentSelectedB = ["7", "8", "9"]
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        self.main.excessLineEdit.setText("")
+        QTest.mouseClick(self.main.generateTransInputFileButton, Qt.LeftButton)
+        self.main.writeErrorToLogs.assert_called_with("Error: Missing input for excess electrons.")
         unittest.TestCase.assertRaises(self, expected_exception=ValueError)
 
     def test_onGenerateTransInputFileButtonClicked_with_nonexistent_default_input(self):
@@ -283,6 +300,16 @@ class TestMain(unittest.TestCase):
         self.main.referenceLineEdit.setText("")
         QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
         self.main.writeErrorToLogs.assert_called_with("Error: Missing input for reference potential.")
+        unittest.TestCase.assertRaises(self, expected_exception=ValueError)
+
+    def test_onGenerateCurrInputFileButtonClicked_and_excess_is_none(self):
+        self.main.transSelected = {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}
+        self.main.currentSelectedA = ["4", "5", "6"]
+        self.main.currentSelectedB = ["7", "8", "9"]
+        self.main.openFileLineEdit.setText("test_files/benzene.xyz")
+        self.main.excessLineEdit.setText("")
+        QTest.mouseClick(self.main.generateCurrInputFileButton, Qt.LeftButton)
+        self.main.writeErrorToLogs.assert_called_with("Error: Missing input for excess electrons.")
         unittest.TestCase.assertRaises(self, expected_exception=ValueError)
 
     def test_onGenerateCurrInputFileButtonClicked_with_nonexistent_default_input(self):
@@ -784,6 +811,17 @@ class TestMain(unittest.TestCase):
         self.main.onReferenceLineEditChanged()
         self.main.writeErrorToLogs.assert_called_with("Error: non-float 'abc' entered for reference potential.")
         self.assertEqual(self.main.referenceLineEdit.text(), "")
+
+    def test_onExcessLineEditChanged(self):
+        self.main.excessLineEdit.setText("-0.5")
+        self.main.onExcessLineEditChanged()
+        self.assertEqual(self.main.excessLineEdit.text(), "-0.5")
+
+    def test_onExcessLineEditChanged_invalid(self):
+        self.main.excessLineEdit.setText("abc")
+        self.main.onExcessLineEditChanged()
+        self.main.writeErrorToLogs.assert_called_with("Error: non-float 'abc' entered for excess electrons.")
+        self.assertEqual(self.main.excessLineEdit.text(), "")
 
     def test_onBiasLineEditChanged(self):
         self.main.biasLineEdit.setText("-0.423")

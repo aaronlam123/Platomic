@@ -265,7 +265,7 @@ class TestInput(unittest.TestCase):
 
     def test_trans_plato_input(self):
         filename = trans_plato_input("test_files/benzene.xyz",
-                                     {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                                     {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.0, 0.1,
                                      0.003, "6CHARS", input_file="config/default_trans.in")
         with open(filename + ".in") as generated:
             with open("test_files/correct_trans.in") as correct:
@@ -274,7 +274,7 @@ class TestInput(unittest.TestCase):
 
     def test_trans_plato_input_gamma_zero(self):
         filename = trans_plato_input("test_files/benzene.xyz",
-                                     {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.0,
+                                     {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.0, 0.0,
                                      0.003, "6CHARS", input_file="config/default_trans.in")
         with open(filename + ".in") as generated:
             with open("test_files/correct_trans_G-0.in") as correct:
@@ -284,24 +284,24 @@ class TestInput(unittest.TestCase):
     def test_trans_plato_input_assert_selection(self):
         with unittest.TestCase.assertRaises(self, AssertionError):
             trans_plato_input("test_files/benzene.xyz",
-                              {}, 0.1,
+                              {}, 0.0, 0.1,
                               0.003, "6CHARS", input_file="config/default_trans.in")
 
     def test_trans_plato_input_assert_input_file(self):
         with unittest.TestCase.assertRaises(self, FileNotFoundError):
             trans_plato_input("test_files/benzene.xyz",
-                              {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                              {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.0, 0.1,
                               0.003, "6CHARS", input_file="config/nonexistent.in")
 
     def test_trans_plato_input_assert_xyz(self):
         with unittest.TestCase.assertRaises(self, IOError):
             trans_plato_input("test_files/nonexistent.xyz",
-                              {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.1,
+                              {"1": ["1", "2", "3"], "2": ["4", "5"], "3": ["6"], "4": [], "5": ["9"]}, 0.0, 0.1,
                               0.003, "6CHARS", input_file="config/default_trans.in")
 
     def test_curr_plato_input(self):
         filename = curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
-                                    ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                                    ["7", "8", "9"], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                                     input_file="config/default_curr.in")
         with open(filename + ".in") as generated:
             with open("test_files/correct_curr.in") as correct:
@@ -311,37 +311,37 @@ class TestInput(unittest.TestCase):
     def test_curr_plato_input_assert_selection(self):
         with unittest.TestCase.assertRaises(self, AssertionError):
             curr_plato_input("test_files/benzene.xyz", {}, ["4", "5", "6"],
-                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             ["7", "8", "9"], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_regionA(self):
         with unittest.TestCase.assertRaises(self, ValueError):
             curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, [],
-                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             ["7", "8", "9"], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_regionB(self):
         with unittest.TestCase.assertRaises(self, ZeroDivisionError):
             curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
-                             [], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             [], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_input_file(self):
         with unittest.TestCase.assertRaises(self, FileNotFoundError):
             curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
-                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             ["7", "8", "9"], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/nonexistent.in")
 
     def test_curr_plato_input_assert_xyz(self):
         with unittest.TestCase.assertRaises(self, IOError):
             curr_plato_input("test_files/nonexistent.xyz", {"1": ["1", "2", "3"], "3": ["6"]}, ["4", "5", "6"],
-                             ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                             ["7", "8", "9"], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                              input_file="config/default_curr.in")
 
     def test_curr_plato_input_assert_occupied_keys(self):
         with unittest.TestCase.assertRaises(self, NotImplementedError):
             curr_plato_input("test_files/benzene.xyz", {"1": ["1", "2", "3"], "2": ["4"], "3": ["6"]}, ["4", "5", "6"],
-                                    ["7", "8", "9"], 0.0, 1, 0.1, 0.003, "6CHARS",
+                                    ["7", "8", "9"], 0.0, 0.0, 1, 0.1, 0.003, "6CHARS",
                                     input_file="config/default_curr.in")
 
     def test_find_current_in_file(self):

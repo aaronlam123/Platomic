@@ -86,6 +86,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.gammaStartLineEdit.editingFinished.connect(self.onGammaStartLineEditChanged)
         self.gammaEndLineEdit.editingFinished.connect(self.onGammaEndLineEditChanged)
         self.gammaStepsLineEdit.editingFinished.connect(self.onGammaStepsLineEditChanged)
+        self.excessLineEdit.editingFinished.connect(self.onExcessLineEditChanged)
         self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
         self.biasLineEdit.editingFinished.connect(self.onBiasLineEditChanged)
         self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
@@ -330,6 +331,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.currentSelectedA = []
         self.currentSelectedB = []
         self.executeButton.setEnabled(False)
+        self.id = secrets.token_hex(3)
 
     def onTransExecuteButtonClicked(self):
         self.writeToLogs("Starting transmission execution.", "green")
@@ -345,6 +347,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Graphs plotted successfully.\n", "green")
         self.executeTransButton.setEnabled(False)
+        self.id = secrets.token_hex(3)
 
     def onExecuteCurrButtonClicked(self, boolean, verbose=True):
         self.writeToLogs("Starting current execution.", "green")
@@ -355,6 +358,7 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeToLogs("Execution carried out successfully.", "green")
             self.writeToLogs("Current: " + current + " mA.\n", "green")
         self.executeCurrButton.setEnabled(False)
+        self.id = secrets.token_hex(3)
         return float(current)
 
     def onExecuteCurrGraphButtonClicked(self):
@@ -458,7 +462,12 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onGenerateInputFileButtonClicked(self):
         try:
-            filename = xyz_to_plato_input(self.openFileLineEdit.text(), self.id)
+            excess = float(self.excessLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs("Error: Missing input for excess electrons.")
+            return
+        try:
+            filename = xyz_to_plato_input(self.openFileLineEdit.text(), excess, self.id)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
         except FileNotFoundError:
@@ -478,7 +487,12 @@ class MainWindow(QtWidgets.QMainWindow):
                 self.writeErrorToLogs("Error: Missing input for gamma.")
                 return False
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, gamma, step_size, self.id)
+            excess = float(self.excessLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs("Error: Missing input for excess electrons.")
+            return
+        try:
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, excess, gamma, step_size, self.id)
             self.inputFilename = filename
             if verbose:
                 self.replaceTextEdit(filename)
@@ -511,8 +525,13 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("Error: Missing input for reference potential.")
             return
         try:
+            excess = float(self.excessLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs("Error: Missing input for excess electrons.")
+            return
+        try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
-                                        self.currentSelectedB, reference_pot, bias, self.gammaLineEdit.text(),
+                                        self.currentSelectedB, excess, reference_pot, bias, self.gammaLineEdit.text(),
                                         step_size, self.id)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
@@ -1022,6 +1041,12 @@ class MainWindow(QtWidgets.QMainWindow):
         else:
             self.gammaLineEdit.setText(string)
             self.gammaLineEdit2.setText(string)
+
+    def onExcessLineEditChanged(self):
+        string = self.excessLineEdit.text()
+        if not isfloat(string):
+            self.writeErrorToLogs("Error: non-float '" + string + "' entered for excess electrons.")
+            self.excessLineEdit.setText("")
 
     def onReferenceLineEditChanged(self):
         string = self.referenceLineEdit.text()
