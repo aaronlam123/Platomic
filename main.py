@@ -317,6 +317,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onExecuteButtonClicked(self):
         self.writeToLogs("Starting execution.", "green")
+        QApplication.processEvents()
         if not self.execute():
             return
         self.atoms = input_file_setup(self.inputFilename + ".out", "config/attributes.txt", self.inputFilename + ".wf")
@@ -335,6 +336,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onTransExecuteButtonClicked(self):
         self.writeToLogs("Starting transmission execution.", "green")
+        QApplication.processEvents()
         if not self.execute():
             return
         self.writeToLogs("Execution carried out successfully.", "green")
@@ -351,6 +353,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
     def onExecuteCurrButtonClicked(self, boolean, verbose=True):
         self.writeToLogs("Starting current execution.", "green")
+        QApplication.processEvents()
         if not self.execute(verbose):
             return
         current = find_current_in_file(self.inputFilename + ".out")
