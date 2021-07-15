@@ -20,12 +20,14 @@ def colours(terminal):
 
 def draw_atoms(atoms, widget, rows, cols):
     for i in range(len(atoms)):
-        md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius())
-        mi = gl.GLMeshItem(meshdata=md, smooth=True, color=atoms[i].get_colour())
-        mi.translate(*atoms[i].get_xyz())
-        widget.addItem(mi)
-        atoms[i].set_mi(mi)
-
+        if atoms[i].get_mi() is None:
+            md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius())
+            mi = gl.GLMeshItem(meshdata=md, smooth=True, color=atoms[i].get_colour())
+            mi.translate(*atoms[i].get_xyz())
+            widget.addItem(mi)
+            atoms[i].set_mi(mi)
+        else:
+            widget.addItem(atoms[i].get_mi())
 
 def draw_selection(atoms, widget, rows, cols):
     for i in range(len(atoms)):
