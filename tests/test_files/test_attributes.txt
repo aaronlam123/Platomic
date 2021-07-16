@@ -1,31 +1,31 @@
-Symbol      Colour          Radius      Bond Order      Skip Orbital        Bonding
-H           white           0.530       1               True               All
-He          cyan            0.310       2               False               All
-Li          violet          1.670       1               False               All
-Be          dark green      1.120       2               False               All
-B           beige           0.870       3               False               All
-C           black           0.670       4               False               C H
-N           blue            0.560       3               False               All
-O           red             0.480       2               False               All
-F           green           0.420       1               False               All
-Ne          cyan            0.380       0               False               All
+Symbol	Colour	Radius	Bond Order	Skip Orbital	Bonding
+H	white	0.530	1	True	All
+He	cyan	0.310	2	False	All
+Li	violet	1.670	1	False	All
+Be	dark green	1.120	2	False	All
+B	beige	0.850	3	False	All
+C	black	0.700	4	False	C H
+N	blue	0.650	3	False	All
+O	red	0.600	2	False	All
+F	green	0.500	1	False	All
+Ne	cyan	1.600	0	False	All
 
-Na          violet          1.900       1               False               All
-Mg          dark green      1.450       2               False               All
-Al          pink            1.180       3               False               All
-Si          pink            1.110       4               False               All
-P           orange          0.980       5               False               All
-S           yellow          0.880       6               False               All
-Cl          green           0.790       1               False               All
-Ar          cyan            0.710       0               False               All
+Na	violet	1.900	1	False	All
+Mg	dark green	1.450	2	False	All
+Al	pink	1.180	3	False	All
+Si	pink	1.110	4	False	All
+P	orange	0.980	5	False	All
+S	yellow	0.880	6	False	All
+Cl	green	0.790	1	False	All
+Ar	cyan	0.710	0	False	All
 
-K           violet          2.430       1               False               All
-Ca          dark green      1.940       2               False               All
-Sc          pink            1.840       3               False               All
-Ti          grey            1.760       4               False               All
-V           pink            1.710       5               False               All
-Cr          pink            1.660       6               False               All
-Mn          pink            1.610       7               False               All
-Fe          dark orange     1.560       3               False               All
+K	violet	2.430	1	False	All
+Ca	dark green	1.940	2	False	All
+Sc	pink	1.840	3	False	All
+Ti	grey	1.760	4	False	All
+V	pink	1.710	5	False	All
+Cr	pink	1.660	6	False	All
+Mn	pink	1.610	7	False	All
+Fe	dark orange	1.560	3	False	All
 
-Au          gold            1.740       8              True               All
+Au	gold	1.740	8	True	All
