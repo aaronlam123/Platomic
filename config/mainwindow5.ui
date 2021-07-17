@@ -655,7 +655,7 @@ p, li { white-space: pre-wrap; }
             <item row="34" column="3">
              <widget class="QLabel" name="label_58">
               <property name="toolTip">
-               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bias values are split among the two terminals, +0.5 for region A and -0.5 for region B.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;Bias values are split among the two terminals, -0.5 for region A and +0.5 for region B.&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
               </property>
               <property name="text">
                <string>(?)</string>
@@ -815,7 +815,7 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>259</width>
+             <width>340</width>
              <height>833</height>
             </rect>
            </property>
@@ -1176,8 +1176,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>273</width>
-             <height>647</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_9">
@@ -1635,8 +1635,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>275</width>
-             <height>610</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
@@ -2232,7 +2232,7 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>340</width>
+             <width>249</width>
              <height>419</height>
             </rect>
            </property>

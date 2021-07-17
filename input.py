@@ -316,12 +316,12 @@ def curr_plato_input(xyz_file, selected, reg_a, reg_b, excess, reference_pot, bi
         if key in return_occupied_keys_list(selected):
             if region_a:
                 contents.insert(terminal_line_count + i + 1,
-                                str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
+                                str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
                                     len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
                 region_a = False
             else:
                 contents.insert(terminal_line_count + i + 1,
-                                str(bias * -0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
+                                str(bias * 0.5 / RYDBERG) + " " + str(gamma) + " 0.001 0 " + str(
                                     len(selected[key])) + " " + ' '.join(selected[key]) + "\n")
         else:
             contents.insert(terminal_line_count + i + 1,
