@@ -534,7 +534,7 @@ p, li { white-space: pre-wrap; }
             <item row="35" column="2">
              <widget class="QLineEdit" name="stepsLineEdit">
               <property name="text">
-               <string>5</string>
+               <string>6</string>
               </property>
              </widget>
             </item>
@@ -837,7 +837,7 @@ p, li { white-space: pre-wrap; }
             <item row="34" column="0">
              <widget class="QLineEdit" name="gammaStepsLineEdit">
               <property name="text">
-               <string>10</string>
+               <string>11</string>
               </property>
              </widget>
             </item>
@@ -2232,8 +2232,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>249</width>
-             <height>419</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_15">
@@ -2708,8 +2708,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>230</width>
-             <height>187</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_11">
