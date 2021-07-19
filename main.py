@@ -828,10 +828,10 @@ class MainWindow(QtWidgets.QMainWindow):
                           self.theta, self.phi, self.R, self.G, self.B, self.A)
 
         if self.advOrbHorzCheckBox.isChecked():
-            draw_advOrbHorz(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.R, self.G, self.B, self.A)
+            draw_advOrbHorz(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.theta, self.phi, self.R, self.G, self.B, self.A)
 
         if self.advOrbVertCheckBox.isChecked():
-            draw_advOrbVert(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.R, self.G, self.B, self.A)
+            draw_advOrbVert(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.theta, self.phi, self.R, self.G, self.B, self.A)
 
         if self.sphOrbWfCheckBox.isChecked():
             draw_sphOrbWf(self.atoms, self.openGLWidget, self.mode, self.orbRow, self.orbCol, self.orbScaler, self.R,

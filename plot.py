@@ -27,6 +27,8 @@ def draw_atoms(atoms, widget, rows, cols):
             widget.addItem(mi)
             atoms[i].set_mi(mi)
         else:
+            md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius())
+            atoms[i].get_mi().setMeshData(meshdata=md)
             widget.addItem(atoms[i].get_mi())
 
 def draw_selection(atoms, widget, rows, cols):
@@ -98,11 +100,14 @@ def draw_advOrbWf(atoms, widget, value, row, cols, scaler, theta, phi, r, g, b, 
             widget.addItem(mi)
 
 
-def draw_advOrbHorz(atoms, widget, value, scaler, r, g, b, a):
+def draw_advOrbHorz(atoms, widget, value, scaler, theta_, phi_, r, g, b, a):
     phi, theta = np.mgrid[0:np.pi:30j, 0:2 * np.pi:30j]
     for i in range(len(atoms)):
         for j in range(len(atoms[i].get_quantum_dict())):
             quantum_dict = atoms[i].get_quantum_dict()
+            tr = pg.Transform3D()
+            tr.rotate(theta_ * 180 / np.pi, 0, 0, 1)
+            tr.rotate(phi_ * 180 / np.pi, 0, 1, 0)
             rad = scaler * \
                   atoms[i].get_eigenvector(value)[j] * \
                   np.abs(sp.sph_harm(quantum_dict[j][2], quantum_dict[j][1], theta, phi).real)
@@ -112,16 +117,20 @@ def draw_advOrbHorz(atoms, widget, value, scaler, r, g, b, a):
             vertexes = np.dstack((x.flatten(), y.flatten()))
             vertexes = np.dstack((vertexes, z.flatten()))
             mi = gl.GLMeshItem(vertexes=vertexes, color=(r, g, b, a))
+            mi.setTransform(tr)
             mi.translate(*atoms[i].get_xyz())
             widget.addItem(mi)
 
 
-def draw_advOrbVert(atoms, widget, value, scaler, r, g, b, a):
+def draw_advOrbVert(atoms, widget, value, scaler, theta_, phi_, r, g, b, a):
     theta, phi = np.mgrid[0:2 * np.pi:30j,
                  0:np.pi:30j]  # swapping theta and phi here changes plotting to vert wireframe
     for i in range(len(atoms)):
         for j in range(len(atoms[i].get_quantum_dict())):
             quantum_dict = atoms[i].get_quantum_dict()
+            tr = pg.Transform3D()
+            tr.rotate(theta_ * 180 / np.pi, 0, 0, 1)
+            tr.rotate(phi_ * 180 / np.pi, 0, 1, 0)
             rad = scaler * \
                   atoms[i].get_eigenvector(value)[j] * \
                   np.abs(sp.sph_harm(quantum_dict[j][2], quantum_dict[j][1], theta, phi).real)
@@ -131,6 +140,7 @@ def draw_advOrbVert(atoms, widget, value, scaler, r, g, b, a):
             vertexes = np.dstack((x.flatten(), y.flatten()))
             vertexes = np.dstack((vertexes, z.flatten()))
             mi = gl.GLMeshItem(vertexes=vertexes, color=(r, g, b, a))
+            mi.setTransform(tr)
             mi.translate(*atoms[i].get_xyz())
             widget.addItem(mi)
 
