@@ -9,15 +9,14 @@ import os
 RYDBERG = 13.605685
 
 
-def lines_that_contain(string, f):  # returns the line which contains string in f
+def lines_that_contain(string, f):
     return [line for line in f if string in line]
 
 
-def lines_that_start_with(string, f):  # returns the line which contains string in f
+def lines_that_start_with(string, f):
     return [line for line in f if string in line.split()[:1]]
 
 
-# returns last two char which contains string in f
 def get_last_two_chars(string, file):
     array = []
     with open(file, "r") as f:
@@ -26,7 +25,6 @@ def get_last_two_chars(string, file):
     return array
 
 
-# returns lines between start and end strings
 def get_lines_between(file, start, end, end_opt="second end", skip_line=True, pop_twice=False, skip=0):
     array = []
     copy = False
@@ -71,7 +69,7 @@ def correct_quantum(quantum):
     return quantum_array
 
 
-def create_orbital_dict(file):  # returns orbitals for each element
+def create_orbital_dict(file):
     orb_dict = {}
     quantum_dict = {}
     elements = get_last_two_chars("Chemical symbol           :", file)
@@ -90,7 +88,7 @@ def create_orbital_dict(file):  # returns orbitals for each element
     return orb_dict, quantum_dict
 
 
-def create_all_atoms(file):  # creates orbitals for each element using .out
+def create_all_atoms(file):
     array = []
     xyz = get_lines_between(file, "Atomic positions (a0):", "Total forces (Ry/a0):")
     for i in range(len(xyz)):
@@ -100,7 +98,7 @@ def create_all_atoms(file):  # creates orbitals for each element using .out
     return array
 
 
-def set_attr_from_file(file, atoms):  # sets attributes to atoms from attributes.txt (skips first line)
+def set_attr_from_file(file, atoms):
     for i in range(len(atoms)):
         with open(file, "r") as f:
             next(f)
@@ -116,7 +114,7 @@ def set_attr_from_file(file, atoms):  # sets attributes to atoms from attributes
                     elem += 1
 
 
-def total_orbitals(atoms, orb_dict):  # finds total number of orbitals in system
+def total_orbitals(atoms, orb_dict):
     total = 0
     for i in range(len(atoms)):
         count = orb_dict.get(atoms[i].get_symbol(), None)
@@ -124,7 +122,7 @@ def total_orbitals(atoms, orb_dict):  # finds total number of orbitals in system
     return total
 
 
-def eig_arr_from_wf(file, atoms, orb_dict):  # returns 2D array with all eigenvalues split by mode
+def eig_arr_from_wf(file, atoms, orb_dict):
     all_modes = []
     a_mode = []
     energies = []
@@ -146,7 +144,6 @@ def eig_arr_from_wf(file, atoms, orb_dict):  # returns 2D array with all eigenva
     return all_modes, energies
 
 
-# sets 2D array of eigenvalues split by mode per atom, sets orbital count and quantum dict #
 def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies):
     for i in range(len(all_modes)):
         orbital = 0
@@ -162,7 +159,7 @@ def set_eig_to_atoms(atoms, orb_dict, quantum_dict, all_modes, energies):
             atoms[j].set_eigenenergies(energies)
 
 
-def input_file_setup(out_file, attributes_file, wf_file):  # Initialises atoms using .out, attributes.txt and .wf
+def input_file_setup(out_file, attributes_file, wf_file):
     orb_dict, quantum_dict = create_orbital_dict(out_file)
     atoms = create_all_atoms(out_file)
     set_attr_from_file(attributes_file, atoms)
@@ -388,7 +385,7 @@ def isnatnumber(string):
     return True
 
 
-def process_current_csv(directory_name):
+def process_current_out(directory_name):
     files = os.listdir(directory_name)
     files.sort()
     bias_v = files[-1].split("_")[-2]

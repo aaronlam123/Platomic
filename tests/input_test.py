@@ -368,7 +368,7 @@ class TestInput(unittest.TestCase):
         self.assertFalse(isnatnumber("-2"))
 
     def test_process_current_csv(self):
-        bias_v, bias, currents = process_current_csv("test_files/test_out_dir")
+        bias_v, bias, currents = process_current_out("test_files/test_out_dir")
         self.assertEqual(bias_v, "1.0V")
         np.testing.assert_array_equal(bias, [0., 0.25, 0.5, 0.75, 1.])
         np.testing.assert_array_equal(currents,

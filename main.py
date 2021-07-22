@@ -645,7 +645,7 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.openDirLineEdit.text() == "":
             self.writeErrorToLogs("Error: no directory selected.")
             return
-        bias_v, bias, currents = process_current_csv(self.openDirLineEdit.text())
+        bias_v, bias, currents = process_current_out(self.openDirLineEdit.text())
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
         current_graph(self.graphWidget2, bias, currents)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
