@@ -352,7 +352,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.graphComboBox.addItems(headers_mapped)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
-        self.writeToLogs("Graph offset set to " + str(self.offset) + ".\n", "green")
+        self.writeToLogs("Graph offset set to " + str(self.offset) + ".", "green")
         self.writeToLogs("Graphs plotted successfully.\n", "green")
         self.executeTransButton.setEnabled(False)
         self.id = secrets.token_hex(3)
@@ -652,7 +652,7 @@ class MainWindow(QtWidgets.QMainWindow):
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
         self.offset = find_chemical_potential(self.openOutFileLineEdit2.text())
         self.offsetLineEdit.setText(str(self.offset))
-        self.writeToLogs("Graph offset set to " + str(self.offset) + ".\n", "green")
+        self.writeToLogs("Graph offset set to " + str(self.offset) + ".", "green")
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
