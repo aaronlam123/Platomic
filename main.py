@@ -651,6 +651,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.csvFilename = self.openCsvFileLineEdit.text()
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
         self.offset = find_chemical_potential(self.openOutFileLineEdit2.text())
+        self.offsetLineEdit.setText(str(self.offset))
         self.writeToLogs("Graph offset set to " + str(self.offset) + ".\n", "green")
         self.graphKeys = headers
         self.graphComboBox.clear()
