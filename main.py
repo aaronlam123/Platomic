@@ -344,7 +344,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
         self.csvFilename = self.inputFilename + "_trans.csv"
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
-        self.offset = self.inputFilename + ".out"
+        self.offset = find_chemical_potential(self.inputFilename + ".out")
         self.offsetLineEdit.setText(str(self.offset))
         self.graphKeys = headers
         self.graphComboBox.clear()

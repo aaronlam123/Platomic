@@ -446,7 +446,9 @@ def find_chemical_potential(file):
     while lines[i] != "Terminal chemical potentials:":
         chemical_potentials.append(float(lines[i].split()[-1]))
         i -= 1
-    return sum(chemical_potentials) / len(chemical_potentials)
+    in_rydberg = sum(chemical_potentials) / len(chemical_potentials)
+    return in_rydberg * RYDBERG
+
 
 if __name__ == '__main__':
     print(find_chemical_potential("c46da3_relax_t_G_0.1.out"))

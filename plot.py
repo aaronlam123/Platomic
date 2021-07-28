@@ -8,6 +8,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from glaxis import GLAxis
 
+RYDBERG = 13.605685
+
 
 def colours(terminal):
     array = ['red', 'cyan', 'orange', 'blue', 'gray']
@@ -184,16 +186,16 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
 def transmission_graph(widget, input_file, index, offset=0):
     widget.clear()
     widget.setLabel("left", text="Transmission")
-    widget.setLabel("bottom", text="Energy", units="Ry")
+    widget.setLabel("bottom", text="Energy", units="eV")
     widget.addItem(pg.InfiniteLine(pos=(0, 0)))
     df = pd.read_csv(input_file, sep=",", quoting=3)
     if index == "All":
         for i in list(df):
             if i == "E(Ry)":
                 continue
-            widget.plot(df["E(Ry)"] - offset, df[i])
+            widget.plot(df["E(Ry)"] / RYDBERG - offset, df[i])
     else:
-        widget.plot(df["E(Ry)"] - offset, df[index])
+        widget.plot(df["E(Ry)"] / RYDBERG - offset, df[index])
 
 
 def current_graph(widget, x, y):
@@ -201,7 +203,6 @@ def current_graph(widget, x, y):
     widget.setLabel("left", text="Current", units="mA")
     widget.setLabel("bottom", text="Bias", units="V")
     widget.plot(x, y)
-    # pen=pg.mkPen(width=3)
 
 
 def energy_gamma_trans_graph(widget, x, y, z):

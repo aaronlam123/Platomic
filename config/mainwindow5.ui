@@ -246,7 +246,7 @@ p, li { white-space: pre-wrap; }
        </size>
       </property>
       <property name="currentIndex">
-       <number>5</number>
+       <number>0</number>
       </property>
       <property name="iconSize">
        <size>
@@ -825,7 +825,7 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>259</width>
+             <width>340</width>
              <height>833</height>
             </rect>
            </property>
@@ -1186,8 +1186,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>273</width>
-             <height>647</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_9">
@@ -1645,8 +1645,8 @@ p, li { white-space: pre-wrap; }
             <rect>
              <x>0</x>
              <y>0</y>
-             <width>275</width>
-             <height>610</height>
+             <width>357</width>
+             <height>832</height>
             </rect>
            </property>
            <layout class="QGridLayout" name="gridLayout_13">
@@ -2809,7 +2809,7 @@ p, li { white-space: pre-wrap; }
             <item row="4" column="0">
              <widget class="QLabel" name="label_64">
               <property name="text">
-               <string>Set chemical potential offset:</string>
+               <string>Set chemical potential offset (eV):</string>
               </property>
              </widget>
             </item>
