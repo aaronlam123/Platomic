@@ -77,6 +77,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # openFileButton
         self.openFileButton.clicked.connect(self.onOpenFileButtonClicked)
         self.openOutFileButton.clicked.connect(self.onOpenOutFileButtonClicked)
+        self.openOutFileButton2.clicked.connect(self.onOpenOutFileButtonClicked2)
         self.openWfFileButton.clicked.connect(self.onOpenWfFileButtonClicked)
         self.openCsvFileButton.clicked.connect(self.onOpenCsvFileButtonClicked)
         self.openDirButton.clicked.connect(self.onOpenDirButtonClicked)
@@ -588,6 +589,13 @@ class MainWindow(QtWidgets.QMainWindow):
         if filename:
             self.openOutFileLineEdit.setText(filename)
 
+    def onOpenOutFileButtonClicked2(self):
+        filename, _ = QtWidgets.QFileDialog.getOpenFileName(parent=self, caption='Open output file',
+                                                            filter="Output File (*.out);;All Files (*.*)")
+
+        if filename:
+            self.openOutFileLineEdit2.setText(filename)
+
     def onOpenWfFileButtonClicked(self):
         filename, _ = QtWidgets.QFileDialog.getOpenFileName(parent=self, caption='Open wavefunction file',
                                                             filter="Wavefunction File (*.wf);;All Files (*.*)")
@@ -637,8 +645,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.openCsvFileLineEdit.text() == "":
             self.writeErrorToLogs("Error: no Plato generated csv file (.csv) selected.")
             return
+        if self.openOutFileLineEdit2.text() == "":
+            self.writeErrorToLogs("Error: no Plato output file (.out) selected.")
+            return
         self.csvFilename = self.openCsvFileLineEdit.text()
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
+        self.offset = find_chemical_potential(self.openOutFileLineEdit2.text())
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
