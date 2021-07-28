@@ -181,22 +181,19 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
             widget.addItem(mi)
 
 
-def transmission_graph(widget, input_file, index):
+def transmission_graph(widget, input_file, index, offset=0):
     widget.clear()
     widget.setLabel("left", text="Transmission")
     widget.setLabel("bottom", text="Energy", units="Ry")
+    widget.addItem(pg.InfiniteLine(pos=(0, 0)))
     df = pd.read_csv(input_file, sep=",", quoting=3)
     if index == "All":
         for i in list(df):
             if i == "E(Ry)":
                 continue
-            widget.plot(df["E(Ry)"], df[i])
+            widget.plot(df["E(Ry)"] - offset, df[i])
     else:
-        widget.plot(df["E(Ry)"], df[index])
-
-    #eigenenergies = ['-22.8993', '-19.1861', '-19.1860', '-14.4556', '-14.4556', '-12.3487', '-11.7604', '-11.2757', '-10.9047', '-10.9046', '-9.3503', '-9.3502', '-3.3950', '-1.2600', '-1.2599', '2.9095', '2.9095', '4.6567', '4.9440', '5.4748', '5.4748', '7.4076', '7.4077', '7.9895', '11.2405', '11.2406', '11.3210', '11.3211', '13.0015', '13.7314']
-    #for i in eigenenergies:
-        #widget.addItem(pg.InfiniteLine(pos=(float(i) / 13.605, 0)))
+        widget.plot(df["E(Ry)"] - offset, df[index])
 
 
 def current_graph(widget, x, y):

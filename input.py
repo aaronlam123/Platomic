@@ -437,3 +437,16 @@ def process_energy_gamma_trans_csv(directory_name, session_id):
         transmission = pyqtgraph.np.append(transmission, column, axis=1)
 
     return energy, gamma, transmission
+
+
+def find_chemical_potential(file):
+    chemical_potentials = []
+    lines = get_lines_between(file, "Terminal chemical potentials:", "Primitive translation vectors (a0):", pop_twice=True)
+    i = len(lines) - 1
+    while lines[i] != "Terminal chemical potentials:":
+        chemical_potentials.append(float(lines[i].split()[-1]))
+        i -= 1
+    return sum(chemical_potentials) / len(chemical_potentials)
+
+if __name__ == '__main__':
+    print(find_chemical_potential("c46da3_relax_t_G_0.1.out"))

@@ -90,6 +90,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.referenceLineEdit.editingFinished.connect(self.onReferenceLineEditChanged)
         self.biasLineEdit.editingFinished.connect(self.onBiasLineEditChanged)
         self.stepsLineEdit.editingFinished.connect(self.onStepsLineEditChanged)
+        self.offsetLineEdit.editingFinished.connect(self.onOffsetLineEditChanged)
 
         # switchToInputFileTabButton
         self.switchToInputFileTabButton.clicked.connect(self.onSwitchToInputFileTabButtonClicked)
@@ -126,6 +127,7 @@ class MainWindow(QtWidgets.QMainWindow):
         self.terminalComboBox.currentIndexChanged.connect(self.setTerminalComboBox)
         self.terminalComboBox.addItems(["Terminal 1", "Terminal 2", "Terminal 3", "Terminal 4", "Terminal 5"])
         self.graphKeys = None
+        self.offset = 0
 
         # atomSettingsTab
         # atomColSlider
@@ -342,11 +344,14 @@ class MainWindow(QtWidgets.QMainWindow):
         self.writeToLogs("Execution carried out successfully.", "green")
         self.csvFilename = self.inputFilename + "_trans.csv"
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
+        self.offset = self.inputFilename + ".out"
+        self.offsetLineEdit.setText(str(self.offset))
         self.graphKeys = headers
         self.graphComboBox.clear()
         self.graphComboBox.addItems(headers_mapped)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab))
         self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
+        self.writeToLogs("Graph offset set to " + str(self.offset) + ".\n", "green")
         self.writeToLogs("Graphs plotted successfully.\n", "green")
         self.executeTransButton.setEnabled(False)
         self.id = secrets.token_hex(3)
@@ -670,7 +675,7 @@ class MainWindow(QtWidgets.QMainWindow):
         # graphSettingsTab
 
     def setGraphComboBox(self):
-        transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()])
+        transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()], self.offset)
 
     def setTerminalComboBox(self):
         self.openGLWidget.terminal = self.terminalComboBox.currentIndex() + 1
@@ -1086,6 +1091,15 @@ class MainWindow(QtWidgets.QMainWindow):
         if not isnatnumber(string):
             self.writeErrorToLogs("Error: non-natural number '" + string + "' entered for gamma steps value.")
             self.gammaStepsLineEdit.setText("")
+
+    def onOffsetLineEditChanged(self):
+        string = self.offsetLineEdit.text()
+        if not isfloat(string):
+            self.writeErrorToLogs("Error: non-float '" + string + "' entered for offset value.")
+            self.offsetLineEdit.setText("0")
+        else:
+            self.offset = float(self.offsetLineEdit.text())
+            self.setGraphComboBox()
 
     # AttributeFileTab
     # attributeTextEdit
