@@ -187,7 +187,7 @@ def transmission_graph(widget, input_file, index, offset=0):
     widget.clear()
     widget.setLabel("left", text="Transmission")
     widget.setLabel("bottom", text="Energy", units="eV")
-    widget.addItem(pg.InfiniteLine(pos=(0, 0)))
+    widget.addItem(pg.InfiniteLine(pos=(0, 0), pen='r'))
     df = pd.read_csv(input_file, sep=",", quoting=3)
     if index == "All":
         for i in list(df):
