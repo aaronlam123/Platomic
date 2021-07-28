@@ -193,9 +193,9 @@ def transmission_graph(widget, input_file, index, offset=0):
         for i in list(df):
             if i == "E(Ry)":
                 continue
-            widget.plot(df["E(Ry)"] / RYDBERG - offset, df[i])
+            widget.plot(df["E(Ry)"] * RYDBERG - offset, df[i])
     else:
-        widget.plot(df["E(Ry)"] / RYDBERG - offset, df[index])
+        widget.plot(df["E(Ry)"] * RYDBERG - offset, df[index])
 
 
 def current_graph(widget, x, y):
