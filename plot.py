@@ -1,3 +1,4 @@
+from PyQt5 import QtGui
 from scipy.spatial import distance
 import pyqtgraph.opengl as gl
 import pyqtgraph as pg
@@ -185,24 +186,52 @@ def draw_advOrbFaces(atoms, widget, value, row, cols, scaler, theta, phi, r, g, 
 
 def transmission_graph(widget, input_file, index, offset=0):
     widget.clear()
-    widget.setLabel("left", text="Transmission")
-    widget.setLabel("bottom", text="Energy", units="eV")
-    widget.addItem(pg.InfiniteLine(pos=(0, 0), pen='r'))
+    widget.setBackground('w')
+    labelStyle = {'color': '#FFF', 'font-size': '12pt'}
+    widget.setLabel("left", text="Transmission", **labelStyle)
+    widget.setLabel("bottom", text="Energy", units="eV", **labelStyle)
+
+    font = QtGui.QFont()
+    font.setPixelSize(14)
+    pen = pg.mkPen(width=3, color='k')
+    widget.getAxis("bottom").setStyle(tickFont=font)
+    widget.getAxis("left").setStyle(tickFont=font)
+    widget.getAxis("bottom").setTextPen(pen)
+    widget.getAxis("left").setTextPen(pen)
+    widget.getAxis("bottom").setPen(pen)
+    widget.getAxis("left").setPen(pen)
+
+    widget.addItem(pg.InfiniteLine(pos=(0, 0), pen=pg.mkPen(width=3, color='r')))
+    widget.getViewBox().suggestPadding = lambda *_: 0.0
     df = pd.read_csv(input_file, sep=",", quoting=3)
     if index == "All":
         for i in list(df):
             if i == "E(Ry)":
                 continue
-            widget.plot(df["E(Ry)"] * RYDBERG - offset, df[i])
+            widget.plot(df["E(Ry)"] * RYDBERG - offset, df[i], pen=pen)
     else:
-        widget.plot(df["E(Ry)"] * RYDBERG - offset, df[index])
+        widget.plot(df["E(Ry)"] * RYDBERG - offset, df[index], pen=pen)
 
 
 def current_graph(widget, x, y):
     widget.clear()
-    widget.setLabel("left", text="Current", units="mA")
-    widget.setLabel("bottom", text="Bias", units="V")
-    widget.plot(x, y)
+    widget.setBackground('w')
+    labelStyle = {'color': '#FFF', 'font-size': '12pt'}
+    widget.setLabel("left", text="Current", units="mA", **labelStyle)
+    widget.setLabel("bottom", text="Bias", units="V", **labelStyle)
+
+    font = QtGui.QFont()
+    font.setPixelSize(14)
+    pen = pg.mkPen(width=3, color='k')
+    widget.getAxis("bottom").setStyle(tickFont=font)
+    widget.getAxis("left").setStyle(tickFont=font)
+    widget.getAxis("bottom").setTextPen(pen)
+    widget.getAxis("left").setTextPen(pen)
+    widget.getAxis("bottom").setPen(pen)
+    widget.getAxis("left").setPen(pen)
+
+    widget.getViewBox().suggestPadding = lambda *_: 0.0
+    widget.plot(x, y, pen=pen)
 
 
 def energy_gamma_trans_graph(widget, x, y, z):
