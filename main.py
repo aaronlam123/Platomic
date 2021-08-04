@@ -1,4 +1,6 @@
 import secrets
+import subprocess
+
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
@@ -13,8 +15,6 @@ import numpy as np
 import sys
 import pyautogui
 import traceback
-
-os.environ["PYTHONUNBUFFERED"] = "1"
 
 np.seterr(divide='ignore', invalid='ignore')
 resolution = pyautogui.size()
@@ -310,14 +310,23 @@ class MainWindow(QtWidgets.QMainWindow):
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
             return False
-        result = run(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True)
-        if result.returncode and verbose:
-            self.writeToLogs(result.stderr, "red")
-            if result.stdout and verbose:
-                self.writeToLogs(result.stdout, "red")
-            return False
-        if result.stdout and verbose:
-            self.writeToLogs(result.stdout, "black")
+        result = subprocess.Popen(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True, encoding='utf-8', errors='replace')
+        while True:
+            realtime_output = result.stdout.readline()
+
+            if realtime_output == '' and result.poll() is not None:
+                break
+
+            if realtime_output:
+                print(realtime_output.strip(), flush=True)
+
+        #if result.returncode and verbose:
+            #self.writeToLogs(result.stderr, "red")
+            #if result.stdout and verbose:
+                #self.writeToLogs(result.stdout, "red")
+            #return False
+        #if result.stdout and verbose:
+            #self.writeToLogs(result.stdout, "black")
         return True
 
     def onExecuteButtonClicked(self):
