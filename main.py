@@ -14,6 +14,8 @@ import sys
 import pyautogui
 import traceback
 
+os.environ["PYTHONUNBUFFERED"] = "1"
+
 np.seterr(divide='ignore', invalid='ignore')
 resolution = pyautogui.size()
 os.environ["QT_AUTO_SCREEN_SCALE_FACTOR"] = "1"
