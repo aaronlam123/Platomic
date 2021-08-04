@@ -319,6 +319,7 @@ class MainWindow(QtWidgets.QMainWindow):
 
             if realtime_output:
                 self.writeToLogs(realtime_output.strip(), "black")
+                QApplication.processEvents()
 
         if result.returncode and verbose:
             return False
