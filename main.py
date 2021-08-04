@@ -318,15 +318,10 @@ class MainWindow(QtWidgets.QMainWindow):
                 break
 
             if realtime_output:
-                print(realtime_output.strip(), flush=True)
+                self.writeToLogs(realtime_output.strip(), "black")
 
-        #if result.returncode and verbose:
-            #self.writeToLogs(result.stderr, "red")
-            #if result.stdout and verbose:
-                #self.writeToLogs(result.stdout, "red")
-            #return False
-        #if result.stdout and verbose:
-            #self.writeToLogs(result.stdout, "black")
+        if result.returncode and verbose:
+            return False
         return True
 
     def onExecuteButtonClicked(self):
