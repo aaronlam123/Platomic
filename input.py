@@ -448,7 +448,3 @@ def find_chemical_potential(file):
         i -= 1
     in_rydberg = sum(chemical_potentials) / len(chemical_potentials)
     return in_rydberg * RYDBERG
-
-
-if __name__ == '__main__':
-    print(find_chemical_potential("c46da3_relax_t_G_0.1.out"))
