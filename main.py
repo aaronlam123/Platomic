@@ -8,7 +8,7 @@ from glview import *
 from glview3D import *
 from plot import *
 from input import *
-from subprocess import PIPE, run
+from subprocess import PIPE, Popen
 import math
 import os
 import numpy as np
@@ -310,17 +310,14 @@ class MainWindow(QtWidgets.QMainWindow):
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
             return False
-        result = subprocess.Popen(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True, encoding='utf-8', errors='replace')
+        result = Popen(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True, encoding='utf-8', errors='replace')
         while True:
-            realtime_output = result.stdout.readline()
-
-            if realtime_output == '' and result.poll() is not None:
+            output = result.stdout.readline()
+            if output == "" and result.poll() is not None:
                 break
-
-            if realtime_output:
-                self.writeToLogs(realtime_output.strip(), "black")
+            if output:
+                self.writeToLogs(output.strip(), "black")
                 QApplication.processEvents()
-
         if result.returncode and verbose:
             return False
         return True
