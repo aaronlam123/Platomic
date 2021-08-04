@@ -1,6 +1,3 @@
-import secrets
-import subprocess
-
 from PyQt5 import QtWidgets, uic
 from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QApplication
@@ -15,6 +12,7 @@ import numpy as np
 import sys
 import pyautogui
 import traceback
+import secrets
 
 np.seterr(divide='ignore', invalid='ignore')
 resolution = pyautogui.size()
