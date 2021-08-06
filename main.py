@@ -649,12 +649,12 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.openCsvFileLineEdit.text() == "":
             self.writeErrorToLogs("Error: no Plato generated csv file (.csv) selected.")
             return
-        if self.openOutFileLineEdit2.text() == "":
-            self.writeErrorToLogs("Error: no Plato output file (.out) selected.")
-            return
         self.csvFilename = self.openCsvFileLineEdit.text()
         headers_mapped, headers = transmission_headers(self.csvFilename, self.transSelected)
-        self.offset = find_chemical_potential(self.openOutFileLineEdit2.text())
+        if self.openOutFileLineEdit2.text() == "":
+            self.offset = 0
+        else:
+            self.offset = find_chemical_potential(self.openOutFileLineEdit2.text())
         self.offsetLineEdit.setText(str(self.offset))
         self.writeToLogs("Graph offset set to " + str(self.offset) + ".", "green")
         self.graphKeys = headers
