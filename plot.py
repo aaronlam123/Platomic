@@ -34,6 +34,7 @@ def draw_atoms(atoms, widget, rows, cols):
             atoms[i].get_mi().setMeshData(meshdata=md)
             widget.addItem(atoms[i].get_mi())
 
+
 def draw_selection(atoms, widget, rows, cols):
     for i in range(len(atoms)):
         md = gl.MeshData.sphere(rows=rows, cols=cols, radius=atoms[i].get_radius() + 0.02)
@@ -89,7 +90,6 @@ def draw_advOrbWf(atoms, widget, value, row, cols, scaler, theta, phi, r, g, b, 
         if atoms[i].get_skipOrbital() == "True":
             continue
         for j in range(len(atoms[i].get_quantum_dict())):
-
             quantum_dict = atoms[i].get_quantum_dict()
             tr = pg.Transform3D()
             tr.rotate(theta * 180 / np.pi, 0, 0, 1)

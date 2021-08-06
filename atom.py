@@ -129,4 +129,3 @@ class Atom:
 
     def decrement_bond_count(self):
         self.__bondCount -= 1
-

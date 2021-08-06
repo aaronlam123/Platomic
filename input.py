@@ -441,7 +441,8 @@ def process_energy_gamma_trans_csv(directory_name, session_id):
 
 def find_chemical_potential(file):
     chemical_potentials = []
-    lines = get_lines_between(file, "Terminal chemical potentials:", "Primitive translation vectors (a0):", pop_twice=True)
+    lines = get_lines_between(file, "Terminal chemical potentials:", "Primitive translation vectors (a0):",
+                              pop_twice=True)
     i = len(lines) - 1
     while lines[i] != "Terminal chemical potentials:":
         chemical_potentials.append(float(lines[i].split()[-1]))

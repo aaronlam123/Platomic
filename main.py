@@ -254,9 +254,9 @@ class MainWindow(QtWidgets.QMainWindow):
         if self.atoms is None:
             self.openGLWidget.atoms = [
                 Atom("0", 0, -9, 0,
-                     "Welcome to Platomic. To get started, select an .xyz file in the 'Plato setup' tab."),
+                     "Welcome to Platomic. To get started, import an .xyz file in the 'Setup' tab."),
                 Atom("0", 0, -9.25, -1, "Hover over any (?) icons for help and / or additional information."),
-                Atom("0", 0, -9.5, -2, "For a full in-depth tutorial check out the User Guide.")]
+                Atom("0", 0, -9.5, -2, "For a full in-depth tutorial check out the User Guide in the doc/ directory.")]
         else:
             self.openGLWidget.atoms = self.atoms
             self.draw()
@@ -308,7 +308,8 @@ class MainWindow(QtWidgets.QMainWindow):
         except TypeError:
             self.writeErrorToLogs("No Plato input file found, click generate before clicking execute.")
             return False
-        result = Popen(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True, encoding='utf-8', errors='replace')
+        result = Popen(command, stdout=PIPE, stderr=PIPE, universal_newlines=True, shell=True, encoding='utf-8',
+                       errors='replace')
         while True:
             output = result.stdout.readline()
             if output == "" and result.poll() is not None:
@@ -503,7 +504,8 @@ class MainWindow(QtWidgets.QMainWindow):
             self.writeErrorToLogs("Error: Missing input for excess electrons.")
             return
         try:
-            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, excess, gamma, step_size, self.id)
+            filename = trans_plato_input(self.openFileLineEdit.text(), self.transSelected, excess, gamma, step_size,
+                                         self.id)
             self.inputFilename = filename
             if verbose:
                 self.replaceTextEdit(filename)
@@ -691,7 +693,8 @@ class MainWindow(QtWidgets.QMainWindow):
         # graphSettingsTab
 
     def setGraphComboBox(self):
-        transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()], self.offset)
+        transmission_graph(self.graphWidget, self.csvFilename, self.graphKeys[self.graphComboBox.currentIndex()],
+                           self.offset)
 
     def setTerminalComboBox(self):
         self.openGLWidget.terminal = self.terminalComboBox.currentIndex() + 1
@@ -849,10 +852,12 @@ class MainWindow(QtWidgets.QMainWindow):
                           self.theta, self.phi, self.R, self.G, self.B, self.A)
 
         if self.advOrbHorzCheckBox.isChecked():
-            draw_advOrbHorz(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.theta, self.phi, self.R, self.G, self.B, self.A)
+            draw_advOrbHorz(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.theta, self.phi, self.R,
+                            self.G, self.B, self.A)
 
         if self.advOrbVertCheckBox.isChecked():
-            draw_advOrbVert(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.theta, self.phi, self.R, self.G, self.B, self.A)
+            draw_advOrbVert(self.atoms, self.openGLWidget, self.mode, self.orbScaler, self.theta, self.phi, self.R,
+                            self.G, self.B, self.A)
 
         if self.sphOrbWfCheckBox.isChecked():
             draw_sphOrbWf(self.atoms, self.openGLWidget, self.mode, self.orbRow, self.orbCol, self.orbScaler, self.R,
