@@ -217,7 +217,7 @@ def current_graph(widget, x, y):
     widget.clear()
     widget.setBackground('w')
     labelStyle = {'color': '#FFF', 'font-size': '12pt'}
-    widget.setLabel("left", text="Current", units="mA", **labelStyle)
+    widget.setLabel("left", text="Current", units="A", **labelStyle)
     widget.setLabel("bottom", text="Bias", units="V", **labelStyle)
 
     font = QtGui.QFont()

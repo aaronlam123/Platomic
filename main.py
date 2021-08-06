@@ -413,7 +413,7 @@ class MainWindow(QtWidgets.QMainWindow):
             QApplication.processEvents()
             ind += 1
         self.writeToLogs("All current calculations completed successfully.", "green")
-        current_graph(self.graphWidget2, biases, currents)
+        current_graph(self.graphWidget2, biases, np.array(currents) / 1000)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         # self.propertiesWindow.setCurrentIndex(self.propertiesWindow.indexOf(self.graphSettingsTab))
         self.writeToLogs("Current vs. bias graph plotted successfully.\n", "green")
@@ -670,7 +670,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         bias_v, bias, currents = process_current_out(self.openDirLineEdit.text())
         self.writeToLogs("Bias from directory determined to be " + bias_v + ".", "green")
-        current_graph(self.graphWidget2, bias, currents)
+        current_graph(self.graphWidget2, bias, np.array(currents) / 1000)
         self.mainWindow.setCurrentIndex(self.mainWindow.indexOf(self.graphTab2))
         self.writeToLogs("Current vs. bias graph plotted successfully.\n", "green")
 
