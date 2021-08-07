@@ -526,6 +526,11 @@ class MainWindow(QtWidgets.QMainWindow):
         return True
 
     def onGenerateCurrInputFileButtonClicked(self, boolean, verbose=True, bias=None, step_size=0.003):
+        try:
+            gamma = float(self.gammaLineEdit.text())
+        except ValueError:
+            self.writeErrorToLogs("Error: Missing input for gamma.")
+            return False
         if bias is None:
             try:
                 bias = float(self.biasLineEdit.text())
@@ -544,7 +549,7 @@ class MainWindow(QtWidgets.QMainWindow):
             return
         try:
             filename = curr_plato_input(self.openFileLineEdit.text(), self.transSelected, self.currentSelectedA,
-                                        self.currentSelectedB, excess, reference_pot, bias, self.gammaLineEdit.text(),
+                                        self.currentSelectedB, excess, reference_pot, bias, gamma,
                                         step_size, self.id)
             self.inputFilename = filename
             self.replaceTextEdit(filename)
@@ -1129,7 +1134,7 @@ class MainWindow(QtWidgets.QMainWindow):
         with open("config/attributes.txt", 'w') as f:
             f.write(str(self.attributeTextEdit.toPlainText()))
         self.writeToLogs("Attribute file attributes.txt modified successfully. Settings will be applied on next "
-                         "execution", "green")
+                         "execution.", "green")
 
     # fullConsoleTab
     # fullConsoleTextEdit
